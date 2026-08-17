@@ -1,0 +1,43 @@
+# Environment / secrets
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build / temp
+dist/
+build/
+*.log
+*.tmp
+
+# Local AI agent config
+CLAUDE.md
+AGENTS.md
+.cursorrules
+.cursor/
+.claude/
+.codex/
+.github/copilot-instructions.md
