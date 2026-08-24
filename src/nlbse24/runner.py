@@ -36,6 +36,7 @@ def _evaluate_partition(
     fold: str,
     repository: str,
     seed: int,
+    run_name: str,
     text_fields: tuple[str, ...],
     model_factory: ModelFactory,
     writer: ResultWriter,
@@ -56,7 +57,7 @@ def _evaluate_partition(
         fold=fold,
         repository=repository,
         seed=seed,
-        model_name=model.name,
+        model_name=run_name,
         model_config=model.get_config(),
         train_records=train_records,
         test_records=test_records,
@@ -104,6 +105,7 @@ def run_classifier_experiment(
             fold=fold,
             repository=repository,
             seed=seed,
+            run_name=model_name,
             text_fields=text_fields,
             model_factory=model_factory,
             writer=writer,
@@ -181,6 +183,7 @@ def run_logistic_baseline(
     repositories: set[str] | None = None,
     overwrite: bool = False,
     allow_official_test: bool = False,
+    run_name: str = "tfidf_logistic_regression",
 ) -> dict[str, Any]:
     """Run P1's baseline under the same public runner available to P2-P5."""
 
@@ -192,7 +195,7 @@ def run_logistic_baseline(
     return run_classifier_experiment(
         repository=CsvIssueRepository(data_dir),
         model_factory=model_factory,
-        model_name="tfidf_logistic_regression",
+        model_name=run_name,
         output_dir=output_dir,
         protocol=protocol,
         seed=config.experiment.seed,

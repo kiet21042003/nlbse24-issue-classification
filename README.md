@@ -64,7 +64,8 @@ experiment. Model owners should start with
 The first end-to-end training-only 5-fold run completed successfully across all
 five repositories (25 evaluations). Its cross-repository macro-F1 is **0.7636**.
 This is a pipeline smoke test and preliminary baseline, not the official test
-score. See [reports/p1_cv_baseline.md](reports/p1_cv_baseline.md).
+score. Initial ablation and domain-transfer findings are summarized in
+[reports/p1_initial_findings.md](reports/p1_initial_findings.md).
 
 ## Official data source
 

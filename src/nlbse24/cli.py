@@ -66,6 +66,7 @@ def _run_baseline(args: argparse.Namespace) -> int:
         repositories=repositories,
         overwrite=args.overwrite,
         allow_official_test=args.confirm_official_test,
+        run_name=args.run_name,
     )
     _json_print(summary)
     return 0
@@ -103,6 +104,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     baseline.add_argument("--repository", action="append", help="repeat to select repositories")
     baseline.add_argument("--overwrite", action="store_true")
+    baseline.add_argument(
+        "--run-name",
+        default="tfidf_logistic_regression",
+        help="unique artifact directory name for a model/config variant",
+    )
     baseline.add_argument(
         "--confirm-official-test",
         action="store_true",

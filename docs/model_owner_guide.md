@@ -58,6 +58,9 @@ summary = run_classifier_experiment(
 Use a named factory function instead of a lambda in committed code so linting
 passes. The example is abbreviated for readability.
 
+Use a distinct `model_name` for each committed model/config variant so result
+directories never collide. P1's CLI exposes the same concept as `--run-name`.
+
 ## 3. Ownership boundaries
 
 - **P2:** `sparse_models.py`, `fasttext.py`, and their configs/tests.

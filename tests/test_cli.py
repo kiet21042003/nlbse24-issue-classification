@@ -17,3 +17,8 @@ def test_repository_filter_can_be_repeated() -> None:
         ]
     )
     assert args.repository == ["facebook/react", "opencv/opencv"]
+
+
+def test_run_name_distinguishes_ablation_artifacts() -> None:
+    args = build_parser().parse_args(["run-baseline", "--run-name", "tfidf_lr_title_only"])
+    assert args.run_name == "tfidf_lr_title_only"
