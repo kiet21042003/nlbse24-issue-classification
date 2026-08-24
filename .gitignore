@@ -34,6 +34,21 @@ build/
 *.tmp
 tmp
 
+# Downloaded datasets and generated artifacts
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+results/*
+!results/.gitkeep
+models/*
+!models/.gitkeep
+coverage.xml
+.coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+
 # Local AI agent config
 CLAUDE.md
 AGENTS.md

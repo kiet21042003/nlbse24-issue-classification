@@ -1,0 +1,19 @@
+[experiment]
+seed = 42
+n_splits = 5
+text_fields = ["title", "body"]
+
+[vectorizer]
+analyzer = "word"
+ngram_range = [1, 2]
+min_df = 2
+max_df = 1.0
+max_features = 50000
+sublinear_tf = true
+strip_accents = "unicode"
+
+[classifier]
+C = 4.0
+class_weight = "balanced"
+max_iter = 2000
+solver = "liblinear"
