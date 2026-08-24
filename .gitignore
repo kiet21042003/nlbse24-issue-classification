@@ -23,6 +23,7 @@ yarn-error.log*
 # Editors / OS
 .vscode/
 .idea/
+~$*.docx
 .DS_Store
 Thumbs.db
 desktop.ini
