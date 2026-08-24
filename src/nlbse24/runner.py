@@ -4,7 +4,7 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
 
-from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService
+from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService, IssueRepository
 from nlbse24.domain import IssueRecord
 from nlbse24.evaluation import (
     ResultWriter,
@@ -70,26 +70,24 @@ def _evaluate_partition(
     return writer.write(artifact), artifact
 
 
-def run_logistic_baseline(
+def run_classifier_experiment(
     *,
-    data_dir: str | Path = "data/raw",
+    repository: IssueRepository,
+    model_factory: ModelFactory,
+    model_name: str,
     output_dir: str | Path = "results",
-    config_path: str | Path = "configs/logistic_regression.toml",
     protocol: str = "cv",
+    seed: int = 42,
+    n_splits: int = 5,
+    text_fields: tuple[str, ...] = ("title", "body"),
     repositories: set[str] | None = None,
     overwrite: bool = False,
     allow_official_test: bool = False,
 ) -> dict[str, Any]:
-    """Run P1's baseline under a shared, leakage-safe protocol."""
+    """Run any contract-compatible model through the shared experiment protocols."""
 
-    config = LogisticBaselineConfig.from_toml(config_path)
-    service = IssueDatasetService(CsvIssueRepository(data_dir))
+    service = IssueDatasetService(repository)
     writer = ResultWriter(output_dir, overwrite=overwrite)
-    seed = config.experiment.seed
-    fields = config.experiment.text_fields
-    def model_factory() -> BaseIssueClassifier:
-        return TfidfLogisticRegressionClassifier(config)
-
     result_rows: list[dict[str, Any]] = []
     paths: list[str] = []
 
@@ -106,7 +104,7 @@ def run_logistic_baseline(
             fold=fold,
             repository=repository,
             seed=seed,
-            text_fields=fields,
+            text_fields=text_fields,
             model_factory=model_factory,
             writer=writer,
         )
@@ -121,9 +119,7 @@ def run_logistic_baseline(
 
     if protocol == "cv":
         records = service.load(DatasetSplit.TRAIN, repositories)
-        for split in stratified_repository_folds(
-            records, n_splits=config.experiment.n_splits, seed=seed
-        ):
+        for split in stratified_repository_folds(records, n_splits=n_splits, seed=seed):
             for repo in sorted({record.repo for record in records}):
                 train_indices = [
                     index for index in split.train_indices if records[index].repo == repo
@@ -165,10 +161,40 @@ def run_logistic_baseline(
     aggregate = aggregate_macro_f1(result_rows)
     summary = {
         **aggregate,
-        "text_fields": list(fields),
+        "text_fields": list(text_fields),
         "artifacts": paths,
     }
-    summary_path = writer.write_summary(
-        protocol, "tfidf_logistic_regression", seed, summary
-    )
+    summary_path = writer.write_summary(protocol, model_name, seed, summary)
     return {**summary, "summary_path": str(summary_path)}
+
+
+def run_logistic_baseline(
+    *,
+    data_dir: str | Path = "data/raw",
+    output_dir: str | Path = "results",
+    config_path: str | Path = "configs/logistic_regression.toml",
+    protocol: str = "cv",
+    repositories: set[str] | None = None,
+    overwrite: bool = False,
+    allow_official_test: bool = False,
+) -> dict[str, Any]:
+    """Run P1's baseline under the same public runner available to P2-P5."""
+
+    config = LogisticBaselineConfig.from_toml(config_path)
+
+    def model_factory() -> BaseIssueClassifier:
+        return TfidfLogisticRegressionClassifier(config)
+
+    return run_classifier_experiment(
+        repository=CsvIssueRepository(data_dir),
+        model_factory=model_factory,
+        model_name="tfidf_logistic_regression",
+        output_dir=output_dir,
+        protocol=protocol,
+        seed=config.experiment.seed,
+        n_splits=config.experiment.n_splits,
+        text_fields=config.experiment.text_fields,
+        repositories=repositories,
+        overwrite=overwrite,
+        allow_official_test=allow_official_test,
+    )

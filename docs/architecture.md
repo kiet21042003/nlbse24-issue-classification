@@ -56,3 +56,7 @@ results/{protocol}/{model}/{repository}/{seed}/{fold}.json
 Artifacts include schema version, data identity, model configuration, timing,
 memory, per-class metrics, macro metrics, labels, predictions, and optional
 scores. This makes aggregation independent of model libraries.
+
+The machine-readable contract is versioned at
+[`schemas/result.schema.json`](../schemas/result.schema.json). Any incompatible
+change requires a schema-version bump and coordination with P5.

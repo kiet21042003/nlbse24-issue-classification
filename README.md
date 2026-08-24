@@ -31,6 +31,16 @@ Downloaded data is written to `data/raw/` and verified against pinned SHA-256
 checksums. Generated runs are written below `results/`; neither directory's
 contents are committed.
 
+Other supported protocols:
+
+```powershell
+# Domain-transfer experiment on training data only
+nlbse24 run-baseline --protocol loo
+
+# Final test: run only after the team freezes the chosen configuration
+nlbse24 run-baseline --protocol official --confirm-official-test
+```
+
 ## Repository layout
 
 ```text
@@ -45,7 +55,15 @@ tests/                   Unit and integration tests
 
 Read [docs/architecture.md](docs/architecture.md) before adding a model and
 [docs/experiment_protocol.md](docs/experiment_protocol.md) before running an
-experiment.
+experiment. Model owners should start with
+[docs/model_owner_guide.md](docs/model_owner_guide.md).
+
+## P1 baseline status
+
+The first end-to-end training-only 5-fold run completed successfully across all
+five repositories (25 evaluations). Its cross-repository macro-F1 is **0.7639**.
+This is a pipeline smoke test and preliminary baseline, not the official test
+score. See [reports/p1_cv_baseline.md](reports/p1_cv_baseline.md).
 
 ## Official data source
 

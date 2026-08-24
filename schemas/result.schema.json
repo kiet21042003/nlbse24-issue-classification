@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kiet21042003/nlbse24-issue-classification/schemas/result.schema.json",
+  "title": "NLBSE'24 experiment result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "created_at_utc",
+    "protocol",
+    "fold",
+    "repository",
+    "seed",
+    "model",
+    "data",
+    "classes",
+    "metrics",
+    "resources",
+    "predictions",
+    "environment"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "format": "uuid"},
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "protocol": {"enum": ["cv", "loo", "official"]},
+    "fold": {"type": "string", "minLength": 1},
+    "repository": {"type": "string", "minLength": 1},
+    "seed": {"type": "integer"},
+    "model": {
+      "type": "object",
+      "required": ["name", "config"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "config": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "upstream_commit",
+        "train_size",
+        "test_size",
+        "train_fingerprint",
+        "test_fingerprint"
+      ]
+    },
+    "classes": {
+      "type": "array",
+      "items": {"enum": ["bug", "feature", "question"]},
+      "minItems": 3,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "metrics": {"type": "object"},
+    "resources": {"type": "object"},
+    "predictions": {
+      "type": "object",
+      "required": ["y_true", "y_pred", "scores"]
+    },
+    "environment": {"type": "object"}
+  },
+  "additionalProperties": false
+}

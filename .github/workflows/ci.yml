@@ -16,4 +16,4 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements-dev.txt
       - run: ruff check src tests
-      - run: pytest --cov=nlbse24 --cov-report=term-missing
+      - run: pytest --cov=nlbse24 --cov-report=term-missing --cov-fail-under=80
