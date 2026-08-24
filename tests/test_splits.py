@@ -31,3 +31,18 @@ def test_leave_one_repository_out_holds_out_only_target(
         test_repos = {sample_records[index].repo for index in fold.test_indices}
         assert test_repos == {fold.held_out_repository}
         assert fold.held_out_repository not in train_repos
+
+
+def test_exact_duplicate_texts_stay_in_the_same_cv_partition() -> None:
+    records = [
+        IssueRecord("org/repo", "2024-01-01", label, f"{label} {index}", "Body")
+        for label in ("bug", "feature", "question")
+        for index in range(6)
+    ]
+    records.append(IssueRecord("org/repo", "2024-01-02", "bug", "bug 0", "Body"))
+    duplicate_indices = {0, len(records) - 1}
+    folds = stratified_repository_folds(records, n_splits=3, seed=42)
+    for fold in folds:
+        assert duplicate_indices.issubset(fold.train_indices) or duplicate_indices.issubset(
+            fold.test_indices
+        )

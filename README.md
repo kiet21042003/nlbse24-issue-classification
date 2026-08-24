@@ -22,6 +22,7 @@ python -m venv .venv
 python -m pip install -r requirements-dev.txt
 nlbse24 download-data
 nlbse24 validate-data
+nlbse24 audit-data
 nlbse24 run-baseline --protocol cv
 ```
 
@@ -61,7 +62,7 @@ experiment. Model owners should start with
 ## P1 baseline status
 
 The first end-to-end training-only 5-fold run completed successfully across all
-five repositories (25 evaluations). Its cross-repository macro-F1 is **0.7639**.
+five repositories (25 evaluations). Its cross-repository macro-F1 is **0.7636**.
 This is a pipeline smoke test and preliminary baseline, not the official test
 score. See [reports/p1_cv_baseline.md](reports/p1_cv_baseline.md).
 

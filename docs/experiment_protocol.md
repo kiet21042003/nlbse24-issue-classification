@@ -16,7 +16,10 @@ The downloader verifies both CSV files by SHA-256 before accepting them.
 
 ### Training-only 5-fold CV
 
-Use stratified five-fold cross-validation independently within each repository.
+Use stratified, group-aware five-fold cross-validation independently within each
+repository. Rows with identical normalized title + body are first grouped, then
+groups are stratified across folds. This prevents exact duplicates from
+appearing on both sides of a CV split.
 This is the default protocol for tuning. All models compared in an experiment
 must reuse the exact same fold assignment and random seed.
 
@@ -56,4 +59,5 @@ repository macro-F1 values, matching the competition ranking rule.
 - Do not use the official test labels for tuning, thresholding, or model choice.
 - Fit preprocessing inside each model pipeline using only that fold's training
   rows.
+- Group exact normalized-text duplicates into the same CV fold.
 - Persist the seed, indices/data hash, configuration, and library versions.

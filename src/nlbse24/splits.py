@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
 from nlbse24.domain import IssueRecord
+from nlbse24.text import compose_text, normalize_whitespace
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,12 +47,26 @@ def stratified_repository_folds(
 
     for repo in sorted(indices_by_repo):
         repo_indices = np.asarray(indices_by_repo[repo], dtype=int)
-        labels = np.asarray([records[index].label for index in repo_indices])
+        grouped_indices: dict[str, list[int]] = defaultdict(list)
+        for index in repo_indices:
+            key = normalize_whitespace(compose_text(records[index])).casefold()
+            grouped_indices[key].append(int(index))
+        groups = list(grouped_indices.values())
+        group_labels: list[str] = []
+        for group in groups:
+            labels = {records[index].label for index in group}
+            if len(labels) != 1:
+                raise ValueError(f"exact duplicate text has conflicting labels in {repo}")
+            group_labels.append(labels.pop())
         for fold_index, (local_train, local_test) in enumerate(
-            splitter.split(repo_indices, labels)
+            splitter.split(np.arange(len(groups)), np.asarray(group_labels))
         ):
-            fold_train[fold_index].extend(repo_indices[local_train].tolist())
-            fold_test[fold_index].extend(repo_indices[local_test].tolist())
+            fold_train[fold_index].extend(
+                index for group_index in local_train for index in groups[group_index]
+            )
+            fold_test[fold_index].extend(
+                index for group_index in local_test for index in groups[group_index]
+            )
 
     folds = [
         SplitFold(

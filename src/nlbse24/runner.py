@@ -118,6 +118,7 @@ def run_classifier_experiment(
         )
 
     if protocol == "cv":
+        split_strategy = "stratified_text_group_folds_per_repository"
         records = service.load(DatasetSplit.TRAIN, repositories)
         for split in stratified_repository_folds(records, n_splits=n_splits, seed=seed):
             for repo in sorted({record.repo for record in records}):
@@ -134,6 +135,7 @@ def run_classifier_experiment(
                     repo,
                 )
     elif protocol == "loo":
+        split_strategy = "leave_one_repository_out"
         records = service.load(DatasetSplit.TRAIN, repositories)
         for split in leave_one_repository_out_folds(records):
             assert split.held_out_repository is not None
@@ -144,6 +146,7 @@ def run_classifier_experiment(
                 split.held_out_repository,
             )
     elif protocol == "official":
+        split_strategy = "official_train_test_per_repository"
         if not allow_official_test:
             raise PermissionError(
                 "official test evaluation is locked; freeze the configuration and "
@@ -161,6 +164,7 @@ def run_classifier_experiment(
     aggregate = aggregate_macro_f1(result_rows)
     summary = {
         **aggregate,
+        "split_strategy": split_strategy,
         "text_fields": list(text_fields),
         "artifacts": paths,
     }

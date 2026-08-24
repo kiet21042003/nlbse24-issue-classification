@@ -10,6 +10,7 @@ from nlbse24.data import (
     DatasetSplit,
     IssueDatasetService,
     JsonIssueRepository,
+    audit_dataset_splits,
 )
 from nlbse24.data.download import download_official_dataset
 from nlbse24.runner import run_logistic_baseline
@@ -46,6 +47,15 @@ def _export_json(args: argparse.Namespace) -> int:
     return 0
 
 
+def _audit(args: argparse.Namespace) -> int:
+    repository = CsvIssueRepository(args.data_dir)
+    report = audit_dataset_splits(
+        repository.load(DatasetSplit.TRAIN), repository.load(DatasetSplit.TEST)
+    )
+    _json_print(report)
+    return 0
+
+
 def _run_baseline(args: argparse.Namespace) -> int:
     repositories = set(args.repository) if args.repository else None
     summary = run_logistic_baseline(
@@ -79,6 +89,10 @@ def build_parser() -> argparse.ArgumentParser:
     export.add_argument("--output-dir", type=Path, default=Path("data/processed/json"))
     export.add_argument("--split", choices=("train", "test", "all"), default="all")
     export.set_defaults(handler=_export_json)
+
+    audit = subparsers.add_parser("audit-data", help="report quality and split overlap")
+    audit.add_argument("--data-dir", type=Path, default=Path("data/raw"))
+    audit.set_defaults(handler=_audit)
 
     baseline = subparsers.add_parser("run-baseline", help="run TF-IDF + Logistic Regression")
     baseline.add_argument("--protocol", choices=("cv", "loo", "official"), default="cv")
