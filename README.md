@@ -18,7 +18,7 @@ metrics, and result writer.
 
 | Owner | Team member | Student ID | Role | Primary code contribution |
 |---|---|---|---|---|
-| P1 | Phạm Tuấn Kiệt | 20252751M | Data, protocol, and Logistic Regression | Data loader and EDA; in-memory and file persistence; official, cross-validation, and leave-one-repository-out splitters; TF-IDF word n-grams with a Logistic Regression baseline; shared result schema. |
+| P1 | Phạm Tuấn Kiệt | 20252751M | Leader, data, protocol, and Logistic Regression | Data loader and EDA; in-memory and file persistence; official, cross-validation, and leave-one-repository-out splitters; TF-IDF word n-grams with a Logistic Regression baseline; shared result schema. |
 | P2 | Nguyễn Trung Hiếu | 20261059M | Lightweight models | TF-IDF character n-grams with LinearSVC and ComplementNB; fastText; hyperparameter tuning and feature ablation. |
 | P3 | Lê Ngọc Ánh | 20252275M | Fine-tuned encoder | RoBERTa-base full fine-tuning and adapters; per-repository versus pooled training experiments. |
 | P4 | Nguyễn Hoàng Nam | 20261081M | Sentence Transformers | Reproduce the SetFit MPNet baseline; evaluate MiniLM; contrastive-sampling ablation. |
