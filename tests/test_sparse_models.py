@@ -25,6 +25,7 @@ LABELS = ["bug"] * 3 + ["feature"] * 3 + ["question"] * 3
 
 COMMITTED_CONFIGS = (
     "configs/tfidf_char_linear_svc.toml",
+    "configs/tfidf_word_linear_svc.toml",
     "configs/tfidf_char_complement_nb.toml",
     "configs/ablations/p2_word_only.toml",
     "configs/ablations/p2_char_only.toml",
