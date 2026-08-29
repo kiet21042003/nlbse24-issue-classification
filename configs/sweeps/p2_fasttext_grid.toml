@@ -1,0 +1,36 @@
+# P2 tuning sweep: supervised fastText.
+# Training-only 5-fold CV, seed 42. 2 x 2 x 2 = 8 points.
+# Requires the optional backend: pip install -r requirements-fasttext.txt
+model_family = "fasttext"
+run_prefix = "p2_ft"
+
+[base.experiment]
+seed = 42
+n_splits = 5
+text_fields = ["title", "body"]
+
+[base.model]
+dim = 100
+lr = 0.5
+epoch = 25
+word_ngrams = 2
+min_count = 1
+minn = 3
+maxn = 6
+bucket = 200000
+loss = "softmax"
+
+[[axes]]
+tag = "wng"
+key = "model.word_ngrams"
+values = [1, 2]
+
+[[axes]]
+tag = "dim"
+key = "model.dim"
+values = [50, 100]
+
+[[axes]]
+tag = "ep"
+key = "model.epoch"
+values = [10, 25]
