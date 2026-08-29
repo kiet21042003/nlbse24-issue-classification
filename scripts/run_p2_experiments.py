@@ -141,6 +141,11 @@ def run_one(
     args: argparse.Namespace,
 ) -> dict[str, Any]:
     config_cls, model_cls = FAMILIES[family]
+    if args.seed is not None:
+        # Artifacts are keyed by seed, so re-running a frozen config under another seed
+        # lands beside the original instead of colliding with it.
+        payload = deep_copy(payload)
+        set_path(payload, "experiment.seed", args.seed)
     config = config_cls.from_mapping(payload)
     repositories = set(args.repository) if args.repository else None
     summary = run_classifier_experiment(
@@ -174,6 +179,10 @@ def run_grid(args: argparse.Namespace) -> int:
     grid = load_toml(path)
     family = resolve_family(grid, path)
     points = list(iter_grid_points(grid))
+    if args.only:
+        points = [(name, payload) for name, payload in points if args.only in name]
+        if not points:
+            raise ValueError(f"no grid point matches --only {args.only!r}")
     ranked: list[dict[str, Any]] = []
 
     for position, (run_name, payload) in enumerate(points, start=1):
@@ -196,7 +205,10 @@ def run_grid(args: argparse.Namespace) -> int:
         "model_family": family,
         "points": ranked,
     }
-    destination = Path(args.output_dir) / "sweeps" / f"{path.stem}-{args.protocol}.json"
+    suffix = f"-{args.only}" if args.only else ""
+    destination = (
+        Path(args.output_dir) / "sweeps" / f"{path.stem}-{args.protocol}{suffix}.json"
+    )
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
@@ -217,6 +229,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir", type=Path, default=Path("results"))
     parser.add_argument("--repository", action="append", help="repeat to select repositories")
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--seed", type=int, help="override the configured seed, for seed-robustness runs"
+    )
+    parser.add_argument(
+        "--only", help="run only the grid points whose run name contains this substring"
+    )
     parser.add_argument("--run-name", help="artifact directory name; defaults to the config stem")
     parser.add_argument(
         "--confirm-official-test",
