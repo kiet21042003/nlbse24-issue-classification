@@ -1,5 +1,9 @@
-# P2 frozen configuration: TF-IDF feature union with ComplementNB.
+# P2 frozen configuration: TF-IDF word n-grams with ComplementNB.
 # Selected on training-only 5-fold CV; see reports/p2_feature_ablation.md.
+#
+# The character branch is disabled deliberately. ComplementNB scored worse with it at
+# every smoothing value tried (0.7054 word-only against 0.6830 for the union at the same
+# alpha), which is the opposite of what the character branch does for LinearSVC.
 model_family = "sparse"
 
 [experiment]
@@ -19,7 +23,7 @@ strip_accents = "unicode"
 lowercase = true
 
 [features.char]
-enabled = true
+enabled = false
 analyzer = "char_wb"
 ngram_range = [2, 5]
 min_df = 3
