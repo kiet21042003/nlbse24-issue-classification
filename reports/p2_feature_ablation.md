@@ -51,6 +51,37 @@ improvement but a targeted one, and the five-repository mean hides that.
 `C = 1.0` wins in every feature set, so regularisation strength and feature choice do not
 interact here.
 
+## RQ: does the answer hold for a different classifier?
+
+The same nine-point sweep was repeated with ComplementNB in place of LinearSVC, over the
+identical feature branches and folds.
+
+| Feature set | alpha | bitcoin | react | vscode | opencv | tensorflow | **Cross-repo** |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| word | 0.3 | 0.6200 | 0.7797 | 0.6983 | 0.6741 | 0.7549 | **0.7054** |
+| word | 1.0 | 0.6115 | 0.7593 | 0.7007 | 0.6807 | 0.7601 | **0.7025** |
+| word | 0.1 | 0.6311 | 0.7656 | 0.6857 | 0.6790 | 0.7429 | **0.7009** |
+| word + char | 0.1 | 0.6209 | 0.7559 | 0.6841 | 0.6864 | 0.7018 | **0.6898** |
+| word + char | 1.0 | 0.6127 | 0.7352 | 0.6875 | 0.6653 | 0.7362 | **0.6874** |
+| word + char | 0.3 | 0.6061 | 0.7370 | 0.6764 | 0.6778 | 0.7176 | **0.6830** |
+| char | 1.0 | 0.5984 | 0.7182 | 0.6782 | 0.6692 | 0.7097 | **0.6747** |
+| char | 0.3 | 0.6075 | 0.7240 | 0.6850 | 0.6624 | 0.6862 | **0.6730** |
+| char | 0.1 | 0.6089 | 0.7134 | 0.6832 | 0.6415 | 0.6710 | **0.6636** |
+
+**No - and the reversal is systematic.** For ComplementNB the ordering is word > word+char
+> char at *every* smoothing value, with no crossover. Adding the character branch costs
+between 0.0111 and 0.0224 macro-F1 depending on alpha, well outside the seed noise
+measured for LinearSVC. Smoothing itself barely matters: the three word-only rows span
+0.0045.
+
+The likely reason is the independence assumption. Character n-grams drawn from the same
+word are near-duplicates of one another, and a naive Bayes model multiplies their evidence
+as though each were an independent observation, so a single distinctive word gets counted
+many times over. A discriminative linear model can simply learn smaller weights for
+redundant features; ComplementNB has no such freedom. The practical consequence is that
+"add character n-grams" is not classifier-independent advice, and
+`configs/tfidf_word_complement_nb.toml` freezes the word-only branch deliberately.
+
 ## RQ: what does the character branch cost?
 
 Mean per evaluation over the 25 CV evaluations of each configuration.
