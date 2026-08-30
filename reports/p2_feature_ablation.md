@@ -84,16 +84,18 @@ redundant features; ComplementNB has no such freedom. The practical consequence 
 
 ## RQ: what does the character branch cost?
 
-Mean per evaluation over the 25 CV evaluations of each configuration.
+Mean per evaluation over the 25 CV evaluations of each configuration, measured in a
+dedicated pass with one configuration running at a time, since `elapsed_seconds` is wall
+clock and concurrent runs inflate it.
 
 | Feature set | C | fit s | inference s | peak MB | vocabulary | Cross-repo |
 |---|---:|---:|---:|---:|---:|---:|
-| word | 1.0 | 0.441 | 0.116 | 8.35 | 6,107 | 0.7541 |
-| char | 1.0 | 3.037 | 1.335 | 40.94 | 26,459 | 0.7445 |
-| word + char | 1.0 | 4.097 | 1.452 | 43.02 | 32,566 | 0.7533 |
+| word | 1.0 | 0.460 | 0.121 | 8.36 | 6,107 | 0.7541 |
+| char | 1.0 | 3.036 | 1.307 | 40.94 | 26,459 | 0.7445 |
+| word + char | 1.0 | 3.932 | 1.394 | 43.02 | 32,566 | 0.7533 |
 
-Relative to word-only features, the union costs **9.3x the fit time, 12.5x the inference
-time, 5.2x the peak memory and 5.3x the vocabulary** for an accuracy difference that is
+Relative to word-only features, the union costs **8.5x the fit time, 11.5x the inference
+time, 5.1x the peak memory and 5.3x the vocabulary** for an accuracy difference that is
 within seed noise on this protocol. That is why both operating points are frozen:
 `configs/tfidf_word_linear_svc.toml` when cost dominates, and
 `configs/tfidf_char_linear_svc.toml` when accuracy and transfer do - the union wins both
@@ -110,9 +112,11 @@ see `reports/p2_lightweight_models.md`.
 | title + body | 0.7082 | 0.7865 | 0.7386 | 0.7525 | 0.7807 | **0.7533** |
 | title only | 0.4741 | 0.7463 | 0.5798 | 0.6556 | 0.5488 | **0.6009** |
 
-Dropping the body costs 0.1524 macro-F1, closely matching the 0.1683 P1 measured for
-Logistic Regression. The body carries most of the signal for every model family tested
-here, and the character branch does not compensate for its absence.
+Dropping the body costs 0.1524 macro-F1 for the word+char union, closely matching the
+0.1683 P1 measured for Logistic Regression. Two model families, two feature sets, the same
+answer: the body carries most of the signal, and the character branch does not compensate
+for its absence. The damage is very uneven across repositories - react loses 0.04 and
+bitcoin loses 0.23 - which tracks how much of each project's issue text is in the title.
 
 ## Threats to validity
 
@@ -120,18 +124,31 @@ here, and the character branch does not compensate for its absence.
   the same folds the table reports, so the winning row is an optimistic estimate of its
   own score. Seed-robustness results in `reports/p2_lightweight_models.md` quantify the
   spread.
-- **Timings are inflated and not wall-clock.** The shared profiler wraps every fit in
+- **Timings carry profiler overhead.** The shared profiler wraps every fit in
   `tracemalloc`, whose overhead grows with the number of Python allocations. Character
   n-gram analysis allocates one string per n-gram, so character configurations are
   penalised more than word configurations. The numbers are internally comparable across
-  P1-P5 because everyone uses the same profiler; they are not a hardware benchmark.
+  P1-P5 because everyone uses the same profiler; they are not a hardware benchmark, and
+  the ratios above overstate the true cost of the character branch by some unmeasured
+  amount.
 - **One machine, one seed per row.** Differences below roughly 0.01 macro-F1 should not be
   read as real.
 
 ## Reproduction
 
 ```powershell
+# the two tuning grids behind the tables above
 python scripts/run_p2_experiments.py --grid configs/sweeps/p2_linear_svc_grid.toml --protocol cv
 python scripts/run_p2_experiments.py --grid configs/sweeps/p2_complement_nb_grid.toml --protocol cv
+
+# the text-field ablation
 python scripts/run_p2_experiments.py --config configs/ablations/p2_title_only.toml --protocol cv
+
+# the cost table, one configuration at a time
+python scripts/run_p2_experiments.py --config configs/tfidf_word_linear_svc.toml --protocol cv
+python scripts/run_p2_experiments.py --config configs/ablations/p2_char_only.toml --protocol cv
+python scripts/run_p2_experiments.py --config configs/tfidf_char_linear_svc.toml --protocol cv
 ```
+
+Individual grid points can be re-run without repeating the sweep, for example
+`--grid configs/sweeps/p2_linear_svc_grid.toml --only feat-char`.
