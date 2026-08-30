@@ -25,7 +25,7 @@ identical to every other workstream.
 | Sparse linear | `tfidf_char_linear_svc` | TF-IDF **word ⊕ character** union into LinearSVC |
 | Sparse linear | `tfidf_word_linear_svc` | TF-IDF word n-grams only into LinearSVC |
 | Sparse Bayes | `tfidf_word_complement_nb` | TF-IDF word n-grams only into ComplementNB |
-| fastText | `fasttext_supervised` | Facebook's supervised fastText, optional dependency |
+| fastText | `fasttext_supervised` | Facebook's supervised fastText, subwords off, optional dependency |
 | Hashed linear | `fasttext_style_sgd` | `HashingVectorizer` + `SGDClassifier(log_loss)` |
 
 Both TF-IDF branches live inside the pipeline, so they are refitted on each fold's
@@ -36,6 +36,35 @@ The hashed linear model is a dependency-free bag-of-n-grams model with a linear 
 head. It shares fastText's hashing trick and linear objective but has no shared embedding
 layer, so it is a lightweight baseline in the same family rather than a reimplementation
 of fastText.
+
+## fastText is sensitive to the order of its training file
+
+This one is worth writing down because it is invisible from the outside and it changed a
+conclusion.
+
+fastText reads its training file sequentially, never shuffles it, and decays the learning
+rate across the run. The shared dataset is sorted by label - every repository is exactly
+100 `bug` rows, then 100 `feature`, then 100 `question` - and the runner hands partitions
+over in that order, so the first version of the adapter wrote a label-sorted file. Under
+the shared protocol, with everything else held fixed, that single detail costs:
+
+| Training file order | bitcoin | react | vscode | opencv | tensorflow | **Cross-repo** |
+|---|---:|---:|---:|---:|---:|---:|
+| as handed over (label-sorted) | 0.6642 | 0.7939 | 0.6982 | 0.6327 | 0.2970 | **0.6172** |
+| shuffled from the seed | 0.6515 | 0.7950 | 0.7254 | 0.6825 | 0.6901 | **0.7089** |
+
+On `tensorflow/tensorflow` the sorted file collapses the model onto a single class -
+every fold predicts `question`, for a per-fold macro-F1 of 0.167 - while `facebook/react`
+is untouched. A single degenerate repository dragged the five-repository mean down by
+0.0917 and made fastText look far weaker than it is.
+
+Every other model in this project is order-invariant: LinearSVC and ComplementNB solve an
+order-independent objective, and `SGDClassifier` shuffles internally each epoch. So
+reporting the sorted-file number would not have been a property of fastText, it would have
+been a property of the adapter. `FastTextClassifier.fit` now permutes the lines with
+`random.Random(config.experiment.seed)` before writing them, which also gives the run a
+reproducible order that fastText 0.9.2's own API cannot express - it exposes no seed
+parameter at all. Every fastText number in this report comes from the shuffled version.
 
 ## Seed robustness
 
