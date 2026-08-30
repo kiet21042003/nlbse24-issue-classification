@@ -14,6 +14,7 @@ Two classifiers live here:
 """
 
 import importlib.metadata
+import random
 import tempfile
 import tomllib
 from collections.abc import Mapping, Sequence
@@ -172,6 +173,14 @@ class FastTextClassifier(BaseIssueClassifier):
                 f"{LABEL_PREFIX}{label} {_flatten(text)}"
                 for text, label in zip(texts, labels, strict=True)
             ]
+            # fastText reads the file sequentially and never shuffles it, while its
+            # learning rate decays over the run. The shared dataset is sorted by
+            # label, so leaving the order alone lets the last label in the file
+            # dominate: on tensorflow/tensorflow that collapses the model onto a
+            # single class (macro-F1 0.297 against 0.585 shuffled). Every other model
+            # in the project is order-invariant, so the order is randomised here to
+            # keep the comparison fair.
+            random.Random(self.config.experiment.seed).shuffle(lines)
             training_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
             self._model = backend.train_supervised(
                 input=str(training_file),
@@ -184,8 +193,8 @@ class FastTextClassifier(BaseIssueClassifier):
                 maxn=settings.maxn,
                 bucket=settings.bucket,
                 loss=settings.loss,
-                # fastText 0.9.2 exposes no seed; single-threaded training is what makes
-                # a run reproducible.
+                # fastText 0.9.2 exposes no seed; single-threaded training over a
+                # deterministically shuffled file is what makes a run reproducible.
                 thread=1,
                 verbose=0,
             )

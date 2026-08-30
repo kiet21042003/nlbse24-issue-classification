@@ -115,6 +115,31 @@ def test_training_file_holds_exactly_one_line_per_example(fitted: FastTextClassi
     assert all("\n" not in line and "\r" not in line for line in lines)
 
 
+def test_training_file_is_shuffled_deterministically(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """fastText never shuffles its input, and the shared dataset is sorted by label.
+
+    Left alone, the label order in the file steers training and collapses some
+    repositories onto a single class, so the adapter shuffles from the experiment seed.
+    """
+
+    install_fake_backend(monkeypatch)
+
+    def lines_for(seed: int) -> list[str]:
+        config = FastTextConfig.from_mapping({"experiment": {"seed": seed}})
+        return FastTextClassifier(config).fit(TEXTS, LABELS)._model.training_lines
+
+    first = lines_for(42)
+    labels_in_file = [line.split(" ", 1)[0].removeprefix(LABEL_PREFIX) for line in first]
+
+    assert sorted(first) == sorted(lines_for(42))
+    assert first == lines_for(42), "the same seed must give the same order"
+    assert labels_in_file != LABELS, "the label-sorted input order must not survive"
+    assert sorted(labels_in_file) == sorted(LABELS), "no example may be lost or duplicated"
+    assert first != lines_for(7), "a different seed must give a different order"
+
+
 def test_training_is_single_threaded_and_passes_no_seed(fitted: FastTextClassifier) -> None:
     kwargs = fitted._model.kwargs
 
