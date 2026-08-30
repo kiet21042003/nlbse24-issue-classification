@@ -42,7 +42,6 @@ data/processed/*
 !data/processed/.gitkeep
 results/*
 !results/.gitkeep
-results-cost/
 models/*
 !models/.gitkeep
 coverage.xml
@@ -59,6 +58,3 @@ AGENTS.md
 .claude/
 .codex/
 .github/copilot-instructions.md
-
-# Local copy of a document that is version-controlled under docs/
-/NLBSE_Topic_Comparison_and_Project_Plan.docx
