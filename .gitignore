@@ -42,6 +42,7 @@ data/processed/*
 !data/processed/.gitkeep
 results/*
 !results/.gitkeep
+results-cost/
 models/*
 !models/.gitkeep
 coverage.xml
