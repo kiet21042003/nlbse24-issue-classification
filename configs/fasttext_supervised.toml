@@ -1,5 +1,11 @@
 # P2 frozen configuration: supervised fastText.
+# Selected on training-only 5-fold CV; see reports/p2_lightweight_models.md.
 # Requires the optional backend: pip install -r requirements-fasttext.txt
+#
+# Subword hashing is switched off (minn = maxn = 0). At the size this protocol trains on
+# (240 documents per fold) the character n-gram buckets dilute the word signal badly:
+# the best subword configuration scored 0.4931 against 0.7089 without it. The learning
+# rate matters just as much - 0.1 collapses the model to near chance.
 model_family = "fasttext"
 
 [experiment]
@@ -9,11 +15,11 @@ text_fields = ["title", "body"]
 
 [model]
 dim = 100
-lr = 0.5
+lr = 1.0
 epoch = 25
 word_ngrams = 2
 min_count = 1
-minn = 3
-maxn = 6
+minn = 0
+maxn = 0
 bucket = 200000
 loss = "softmax"
