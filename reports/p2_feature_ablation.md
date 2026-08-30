@@ -51,6 +51,25 @@ improvement but a targeted one, and the five-repository mean hides that.
 `C = 1.0` wins in every feature set, so regularisation strength and feature choice do not
 interact here.
 
+### Refining the character n-gram range
+
+A follow-up sweep varied only `features.char.ngram_range`, at the winning feature set and
+`C = 1.0`. Timings are from a single-process run.
+
+| char n-grams | bitcoin | react | vscode | opencv | tensorflow | **Cross-repo** | fit s | vocab |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| 2-5 | 0.7082 | 0.7865 | 0.7386 | 0.7525 | 0.7807 | **0.7533** | 3.887 | 32,566 |
+| 2-4 | 0.7006 | 0.7869 | 0.7419 | 0.7487 | 0.7743 | **0.7505** | 3.003 | 24,171 |
+| 3-5 | 0.6912 | 0.7930 | 0.7349 | 0.7416 | 0.7812 | **0.7484** | 3.314 | 30,614 |
+| 3-6 | 0.6809 | 0.7930 | 0.7385 | 0.7479 | 0.7739 | **0.7468** | 4.002 | 38,214 |
+
+The frozen 2-5 range comes out on top, but the whole sweep spans 0.0065 - less than the
+seed spread measured for this configuration - so this axis is not worth tuning. The only
+systematic effect is on bitcoin, which loses 0.0273 as the lower bound moves from 2 to 3;
+two-character grams evidently carry signal in the one repository with no issue template.
+If cost mattered, 2-4 would be the better pick: 23% less fit time and 26% fewer features
+for 0.0028 macro-F1.
+
 ## RQ: does the answer hold for a different classifier?
 
 The same nine-point sweep was repeated with ComplementNB in place of LinearSVC, over the
@@ -137,8 +156,9 @@ bitcoin loses 0.23 - which tracks how much of each project's issue text is in th
 ## Reproduction
 
 ```powershell
-# the two tuning grids behind the tables above
+# the three tuning grids behind the tables above
 python scripts/run_p2_experiments.py --grid configs/sweeps/p2_linear_svc_grid.toml --protocol cv
+python scripts/run_p2_experiments.py --grid configs/sweeps/p2_char_ngram_grid.toml --protocol cv
 python scripts/run_p2_experiments.py --grid configs/sweeps/p2_complement_nb_grid.toml --protocol cv
 
 # the text-field ablation

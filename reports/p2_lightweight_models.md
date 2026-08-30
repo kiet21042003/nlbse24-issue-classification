@@ -16,16 +16,16 @@ the CI job. Reference points from P1's Logistic Regression: **0.7636** CV, **0.5
 
 ## Method
 
-Four models, all behind the shared `BaseIssueClassifier` contract and all run through
-P1's `run_classifier_experiment`, so splits, metrics, profiling and artifact writing are
-identical to every other workstream.
+Five configurations across three model families, all behind the shared
+`BaseIssueClassifier` contract and all run through P1's `run_classifier_experiment`, so
+splits, metrics, profiling and artifact writing are identical to every other workstream.
 
 | Model | Run name | Description |
 |---|---|---|
 | Sparse linear | `tfidf_char_linear_svc` | TF-IDF **word ⊕ character** union into LinearSVC |
 | Sparse linear | `tfidf_word_linear_svc` | TF-IDF word n-grams only into LinearSVC |
 | Sparse Bayes | `tfidf_word_complement_nb` | TF-IDF word n-grams only into ComplementNB |
-| fastText | `fasttext_supervised` | Facebook's supervised fastText, subwords off, optional dependency |
+| fastText | `fasttext_supervised` | Supervised fastText, subwords off, optional dep |
 | Hashed linear | `fasttext_style_sgd` | `HashingVectorizer` + `SGDClassifier(log_loss)` |
 
 Both TF-IDF branches live inside the pipeline, so they are refitted on each fold's
@@ -53,10 +53,12 @@ the shared protocol, with everything else held fixed, that single detail costs:
 | as handed over (label-sorted) | 0.6642 | 0.7939 | 0.6982 | 0.6327 | 0.2970 | **0.6172** |
 | shuffled from the seed | 0.6515 | 0.7950 | 0.7254 | 0.6825 | 0.6901 | **0.7089** |
 
-On `tensorflow/tensorflow` the sorted file collapses the model onto a single class -
-every fold predicts `question`, for a per-fold macro-F1 of 0.167 - while `facebook/react`
-is untouched. A single degenerate repository dragged the five-repository mean down by
-0.0917 and made fastText look far weaker than it is.
+On `tensorflow/tensorflow` the sorted file collapses the model. In the fold inspected,
+all 60 held-out issues were predicted `question`, the last label in the file, for a
+macro-F1 of 0.167; the 0.2970 five-fold mean says the other folds were only marginally
+better. `facebook/react` is untouched. Of the 0.0917 the fix is worth overall, 0.0786
+comes from tensorflow alone - one near-degenerate repository was making fastText look far
+weaker than it is.
 
 Every other model in this project is order-invariant: LinearSVC and ComplementNB solve an
 order-independent objective, and `SGDClassifier` shuffles internally each epoch. So
