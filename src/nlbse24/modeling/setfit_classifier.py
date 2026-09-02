@@ -144,8 +144,7 @@ class SetFitClassifier(BaseIssueClassifier):
             from setfit import SetFitModel, Trainer, TrainingArguments
         except ImportError as error:
             raise ImportError(
-                "SetFit extras are missing; install them with "
-                "`pip install -r requirements-setfit.txt`"
+                "SetFit extras are missing; install them with `pip install setfit==1.1.1`"
             ) from error
 
         keep = subsample_indices_per_class(
