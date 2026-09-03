@@ -3,3 +3,10 @@ numpy==1.26.4
 pandas==2.2.0
 psutil==7.1.2
 scikit-learn==1.7.2
+torch>=2.1,<2.5
+transformers>=4.38,<4.45
+datasets>=2.18,<3.0
+tokenizers>=0.15,<0.20
+accelerate>=0.27,<0.34
+peft>=0.10,<0.13
+sentencepiece>=0.2.0

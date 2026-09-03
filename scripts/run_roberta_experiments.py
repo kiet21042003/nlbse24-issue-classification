@@ -1,121 +1,69 @@
-"""P3 RoBERTa experiment runner: per-repository versus pooled training.
-
-Reuses the leakage-safe split protocols from splits.py; each fold is fed
-into a fresh RobertaClassifier so full fine-tuning and adapter runs never
-share weights across folds or repositories.
+"""P3 RoBERTa experiment script: điều phối per-repository và pooled training.
+ 
 """
 
-import json
-from collections.abc import Sequence
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
-import numpy as np
-from sklearn.metrics import classification_report
-
-from nlbse24.domain import IssueRecord
-from nlbse24.text import compose_text
-from splits import SplitFold, leave_one_repository_out_folds, stratified_repository_folds
-
-from roberta_classifier import AdapterSettings, RobertaClassifier, RobertaConfig
-
-RESULT_METRICS = ("precision", "recall", "f1-score")
+from nlbse24.data import CsvIssueRepository
+from nlbse24.modeling import BaseIssueClassifier
+from nlbse24.modeling.roberta_classifier import AdapterSettings, RobertaClassifier, RobertaConfig
+from nlbse24.runner import run_classifier_experiment
 
 
-@dataclass(frozen=True, slots=True)
-class FoldResult:
-    protocol: str
-    fold: str
-    held_out_repository: str | None
-    report: dict[str, dict[str, float]]
+def run_roberta_experiment(
+    *,
+    protocol: Literal["cv", "pooled_cv"],
+    data_dir: str | Path = "data/raw",
+    output_dir: str | Path = "results",
+    config: RobertaConfig | None = None,
+    config_path: str | Path | None = None,
+    repositories: set[str] | None = None,
+    overwrite: bool = False,
+) -> dict[str, Any]:
+    """protocol='cv' -> per-repository (train và eval riêng trên từng repo).
+    protocol='pooled_cv' -> pooled (train gộp mọi repo, eval riêng theo repo)."""
+    if config is not None and config_path is not None:
+        raise ValueError("chỉ truyền config hoặc config_path, không dùng cả hai")
 
-
-def _texts_and_labels(
-    records: Sequence[IssueRecord], indices: Sequence[int]
-) -> tuple[list[str], list[str]]:
-    texts = [compose_text(records[index]) for index in indices]
-    labels = [records[index].label for index in indices]
-    return texts, labels
-
-
-def run_fold(records: Sequence[IssueRecord], fold: SplitFold, config: RobertaConfig) -> FoldResult:
-    """Fit one classifier on a fold's train split and score it on the test split."""
-
-    train_texts, train_labels = _texts_and_labels(records, fold.train_indices)
-    test_texts, test_labels = _texts_and_labels(records, fold.test_indices)
-
-    classifier = RobertaClassifier(config)
-    classifier.fit(train_texts, train_labels)
-    predicted_labels = classifier.predict(test_texts)
-
-    report = classification_report(test_labels, predicted_labels, digits=4, output_dict=True)
-    return FoldResult(
-        protocol=fold.protocol,
-        fold=fold.fold,
-        held_out_repository=fold.held_out_repository,
-        report=report,
+    resolved_config = config or (
+        RobertaConfig.from_toml(config_path) if config_path else RobertaConfig()
     )
 
+    def model_factory() -> BaseIssueClassifier:
+        return RobertaClassifier(resolved_config)
 
-def run_per_repository(records: Sequence[IssueRecord], config: RobertaConfig) -> list[FoldResult]:
-    """Leave-one-repository-out: one classifier trained per held-out repository."""
+    model_name = RobertaClassifier(resolved_config).name
 
-    folds = leave_one_repository_out_folds(list(records))
-    return [run_fold(records, fold, config) for fold in folds]
-
-
-def run_pooled(records: Sequence[IssueRecord], config: RobertaConfig) -> list[FoldResult]:
-    """Stratified cross-validation pooled across every repository."""
-
-    folds = stratified_repository_folds(
-        list(records), n_splits=config.experiment.n_splits, seed=config.experiment.seed
+    return run_classifier_experiment(
+        repository=CsvIssueRepository(data_dir),
+        model_factory=model_factory,
+        model_name=model_name,
+        output_dir=output_dir,
+        protocol=protocol,
+        seed=resolved_config.experiment.seed,
+        n_splits=resolved_config.experiment.n_splits,
+        text_fields=resolved_config.experiment.text_fields,
+        repositories=repositories,
+        overwrite=overwrite,
     )
-    return [run_fold(records, fold, config) for fold in folds]
-
-
-def summarize(results: list[FoldResult]) -> dict[str, float]:
-    """Average the weighted-average precision/recall/f1 across folds."""
-
-    per_fold_average = [result.report["weighted avg"] for result in results]
-    return {
-        metric: float(np.mean([row[metric] for row in per_fold_average]))
-        for metric in RESULT_METRICS
-    }
-
-
-def save_results(results: list[FoldResult], output_path: Path) -> None:
-    payload = [
-        {
-            "protocol": result.protocol,
-            "fold": result.fold,
-            "held_out_repository": result.held_out_repository,
-            "report": result.report,
-        }
-        for result in results
-    ]
-    output_path.write_text(json.dumps(payload, indent=2))
 
 
 def main() -> None:
-    # Replace with the team's actual loader (see the data module's contract).
-    from nlbse24.data import load_issue_records
-
-    records: list[IssueRecord] = load_issue_records()
-    output_dir = Path("output/roberta")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
+    output_dir = Path("results/roberta")
     for adapter_enabled in (False, True):
         config = RobertaConfig(adapter=AdapterSettings(enabled=adapter_enabled))
         suffix = "adapter" if adapter_enabled else "full"
 
-        per_repo_results = run_per_repository(records, config)
-        save_results(per_repo_results, output_dir / f"per_repository_{suffix}.json")
-        print(f"per-repository ({suffix}):", summarize(per_repo_results))
+        per_repo_summary = run_roberta_experiment(
+            protocol="cv", config=config, output_dir=output_dir
+        )
+        print(f"per-repository ({suffix}):", per_repo_summary)
 
-        pooled_results = run_pooled(records, config)
-        save_results(pooled_results, output_dir / f"pooled_{suffix}.json")
-        print(f"pooled ({suffix}):", summarize(pooled_results))
+        pooled_summary = run_roberta_experiment(
+            protocol="pooled_cv", config=config, output_dir=output_dir
+        )
+        print(f"pooled ({suffix}):", pooled_summary)
 
 
 if __name__ == "__main__":
