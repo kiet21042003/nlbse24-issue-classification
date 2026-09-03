@@ -149,7 +149,7 @@ class RobertaClassifier(BaseIssueClassifier):
         except ImportError as error:
             raise ImportError(
                 "Transformers extras are missing; install them with "
-                "`pip install -r requirements-roberta.txt`"
+                "`pip install -r requirements.txt`"
             ) from error
 
         self._classes = tuple(sorted(set(labels)))
