@@ -1,4 +1,9 @@
 # Feature ablation: word n-grams only (character branch disabled).
+#
+# Identical to configs/tfidf_word_linear_svc.toml, and deliberately so: this arm of
+# the ablation turned out to be the cost-selected operating point, so the same
+# settings appear once as an ablation and once as a frozen configuration. Keep both -
+# dropping this file would leave configs/ablations/ with char and title but no word.
 model_family = "sparse"
 
 [experiment]

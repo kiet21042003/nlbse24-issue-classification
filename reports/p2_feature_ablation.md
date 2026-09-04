@@ -150,6 +150,12 @@ bitcoin loses 0.23 - which tracks how much of each project's issue text is in th
   P1-P5 because everyone uses the same profiler; they are not a hardware benchmark, and
   the ratios above overstate the true cost of the character branch by some unmeasured
   amount.
+- **Absolute timings drift; ratios do not.** Two configurations were measured twice, each
+  time as the only process on the machine. Both came back about 45% slower on the second
+  pass (word-only fit 0.460 s then 0.674 s, char-only 3.036 s then 4.358 s), while the
+  char-to-word ratio held at 6.6x then 6.5x and the memory and vocabulary figures were
+  identical to the last digit. Read the cost table as ratios between models, not as
+  absolute seconds, and do not read the third decimal at all.
 - **One machine, one seed per row.** Differences below roughly 0.01 macro-F1 should not be
   read as real.
 

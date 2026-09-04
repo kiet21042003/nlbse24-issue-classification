@@ -235,6 +235,12 @@ memory is an axis.
   allocates one string per n-gram and is penalised more than word analysis. Figures are
   comparable across P1-P5 because everyone uses the same profiler, but they are not a
   hardware benchmark and they do not transfer across machines.
+- **Absolute timings drift; ratios do not.** Two configurations were measured twice, each
+  time as the only process on the machine. Both came back about 45% slower on the second
+  pass (word-only fit 0.460 s then 0.674 s, char-only 3.036 s then 4.358 s), while the
+  char-to-word ratio held at 6.6x then 6.5x and the memory and vocabulary figures were
+  identical to the last digit. Read the cost table as ratios between models, not as
+  absolute seconds, and do not read the third decimal at all.
 - **`python_peak_mb` is blind to native memory.** `fasttext_supervised` reports 5.55 MB of
   Python peak against 196 MB of real RSS growth, because its embedding matrix is allocated
   in C++. Any Pareto plot including fastText must use `rss_delta_mb`.
