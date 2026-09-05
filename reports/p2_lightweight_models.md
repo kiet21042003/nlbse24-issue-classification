@@ -85,24 +85,24 @@ claim separating these two configurations on within-repository cross-validation 
 unsupported.
 
 The same turns out to be true of the other two protocols once they are given intervals
-rather than point estimates. A paired bootstrap over the held-out rows puts the union
-ahead by +0.0008 on CV, +0.0105 under transfer and +0.0093 on the official test, and every
-one of those intervals crosses zero:
+rather than point estimates. A paired bootstrap over the held-out rows leaves the union
+0.0008 behind on CV and ahead by +0.0105 under transfer and +0.0093 on the official test,
+and every one of those intervals crosses zero:
 
 | Protocol | union - word only | 95% CI | P(union ahead) |
 |---|---:|---|---:|
-| CV | +0.0008 | [-0.0107, +0.0126] | 0.554 |
+| CV | -0.0008 | [-0.0126, +0.0107] | 0.446 |
 | LOO | +0.0105 | [-0.0056, +0.0267] | 0.899 |
 | Official | +0.0093 | [-0.0020, +0.0210] | 0.945 |
 
 So no single protocol separates these two feature sets, and neither does the set of them
 together. What is left is weaker than a significance claim and should be stated as such:
-the union is ahead on the four-seed CV mean and on all three protocol means, but only on
-9 of the 15 per-repository columns those protocols produce - against 7.5 expected by
-chance. The aggregate sign is consistent; the per-repository evidence behind it is close
-to a coin flip, which is exactly what the per-class decomposition in
-`reports/p2_feature_ablation.md` predicts, since the union wins `bug` and loses `question`
-and which effect dominates depends on the repository.
+the union is ahead on the four-seed CV mean and on both out-of-domain protocol means, and
+behind by 0.0008 on single-seed CV. Per repository it wins 9 of the 15 columns those
+protocols produce, against 7.5 expected by chance. The aggregate signs mostly favour the
+union; the per-repository evidence behind them is close to a coin flip. That is exactly
+what the per-class decomposition in `reports/p2_feature_ablation.md` predicts: the union
+wins `bug` and loses `question`, so which effect dominates depends on the repository.
 
 That is enough to justify a default and not enough to report a better model. Both
 operating points are frozen for this reason, and the choice between them should be made on
@@ -161,9 +161,9 @@ only.
 Within the TF-IDF family the character branch is ahead by +0.0105 over word-only features
 and +0.0127 over P1's baseline - a gap of the same size as the official one and, like it,
 inside the noise band (95% CI [-0.0056, +0.0267]) - driven almost entirely by bitcoin
-(+0.0560 over word-only, +0.0626 over P1). Character n-grams capture sub-word regularities that survive
-a change of repository, whereas word features are more tied to a project's own vocabulary
-and issue template.
+(+0.0560 over word-only, +0.0626 over P1). Character n-grams capture sub-word
+regularities that survive a change of repository, whereas word features are more tied to
+a project's own vocabulary and issue template.
 
 The overall winner, `fasttext_style_sgd`, also uses character n-grams, and it is the only
 model that stays above 0.585 on every held-out repository - it has no repository it is
