@@ -51,6 +51,44 @@ improvement but a targeted one, and the five-repository mean hides that.
 `C = 1.0` wins in every feature set, so regularisation strength and feature choice do not
 interact here.
 
+### Where the character branch actually acts
+
+The macro column is the mean of three per-class F1 scores, and reading it alone turns out
+to hide the whole effect. Per class, with folds averaged inside each repository exactly as
+the macro column averages them:
+
+| Feature set | bug | feature | question | Macro | Spread |
+|---|---:|---:|---:|---:|---:|
+| word | 0.7615 | 0.7611 | 0.7397 | **0.7541** | 0.0219 |
+| word + char | **0.7730** | 0.7584 | 0.7285 | **0.7533** | 0.0445 |
+| char | 0.7674 | 0.7519 | 0.7142 | **0.7445** | 0.0532 |
+| **union - word** | **+0.0115** | -0.0027 | **-0.0112** | **-0.0008** | |
+
+**The -0.0008 in the macro column is not a small effect, it is two large ones cancelling.**
+Adding the character branch is worth +0.0115 on `bug` and costs -0.0112 on `question`,
+either of which is an order of magnitude larger than the difference they average to. A
+report that only ever printed macro-F1 would have concluded that character n-grams do
+nothing here. They do something quite specific: they trade `question` accuracy for `bug`
+accuracy.
+
+That reading also explains the per-repository pattern above without needing a separate
+story. Bitcoin, the repository with no issue template and the largest gain from the union,
+is the one whose free-form text gives `bug` reports their most distinctive surface
+markers - stack traces, hex strings, version numbers, file paths - and those are exactly
+the tokens a word analyser fragments and a character analyser keeps. `question` has no
+comparable surface signature; it is defined by intent rather than by vocabulary, so the
+extra features add noise to it rather than evidence.
+
+It also predicts something the ComplementNB sweep below confirms independently: character
+features help only where a model can down-weight the redundancy they introduce. And it
+sets the expectation for the frozen configurations - the union should be preferred when
+`bug` recall matters and avoided when `question` does, which is a sharper decision rule
+than "it is 0.0008 worse on average".
+
+The spread column carries a second, blunter warning: every character configuration is less
+balanced across classes than word-only features, and `char` alone is the least balanced of
+the three. Whatever the character branch buys, it does not buy uniformity.
+
 ### Refining the character n-gram range
 
 A follow-up sweep varied only `features.char.ngram_range`, at the winning feature set and
@@ -115,14 +153,17 @@ clock and concurrent runs inflate it.
 
 Relative to word-only features, the union costs **8.5x the fit time, 11.5x the inference
 time, 5.1x the peak memory and 5.3x the vocabulary** for an accuracy difference that is
-within seed noise on this protocol. That is why both operating points are frozen:
-`configs/tfidf_word_linear_svc.toml` when cost dominates, and
-`configs/tfidf_char_linear_svc.toml` when accuracy and transfer do - the union wins both
-the leave-one-repository-out and the official-test comparisons, where the extra cost does
-buy something.
+within noise on every protocol measured. That is why both operating points are frozen
+rather than one being retired: `configs/tfidf_word_linear_svc.toml` when cost dominates,
+`configs/tfidf_char_linear_svc.toml` otherwise.
 
-The picture changes under domain transfer, where the character branch does earn its cost -
-see `reports/p2_lightweight_models.md`.
+Stated plainly, this is a poor trade on macro-F1 alone. The union is ahead by +0.0105
+under transfer and +0.0093 on the official test, but a paired bootstrap puts both
+intervals across zero, so an order of magnitude in cost buys an improvement that cannot be
+demonstrated. The defensible reasons to pay it are the ones the mean does not show: the
++0.0115 on `bug` above, and the +0.0560 on bitcoin - the repository with no issue
+template, and the one where word features have least to work with. If neither applies,
+take the word-only configuration. Intervals are in `reports/p2_lightweight_models.md`.
 
 ## RQ: how much does the issue body contribute?
 
@@ -157,7 +198,16 @@ bitcoin loses 0.23 - which tracks how much of each project's issue text is in th
   identical to the last digit. Read the cost table as ratios between models, not as
   absolute seconds, and do not read the third decimal at all.
 - **One machine, one seed per row.** Differences below roughly 0.01 macro-F1 should not be
-  read as real.
+  read as real. The per-class decomposition is the reason this rule has to be applied to
+  the macro column specifically and not to the underlying effect: +0.0115 on `bug` and
+  -0.0112 on `question` are each above that threshold even though their mean is far below
+  it. "Within noise on macro-F1" and "no effect" are not the same statement.
+- **The per-class split is not itself seed-tested.** The four-seed robustness runs record
+  cross-repository macro-F1 only, so the +0.0115 / -0.0112 decomposition rests on seed 42.
+  Its direction is corroborated by the per-repository pattern and by the official-test
+  per-class table in `reports/p2_lightweight_models.md`, where the same two classes sit
+  at the top and the bottom for every model, but the magnitudes should be read as
+  indicative.
 
 ## Reproduction
 
@@ -169,6 +219,10 @@ python scripts/run_p2_experiments.py --grid configs/sweeps/p2_complement_nb_grid
 
 # the text-field ablation
 python scripts/run_p2_experiments.py --config configs/ablations/p2_title_only.toml --protocol cv
+
+# the per-class decomposition of the feature ablation, read back from those artifacts
+python scripts/p2_analysis.py --protocol cv `
+    --models p2_word_only --models tfidf_char_linear_svc --models p2_char_only
 
 # the cost table, one configuration at a time
 python scripts/run_p2_experiments.py --config configs/tfidf_word_linear_svc.toml --protocol cv

@@ -82,8 +82,31 @@ seeds.
 This matters: on seed 42 alone the word-only model looks better, and on the four-seed mean
 the union is ahead and half as variable. Seed 42 is the top of the word-only range. Any
 claim separating these two configurations on within-repository cross-validation is
-unsupported; the differences that do hold up appear under domain transfer and on the
-official test.
+unsupported.
+
+The same turns out to be true of the other two protocols once they are given intervals
+rather than point estimates. A paired bootstrap over the held-out rows puts the union
+ahead by +0.0008 on CV, +0.0105 under transfer and +0.0093 on the official test, and every
+one of those intervals crosses zero:
+
+| Protocol | union - word only | 95% CI | P(union ahead) |
+|---|---:|---|---:|
+| CV | +0.0008 | [-0.0107, +0.0126] | 0.554 |
+| LOO | +0.0105 | [-0.0056, +0.0267] | 0.899 |
+| Official | +0.0093 | [-0.0020, +0.0210] | 0.945 |
+
+So no single protocol separates these two feature sets, and neither does the set of them
+together. What is left is weaker than a significance claim and should be stated as such:
+the union is ahead on the four-seed CV mean and on all three protocol means, but only on
+9 of the 15 per-repository columns those protocols produce - against 7.5 expected by
+chance. The aggregate sign is consistent; the per-repository evidence behind it is close
+to a coin flip, which is exactly what the per-class decomposition in
+`reports/p2_feature_ablation.md` predicts, since the union wins `bug` and loses `question`
+and which effect dominates depends on the repository.
+
+That is enough to justify a default and not enough to report a better model. Both
+operating points are frozen for this reason, and the choice between them should be made on
+cost and on which class matters, not on these five macro-F1 columns.
 
 ## Model family comparison
 
@@ -104,7 +127,11 @@ Two things stand out.
 **The protocols do not agree on a winner.** The LinearSVC pair leads on within-repository
 CV and on the official test, but the best transfer model is the hashed linear one, which
 is simultaneously the *worst* of the five on CV. Ranking lightweight models on CV alone
-would have picked the wrong model for a cross-project deployment.
+would have picked the wrong model for a cross-project deployment. A paired bootstrap
+confirms the part of this that matters - `fasttext_style_sgd` really is ahead of
+`tfidf_word_linear_svc` under transfer, with an interval clear of zero - while leaving the
+top two transfer models statistically tied. Both protocol sections below carry the
+intervals.
 
 **Transfer separates the families far more than CV does.** The CV column spans 0.0511
 between best and worst; the LOO column spans 0.1248. In-domain cross-validation compresses
@@ -112,7 +139,10 @@ the differences between these model families, which is worth remembering when RQ
 written up: five models that look 5 points apart in-domain are 12 points apart the moment
 the repository changes.
 
-No lightweight model beats P1's Logistic Regression on CV. Two of them beat it on transfer.
+No lightweight model beats P1's Logistic Regression on CV. Three beat it on transfer,
+though only two by a margin worth stating: `fasttext_style_sgd` by 0.0276 and
+`tfidf_char_linear_svc` by 0.0127, with `tfidf_word_linear_svc` ahead by 0.0022, which is
+a tie.
 
 ## Domain transfer (leave-one-repository-out)
 
@@ -128,9 +158,10 @@ only.
 | `fasttext_supervised` | 0.5837 | 0.6149 | 0.4317 | 0.5142 | 0.5477 | **0.5384** |
 | `tfidf_word_complement_nb` | 0.5274 | 0.3445 | 0.4710 | 0.5018 | 0.6071 | **0.4904** |
 
-Within the TF-IDF family the character branch pays for itself: +0.0105 over word-only
-features and +0.0127 over P1's baseline, driven almost entirely by bitcoin (+0.0560 over
-word-only, +0.0626 over P1). Character n-grams capture sub-word regularities that survive
+Within the TF-IDF family the character branch is ahead by +0.0105 over word-only features
+and +0.0127 over P1's baseline - a gap of the same size as the official one and, like it,
+inside the noise band (95% CI [-0.0056, +0.0267]) - driven almost entirely by bitcoin
+(+0.0560 over word-only, +0.0626 over P1). Character n-grams capture sub-word regularities that survive
 a change of repository, whereas word features are more tied to a project's own vocabulary
 and issue template.
 
@@ -145,6 +176,34 @@ collapse rather than a uniform decline. A naive Bayes model estimates per-class 
 distributions directly, so when the held-out repository's vocabulary and issue template
 are unlike the pooled four, those estimates transfer poorly; a discriminative model only
 has to keep a decision boundary roughly in place.
+
+### How much of that ordering is real
+
+The same paired bootstrap as the official-test section, applied to the leave-one-repository-out
+predictions.
+
+| Model | LOO | 95% CI |
+|---|---:|---|
+| `fasttext_style_sgd` | 0.6152 | [0.5900, 0.6382] |
+| `tfidf_char_linear_svc` | 0.6003 | [0.5747, 0.6232] |
+| `tfidf_word_linear_svc` | 0.5898 | [0.5642, 0.6124] |
+| `fasttext_supervised` | 0.5384 | [0.5124, 0.5619] |
+| `tfidf_word_complement_nb` | 0.4904 | [0.4652, 0.5134] |
+
+| Paired difference from `fasttext_style_sgd` | delta | 95% CI | P(delta > 0) |
+|---|---:|---|---:|
+| `tfidf_char_linear_svc` | +0.0149 | [-0.0062, +0.0359] | 0.919 |
+| `tfidf_word_linear_svc` | +0.0254 | [+0.0030, +0.0479] | 0.987 |
+| `fasttext_supervised` | +0.0768 | [+0.0525, +0.1019] | 1.000 |
+| `tfidf_word_complement_nb` | +0.1249 | [+0.0993, +0.1497] | 1.000 |
+
+Calling `fasttext_style_sgd` the transfer winner outright is more than the data supports:
+its lead over the character union is +0.0149 with an interval that crosses zero. Its lead
+over the *word-only* model does clear zero, and that is the comparison the
+protocol-disagreement claim actually needs - the model that is worst on CV is
+significantly better than `tfidf_word_linear_svc` under domain shift. So the disagreement
+between protocols is real; the specific identity of the transfer winner is not settled
+between the two character-feature models.
 
 The usual caveat from P1's analysis applies: leave-one-repository-out changes both the
 domain and the training-set size, so it is not a controlled estimate of domain shift
@@ -165,7 +224,9 @@ Run once per model after the configurations were frozen and committed, using the
 
 The union leads by 0.0093 over word-only features, consistent with the transfer result and
 opposite to the single-seed CV ordering. The order of the five models matches CV except
-that `fasttext_style_sgd` moves up two places and `fasttext_supervised` drops to last.
+that `fasttext_style_sgd` moves up two places and `fasttext_supervised` drops to last. How
+much of that ordering is separable from sampling noise is quantified at the end of this
+section, and the answer is not all of it.
 
 fastText's official score is dragged down by one repository: 0.5378 on
 `tensorflow/tensorflow`, against 0.6901 for the same configuration under CV. It is the
@@ -176,6 +237,98 @@ on this repository rather than of the adapter.
 For external context, the NLBSE'24 competition report puts the SetFit baseline near 0.827
 and a published fastText entry at 0.718. A tuned TF-IDF plus LinearSVC lands between them
 at 0.7591, for a fit that takes about four seconds on a fold of 240 issues.
+
+### How much of that ordering is real
+
+The cross-repository score is a mean over 1,500 test issues, so it carries sampling error
+that a table of point estimates hides. Each model was bootstrapped over its own test rows,
+10,000 resamples drawn within each repository so that the five-repository structure of the
+metric is preserved. Pairs were compared on the *same* resamples, which is why the
+difference intervals are much narrower than the two score intervals they are built from.
+Both tables come from `scripts/p2_analysis.py --protocol official`; Monte-Carlo error puts
+the interval edges themselves at about the fourth decimal.
+
+| Model | Official | 95% CI |
+|---|---:|---|
+| `tfidf_char_linear_svc` | 0.7591 | [0.7361, 0.7795] |
+| `tfidf_word_linear_svc` | 0.7498 | [0.7267, 0.7702] |
+| `fasttext_style_sgd` | 0.7322 | [0.7092, 0.7532] |
+| `tfidf_word_complement_nb` | 0.7108 | [0.6864, 0.7325] |
+| `fasttext_supervised` | 0.6896 | [0.6655, 0.7111] |
+
+| Paired difference from `tfidf_char_linear_svc` | delta | 95% CI | P(delta > 0) |
+|---|---:|---|---:|
+| `tfidf_word_linear_svc` | +0.0093 | [-0.0020, +0.0210] | 0.945 |
+| `fasttext_style_sgd` | +0.0269 | [+0.0089, +0.0447] | 0.999 |
+| `tfidf_word_complement_nb` | +0.0483 | [+0.0303, +0.0664] | 1.000 |
+| `fasttext_supervised` | +0.0695 | [+0.0468, +0.0925] | 1.000 |
+
+**The one gap that does not survive is the headline one.** The union's 0.0093 lead over
+word-only features has an interval that crosses zero, and 0.0093 sits below the 0.01
+threshold this report already applies to its CV numbers. Applying that threshold
+consistently, the two feature sets are not separable on the official test either - the
+same verdict the four-seed table reached for cross-validation. What the official test does
+establish is the distance to the other three families: the margins over
+`fasttext_style_sgd`, ComplementNB and `fasttext_supervised` all keep their intervals
+clear of zero.
+
+The honest cross-protocol summary of the character branch is therefore weaker than the
+point estimates alone suggest. It is never behind, it leads on every protocol, and on no
+single protocol is that lead distinguishable from noise. It is a defensible default
+because the sign is consistent across three protocols and four seeds, not because any one
+of them proves it.
+
+## Per-class behaviour
+
+Every artifact carries per-class precision, recall and a confusion matrix, and every
+macro-F1 column above averages all of that away. `scripts/p2_analysis.py` reads them back
+without refitting anything; two facts only appear per class.
+
+| Model | bug | feature | question | Macro | Spread |
+|---|---:|---:|---:|---:|---:|
+| `tfidf_char_linear_svc` | 0.7770 | **0.7845** | 0.7159 | 0.7591 | 0.0686 |
+| `tfidf_word_linear_svc` | 0.7623 | 0.7749 | 0.7121 | 0.7498 | 0.0628 |
+| `fasttext_style_sgd` | 0.7727 | 0.7378 | 0.6861 | 0.7322 | 0.0866 |
+| `tfidf_word_complement_nb` | 0.7089 | 0.7567 | 0.6669 | 0.7108 | 0.0897 |
+| `fasttext_supervised` | 0.7404 | 0.6905 | 0.6379 | 0.6896 | 0.1025 |
+
+Official test, per-class F1 averaged over the five repositories, ordered by macro-F1.
+
+**`question` is the hardest class for all five models, with no exception.** It is last on
+every row, by between 0.03 and 0.09 F1. The class is not rarer than the others - the
+dataset is exactly balanced at 100 issues per class per repository - so this is a property
+of the category rather than of its support.
+
+**Weaker models do not degrade evenly, they degrade on `question`.** Read the spread
+column against the macro column and the two run opposite: the strongest model has the
+narrowest per-class spread (0.0686) and the weakest has the widest (0.1025). Macro-F1 on
+this task is to a large extent a statement about how much of `question` a model recovers.
+That is worth knowing before ensembling, because soft-voting five models that all fail on
+the same class will not repair that class - the errors are correlated by construction.
+
+The pooled confusion matrix for the best model, over all 1,500 official test issues, shows
+where the mass goes:
+
+| true \ predicted | bug | feature | question | Recall |
+|---|---:|---:|---:|---:|
+| **bug** | 379 | 43 | 78 | 0.758 |
+| **feature** | 34 | 406 | 60 | 0.812 |
+| **question** | 58 | 86 | 356 | 0.712 |
+| **Precision** | 0.805 | 0.759 | 0.721 | |
+
+`question` fails symmetrically: 144 of its own issues go to the other two classes, and 138
+issues from those classes are wrongly called `question`, so neither a precision fix nor a
+recall fix alone would help much. The single largest off-diagonal cell is `question`
+predicted as `feature` (86), and `bug` against `question` is the largest confusion once
+both directions are added (78 + 58 = 136).
+
+Both pairings are plausible in the text rather than surprising. An issue that describes
+something not working, phrased as a request for help, carries surface features of all
+three categories at once, and a feature request phrased as "is there a way to..." is
+lexically a question. The NLBSE'24 labels come from the repositories' own issue templates
+and maintainer triage rather than from an adjudicated annotation protocol, so some of this
+confusion is likely present in the labels themselves and sets a ceiling that no amount of
+feature engineering on this dataset will lift.
 
 ## Cost
 
@@ -206,10 +359,14 @@ redo at predict time. It pays for that in memory, and the payment is invisible t
 shared profiler - 5.55 MB of Python peak against **196 MB of real RSS growth**, because
 the embedding matrix is allocated in C++.
 
-**The character branch is the expensive way to buy accuracy.** Against word-only features
-it costs 8.5x the fit time, 11.5x the inference time and 5.1x the peak memory for +0.0093
-on the official test and -0.0008 on CV. It is worth it if transfer or official accuracy is
-the target, and not otherwise; both operating points are frozen so the integrator can pick.
+**The character branch is an expensive way to buy accuracy that cannot be demonstrated.**
+Against word-only features it costs 8.5x the fit time, 11.5x the inference time and 5.1x
+the peak memory for +0.0093 on the official test, +0.0105 under transfer and -0.0008 on
+CV - three gaps whose bootstrap intervals all cross zero. On macro-F1 alone the honest
+recommendation is the cheap configuration. The union earns its cost only where the
+per-class and per-repository structure matters: `bug` classification, and repositories
+whose issues have no template. Both operating points are frozen so the integrator can
+pick, and this is the paragraph to read before picking.
 
 For a Pareto plot, the frontier on (official macro-F1, inference seconds) is three points:
 `fasttext_supervised` (0.6896, 0.009), `tfidf_word_linear_svc` (0.7498, 0.121) and
@@ -227,6 +384,12 @@ memory is an axis.
 - Sparse models also report the fitted vocabulary size under
   `model.config.fitted.vocabulary_size`, which the data audit asked for and which is the
   natural x-axis for a size/accuracy plot.
+- **All five models are weakest on the same class.** `question` is last for every one of
+  them, and the models that score worst overall are the ones that lose the most there. An
+  ensemble of these five should be expected to inherit that weakness rather than to
+  average it away; the per-class section has the numbers. If the ensemble is meant to
+  improve macro-F1, the useful diversity has to come from a family that fails somewhere
+  else - P3's encoder or P4's Sentence Transformers - not from a second sparse model.
 
 ## Limitations
 
@@ -251,6 +414,13 @@ memory is an axis.
 - **Selection bias.** Configurations were chosen by argmax over a grid scored on the same
   CV folds. The seed table above is the correction; treat single-seed CV gaps below about
   0.01 macro-F1 as noise.
+- **The bootstrap covers test sampling only.** Resampling the test rows estimates how much
+  the score would move on a different sample of issues from these five repositories. It
+  holds the trained model fixed, so it says nothing about training-set variation, and it
+  cannot correct the selection bias above - a configuration chosen by argmax on CV keeps
+  that optimism no matter how its official score is bootstrapped. The intervals also
+  assume issues are drawn independently, which the shared-text duplicates noted below
+  mildly violate. Read them as the *narrowest* credible intervals, not the widest.
 - **Inherited data issues.** Three exact-text keys are shared between train and test, one
   of them with contradictory labels, so official scores carry a small optimistic
   memorisation component. `predict_scores` is called outside the shared profiler and after
@@ -298,6 +468,11 @@ foreach ($s in 1, 2, 3) {
 # feature ablations
 python scripts/run_p2_experiments.py --config configs/ablations/p2_char_only.toml --protocol cv
 python scripts/run_p2_experiments.py --config configs/ablations/p2_title_only.toml --protocol cv
+
+# per-class tables, pooled confusion matrix and the paired bootstrap, read back from the
+# artifacts above - no model is refitted, so this is seconds rather than minutes
+python scripts/p2_analysis.py --protocol official
+python scripts/p2_analysis.py --protocol loo
 ```
 
 The loop above is written serially on purpose. `elapsed_seconds` is wall clock, so running

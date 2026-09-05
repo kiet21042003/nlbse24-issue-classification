@@ -143,7 +143,5 @@ def test_sweep_reports_are_named_so_the_shared_ingestion_skips_them(
     assert launcher.run_grid(args) == 0
 
     written = sorted((tmp_path / "sweeps").glob("*.json"))
-    assert [path.name for path in written] == [
-        "summary-seed-42-p2_char_ngram_grid-cv.json"
-    ]
+    assert [path.name for path in written] == ["summary-seed-42-p2_char_ngram_grid-cv.json"]
     assert all(path.name.startswith("summary-seed-") for path in tmp_path.rglob("*.json"))
