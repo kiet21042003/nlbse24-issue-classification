@@ -1,0 +1,17 @@
+# P2 frozen configuration: fastText-style hashed linear model (pure scikit-learn).
+model_family = "fasttext_style"
+
+[experiment]
+seed = 42
+n_splits = 5
+text_fields = ["title", "body"]
+
+[model]
+n_features = 1048576
+word_ngram_range = [1, 2]
+char_ngram_range = [3, 5]
+use_char_ngrams = true
+alpha = 0.00001
+max_iter = 30
+tol = 0.0001
+class_weight = "balanced"

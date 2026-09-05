@@ -1,0 +1,6 @@
+# Optional backend for src/nlbse24/modeling/fasttext.py (P2).
+# Deliberately kept out of requirements.txt so the shared CI job stays dependency-free;
+# the fastText code paths are covered by a mocked backend in tests/test_fasttext_backend.py.
+# Wheels exist for CPython 3.8-3.12; there is no CPython 3.13 wheel.
+-r requirements.txt
+fasttext-wheel==0.9.2
