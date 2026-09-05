@@ -108,3 +108,42 @@ def test_presets_override_the_base_configuration() -> None:
     assert char_only["features"]["word"]["enabled"] is False
     assert char_only["features"]["char"]["enabled"] is True
     assert char_only["classifier"]["linear_svc"]["C"] == 1.0
+
+
+def test_sweep_reports_are_named_so_the_shared_ingestion_skips_them(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A sweep report is a derived summary, not a run artifact.
+
+    P5's result ingestion walks the whole results tree, skips files named
+    ``summary-seed-*`` and validates every other JSON against the run-artifact schema.
+    A sweep report under any other name therefore makes ``results_dataframe("results")``
+    raise on P2's own output, so the name is part of the contract rather than cosmetic.
+    """
+
+    monkeypatch.setattr(
+        launcher,
+        "run_one",
+        lambda **_kwargs: {
+            "seed": 42,
+            "cross_repository_macro_f1": 0.5,
+            "repository_macro_f1": {},
+            "evaluations": 0,
+        },
+    )
+    args = launcher.build_parser().parse_args(
+        [
+            "--grid",
+            str(REPO_ROOT / "configs" / "sweeps" / "p2_char_ngram_grid.toml"),
+            "--output-dir",
+            str(tmp_path),
+        ]
+    )
+
+    assert launcher.run_grid(args) == 0
+
+    written = sorted((tmp_path / "sweeps").glob("*.json"))
+    assert [path.name for path in written] == [
+        "summary-seed-42-p2_char_ngram_grid-cv.json"
+    ]
+    assert all(path.name.startswith("summary-seed-") for path in tmp_path.rglob("*.json"))

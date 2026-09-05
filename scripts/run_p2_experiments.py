@@ -184,10 +184,12 @@ def run_grid(args: argparse.Namespace) -> int:
         if not points:
             raise ValueError(f"no grid point matches --only {args.only!r}")
     ranked: list[dict[str, Any]] = []
+    seed: int | None = None
 
     for position, (run_name, payload) in enumerate(points, start=1):
         print(f"[{position}/{len(points)}] {run_name}", flush=True)
         summary = run_one(family=family, payload=payload, run_name=run_name, args=args)
+        seed = summary["seed"]
         ranked.append(
             {
                 "run_name": run_name,
@@ -203,11 +205,19 @@ def run_grid(args: argparse.Namespace) -> int:
         "grid": str(path),
         "protocol": args.protocol,
         "model_family": family,
+        "seed": seed,
         "points": ranked,
     }
     suffix = f"-{args.only}" if args.only else ""
+    # A sweep report is a derived summary rather than a run artifact, but it lands inside
+    # the results tree that P5's ingestion walks. That walk skips files named
+    # summary-seed-* and validates every other JSON against the run-artifact schema, so a
+    # sweep report under any other name makes results_dataframe("results") raise. Reuse
+    # the naming convention the per-run summaries already follow.
     destination = (
-        Path(args.output_dir) / "sweeps" / f"{path.stem}-{args.protocol}{suffix}.json"
+        Path(args.output_dir)
+        / "sweeps"
+        / f"summary-seed-{seed}-{path.stem}-{args.protocol}{suffix}.json"
     )
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
