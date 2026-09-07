@@ -1,0 +1,20 @@
+# configs/roberta_full.toml
+[experiment]
+seed = 42
+n_splits = 5
+text_fields = ["title", "body"]
+
+[model]
+backbone = "roberta-base"
+max_seq_length = 512
+num_labels = 3
+
+[adapter]
+enabled = false
+
+[training]
+num_train_epochs = 10
+per_device_train_batch_size = 16
+per_device_eval_batch_size = 16
+learning_rate = 5e-5
+weight_decay = 0.0
