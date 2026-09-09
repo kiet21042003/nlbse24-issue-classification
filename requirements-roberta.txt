@@ -1,10 +1,5 @@
 # Extras for the P3 RoBERTa classifier (full fine-tuning + LoRA adapter).
-# Mirrors the pattern of requirements-fasttext.txt: kept out of the base
-# project requirements so CI/the shared test suite don't need a GPU stack
-# just to import nlbse24.modeling.roberta_classifier.
-#
-# Install with: pip install -r requirements-roberta.txt
-
+ 
 torch>=2.1,<2.5
 transformers>=4.38,<4.45
 datasets>=2.18,<3.0
