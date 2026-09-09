@@ -11,7 +11,7 @@ text_fields = ["title", "body"]
 [model]
 backbone = "sentence-transformers/all-MiniLM-L6-v2"
 max_seq_length = 128
-# device = "cuda"
+device = "cuda"
 
 [sampling]
 num_iterations = 20
