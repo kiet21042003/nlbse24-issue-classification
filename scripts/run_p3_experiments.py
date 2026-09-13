@@ -1,10 +1,19 @@
-"""Launcher for the P3 RoBERTa experiments (full fine-tuning and LoRA adapters).
+"""P3 RoBERTa experiment script: per-repository (via shared runner) and pooled
+(standalone, P3-only ablation) training.
 
-    python scripts/run_roberta_experiments.py --config configs/roberta_full.toml
-    python scripts/run_roberta_experiments.py --config configs/roberta_lora.toml \
+"pooled_cv" is a P3-specific ablation, not one of the project's three official
+protocols (see experiment_protocol.md): it trains one model per fold on every
+repository pooled together, then evaluates it separately per repository. It
+reuses the same artifact schema/writer as the shared runner but does not call
+``run_classifier_experiment``, so no changes to runner.py were needed.
+
+Examples::
+
+    python scripts/run_p3_experiments.py --config configs/roberta_full.toml
+    python scripts/run_p3_experiments.py --config configs/roberta_lora.toml \
         --protocol pooled_cv
-    python scripts/run_roberta_experiments.py --config configs/roberta_smoke.toml \
-        --protocol cv --repository org/react
+    python scripts/run_p3_experiments.py --config configs/roberta_smoke.toml \
+        --protocol cv --repository facebook/react
 """
 
 import argparse
@@ -14,22 +23,22 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-# Allow "python scripts/run_roberta_experiments.py" from a checkout that was not pip-installed.
+# Allow "python scripts/run_p3_experiments.py" from a checkout that was not pip-installed.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService  
-from nlbse24.evaluation import (  
+from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService  # noqa: E402
+from nlbse24.evaluation import (  # noqa: E402
     ResultWriter,
     aggregate_macro_f1,
     evaluate_predictions,
     make_run_artifact,
     profile_call,
 )
-from nlbse24.modeling.base import BaseIssueClassifier  
-from nlbse24.modeling.encoder import RobertaClassifier, RobertaConfig  
-from nlbse24.runner import run_classifier_experiment  
-from nlbse24.splits import stratified_repository_folds  
-from nlbse24.text import compose_texts  
+from nlbse24.modeling.base import BaseIssueClassifier  # noqa: E402
+from nlbse24.modeling.encoder import RobertaClassifier, RobertaConfig  # noqa: E402
+from nlbse24.runner import run_classifier_experiment  # noqa: E402
+from nlbse24.splits import stratified_repository_folds  # noqa: E402
+from nlbse24.text import compose_texts  # noqa: E402
 
 PROTOCOL_CHOICES = ("cv", "loo", "official", "pooled_cv")
 
@@ -43,7 +52,9 @@ def make_factory(config: RobertaConfig) -> Any:
     return model_factory
 
 
-def run_pooled(*, config: RobertaConfig, run_name: str, args: argparse.Namespace) -> dict[str, Any]:
+def run_pooled(
+    *, config: RobertaConfig, run_name: str, args: argparse.Namespace
+) -> dict[str, Any]:
     """P3-only ablation: one model per fold trained on all repos pooled together,
     evaluated separately per repository. Does not call run_classifier_experiment."""
 
@@ -118,7 +129,9 @@ def run_pooled(*, config: RobertaConfig, run_name: str, args: argparse.Namespace
     return {**summary, "summary_path": str(summary_path)}
 
 
-def run_shared(*, config: RobertaConfig, run_name: str, args: argparse.Namespace) -> dict[str, Any]:
+def run_shared(
+    *, config: RobertaConfig, run_name: str, args: argparse.Namespace
+) -> dict[str, Any]:
     """cv / loo / official: delegate entirely to the shared runner, unmodified."""
 
     repositories = set(args.repository) if args.repository else None
@@ -152,14 +165,18 @@ def run_single_config(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="run_roberta_experiments", description=__doc__)
-    parser.add_argument("--config", type=Path, required=True, help="run one committed configuration")
+    parser = argparse.ArgumentParser(prog="run_p3_experiments", description=__doc__)
+    parser.add_argument(
+        "--config", type=Path, required=True, help="run one committed configuration"
+    )
     parser.add_argument("--protocol", choices=PROTOCOL_CHOICES, default="cv")
     parser.add_argument("--data-dir", type=Path, default=Path("data/raw"))
     parser.add_argument("--output-dir", type=Path, default=Path("results"))
     parser.add_argument("--repository", action="append", help="repeat to select repositories")
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument("--run-name", help="artifact directory name; defaults to the model's name")
+    parser.add_argument(
+        "--run-name", help="artifact directory name; defaults to the model's name"
+    )
     parser.add_argument(
         "--confirm-official-test",
         action="store_true",

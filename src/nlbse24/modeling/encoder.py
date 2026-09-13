@@ -51,6 +51,9 @@ class RobertaConfig:
     adapter: AdapterSettings = AdapterSettings()
     training: TrainingSettings = TrainingSettings()
 
+    def __post_init__(self) -> None:
+        self.validate()
+
     @classmethod
     def from_toml(cls, path: str | Path) -> "RobertaConfig":
         with Path(path).open("rb") as stream:
@@ -124,7 +127,7 @@ class RobertaClassifier(BaseIssueClassifier):
     def name(self) -> str:
         suffix = "adapter" if self.config.adapter.enabled else "full"
         short = self.config.model.backbone.rsplit("/", 1)[-1].lower().replace("-", "_")
-        return f"roberta_{short}_{suffix}"
+        return f"{short}_{suffix}"
 
     @property
     def classes_(self) -> tuple[str, ...]:
@@ -138,14 +141,14 @@ class RobertaClassifier(BaseIssueClassifier):
             raise ValueError("cannot fit on an empty dataset")
         try:
             from datasets import Dataset as HFDataset
-            from transformers import DataCollatorWithPadding
-            from transformers import RobertaConfig as HFRobertaConfig
             from transformers import (
+                DataCollatorWithPadding,
                 RobertaForSequenceClassification,
                 RobertaTokenizerFast,
                 Trainer,
                 TrainingArguments,
             )
+            from transformers import RobertaConfig as HFRobertaConfig
         except ImportError as error:
             raise ImportError(
                 "Transformers extras are missing; install them with "
