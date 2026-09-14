@@ -32,7 +32,7 @@ class AdapterSettings:
     r: int = 8
     lora_alpha: int = 16
     lora_dropout: float = 0.1
-    target_modules: tuple[str, ...] = ("query", "value")
+    target_modules: tuple[str, ...] = ("query", "key", "value", "attention.output.dense")
 
 
 @dataclass(frozen=True, slots=True)

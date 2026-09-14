@@ -61,7 +61,7 @@ def test_committed_full_config_loads() -> None:
 def test_committed_lora_config_loads() -> None:
     config = RobertaConfig.from_toml("configs/roberta_lora.toml")
     assert config.adapter.enabled is True
-    assert config.adapter.target_modules == ("query", "value")
+    assert config.adapter.target_modules == ("query", "key", "value", "attention.output.dense")
 
 
 # --- Classifier contract guards (no heavy deps needed) ----------------------

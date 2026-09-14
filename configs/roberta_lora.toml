@@ -5,19 +5,19 @@ text_fields = ["title", "body"]
 
 [model]
 backbone = "roberta-base"
-max_seq_length = 256
+max_seq_length = 160
 num_labels = 3
 
 [adapter]
 enabled = true
-r = 8
-lora_alpha = 16
+r = 48
+lora_alpha = 96
 lora_dropout = 0.1
-target_modules = ["query", "value"]
+target_modules = ["query", "key", "value", "attention.output.dense"]
 
 [training]
-num_train_epochs = 6
+num_train_epochs = 20
 per_device_train_batch_size = 16
 per_device_eval_batch_size = 32
-learning_rate = 2e-4
-weight_decay = 0.01
+learning_rate = 3e-4
+weight_decay = 0.0
