@@ -13,7 +13,6 @@ from nlbse24.modeling.encoder import (
 
 # --- Config validation (no heavy deps needed) -------------------------------
 
-
 def test_default_config_is_valid() -> None:
     RobertaConfig().validate()
 
@@ -66,9 +65,7 @@ def test_committed_lora_config_loads() -> None:
 
 # --- Classifier contract guards (no heavy deps needed) ----------------------
 
-
 def test_name_reflects_backbone_and_adapter_flag() -> None:
-    
     full = RobertaClassifier(RobertaConfig())
     assert full.name == "roberta_base_full"
 
@@ -127,17 +124,16 @@ def test_fit_without_transformers_raises_helpful_import_error(monkeypatch) -> No
 
 
 # --- Integration: real fit/predict/LoRA (skipped unless deps + network) ----
-# No @pytest.mark.slow here: pytest.importorskip below already skips these
-# tests cleanly when transformers/torch/peft are absent (e.g. on CI, which
-# only installs requirements-dev.txt), without needing a registered marker.
-
-transformers = pytest.importorskip("transformers")
-pytest.importorskip("torch")
-
+# importorskip is now local to each integration test, not module-level,
+# so config/contract tests above never get skipped just because
+# transformers/torch/peft are absent (e.g. CI with only requirements-dev.txt).
 
 def test_fit_predict_round_trip_full() -> None:
     """Requires network access to download `roberta-base` on first run.
     Kept tiny (2 examples/class, 1 epoch) to stay runnable on a weak CPU."""
+    pytest.importorskip("transformers")
+    pytest.importorskip("torch")
+
     config = RobertaConfig(
         experiment=ExperimentSettings(seed=42),
         model=ModelSettings(max_seq_length=32),
@@ -160,7 +156,10 @@ def test_fit_predict_round_trip_full() -> None:
 
 
 def test_fit_predict_round_trip_lora() -> None:
+    pytest.importorskip("transformers")
+    pytest.importorskip("torch")
     pytest.importorskip("peft")
+
     config = RobertaConfig(
         adapter=AdapterSettings(enabled=True, r=4),
         model=ModelSettings(max_seq_length=32),
