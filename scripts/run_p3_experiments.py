@@ -26,19 +26,19 @@ from typing import Any
 # Allow "python scripts/run_p3_experiments.py" from a checkout that was not pip-installed.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService  # noqa: E402
-from nlbse24.evaluation import (  # noqa: E402
+from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService 
+from nlbse24.evaluation import ( 
     ResultWriter,
     aggregate_macro_f1,
     evaluate_predictions,
     make_run_artifact,
     profile_call,
 )
-from nlbse24.modeling.base import BaseIssueClassifier  # noqa: E402
-from nlbse24.modeling.encoder import RobertaClassifier, RobertaConfig  # noqa: E402
-from nlbse24.runner import run_classifier_experiment  # noqa: E402
-from nlbse24.splits import stratified_repository_folds  # noqa: E402
-from nlbse24.text import compose_texts  # noqa: E402
+from nlbse24.modeling.base import BaseIssueClassifier 
+from nlbse24.modeling.encoder import RobertaClassifier, RobertaConfig 
+from nlbse24.runner import run_classifier_experiment 
+from nlbse24.splits import stratified_repository_folds 
+from nlbse24.text import compose_texts 
 
 PROTOCOL_CHOICES = ("cv", "loo", "official", "pooled_cv")
 
