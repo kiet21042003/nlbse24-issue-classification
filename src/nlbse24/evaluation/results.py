@@ -61,7 +61,7 @@ def validate_artifact(artifact: dict[str, Any]) -> None:
             f"unsupported result schema version: {artifact['schema_version']!r}"
         )
 
-    if artifact["protocol"] not in {"cv", "loo", "official"}:
+    if artifact["protocol"] not in {"cv", "loo", "official", "pooled_cv"}:
         raise ValueError(f"unsupported protocol: {artifact['protocol']!r}")
 
     model = artifact["model"]

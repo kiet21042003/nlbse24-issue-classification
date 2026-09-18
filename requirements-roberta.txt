@@ -1,0 +1,8 @@
+# Extras for the P3 RoBERTa classifier (full fine-tuning + LoRA adapter).
+
+accelerate==1.14.0
+datasets==2.21.0
+peft==0.20.0
+tokenizers==0.22.2
+torch==2.4.1
+transformers==4.57.6
