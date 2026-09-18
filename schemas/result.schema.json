@@ -23,7 +23,7 @@
     "schema_version": {"const": "1.0"},
     "run_id": {"type": "string", "format": "uuid"},
     "created_at_utc": {"type": "string", "format": "date-time"},
-    "protocol": {"enum": ["cv", "loo", "official"]},
+    "protocol": {"enum": ["cv", "loo", "official", "pooled_cv"]},
     "fold": {"type": "string", "minLength": 1},
     "repository": {"type": "string", "minLength": 1},
     "seed": {"type": "integer"},

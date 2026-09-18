@@ -26,19 +26,19 @@ from typing import Any
 # Allow "python scripts/run_p3_experiments.py" from a checkout that was not pip-installed.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService 
-from nlbse24.evaluation import ( 
+from nlbse24.data import CsvIssueRepository, DatasetSplit, IssueDatasetService
+from nlbse24.evaluation import (
     ResultWriter,
     aggregate_macro_f1,
     evaluate_predictions,
     make_run_artifact,
     profile_call,
 )
-from nlbse24.modeling.base import BaseIssueClassifier 
-from nlbse24.modeling.encoder import RobertaClassifier, RobertaConfig 
-from nlbse24.runner import run_classifier_experiment 
-from nlbse24.splits import stratified_repository_folds 
-from nlbse24.text import compose_texts 
+from nlbse24.modeling.base import BaseIssueClassifier
+from nlbse24.modeling.encoder import RobertaClassifier, RobertaConfig
+from nlbse24.runner import run_classifier_experiment
+from nlbse24.splits import stratified_repository_folds
+from nlbse24.text import compose_texts
 
 PROTOCOL_CHOICES = ("cv", "loo", "official", "pooled_cv")
 
@@ -52,9 +52,7 @@ def make_factory(config: RobertaConfig) -> Any:
     return model_factory
 
 
-def run_pooled(
-    *, config: RobertaConfig, run_name: str, args: argparse.Namespace
-) -> dict[str, Any]:
+def run_pooled(*, config: RobertaConfig, run_name: str, args: argparse.Namespace) -> dict[str, Any]:
     """P3-only ablation: one model per fold trained on all repos pooled together,
     evaluated separately per repository. Does not call run_classifier_experiment."""
 
@@ -129,9 +127,7 @@ def run_pooled(
     return {**summary, "summary_path": str(summary_path)}
 
 
-def run_shared(
-    *, config: RobertaConfig, run_name: str, args: argparse.Namespace
-) -> dict[str, Any]:
+def run_shared(*, config: RobertaConfig, run_name: str, args: argparse.Namespace) -> dict[str, Any]:
     """cv / loo / official: delegate entirely to the shared runner, unmodified."""
 
     repositories = set(args.repository) if args.repository else None
@@ -174,9 +170,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir", type=Path, default=Path("results"))
     parser.add_argument("--repository", action="append", help="repeat to select repositories")
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument(
-        "--run-name", help="artifact directory name; defaults to the model's name"
-    )
+    parser.add_argument("--run-name", help="artifact directory name; defaults to the model's name")
     parser.add_argument(
         "--confirm-official-test",
         action="store_true",

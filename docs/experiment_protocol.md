@@ -23,6 +23,19 @@ appearing on both sides of a CV split.
 This is the default protocol for tuning. All models compared in an experiment
 must reuse the exact same fold assignment and random seed.
 
+### Pooled training-only CV (P3 ablation)
+
+`pooled_cv` uses the same repository-stratified, exact-text-grouped folds
+as `cv`. Train one model on all repositories' training partitions per fold,
+then evaluate separately on each repository's held-out partition. This gives
+five fits and 25 evaluation artifacts. It is not leave-one-repository-out:
+each evaluated repository also contributes training rows.
+
+Keep `pooled_cv` separate from `cv` in comparisons and artifact directories.
+Fit resource measurements are repeated across the five repository artifacts
+of a fold; count each fit once when computing total training cost. Schema 1.0
+accepts this additional protocol; older readers must be updated before ingestion.
+
 ### Official per-repository evaluation
 
 Train five independent classifiers: for each repository, train on its official

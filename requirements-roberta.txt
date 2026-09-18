@@ -1,5 +1,5 @@
 # Extras for the P3 RoBERTa classifier (full fine-tuning + LoRA adapter).
- 
+
 accelerate==1.14.0
 datasets==2.21.0
 peft==0.20.0

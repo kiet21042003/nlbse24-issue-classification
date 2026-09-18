@@ -7,6 +7,7 @@ from nlbse24.evaluation.results import (
     artifact_to_row,
     find_artifact_paths,
     load_artifact,
+    results_dataframe,
 )
 
 
@@ -91,3 +92,17 @@ def test_load_artifact_rejects_missing_required_keys(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="missing required keys"):
         load_artifact(path)
+
+
+@pytest.mark.parametrize("protocol", ["cv", "loo", "official", "pooled_cv"])
+def test_protocol_schema_and_ingestion_agree(tmp_path: Path, protocol: str) -> None:
+    schema = json.loads(
+        (Path(__file__).resolve().parents[1] / "schemas/result.schema.json").read_text()
+    )
+    assert protocol in schema["properties"]["protocol"]["enum"]
+    artifact = _artifact()
+    artifact["protocol"] = protocol
+    (tmp_path / "fold-1.json").write_text(json.dumps(artifact), encoding="utf-8")
+    frame = results_dataframe(tmp_path)
+    assert frame["protocol"].tolist() == [protocol]
+    assert frame["macro_f1"].tolist() == [1.0]

@@ -72,12 +72,12 @@ dataset, folds, seed, `max_seq_length`, and epoch budget.
 
 ```bash
 # Full fine-tuning
-python scripts/run_roberta_experiments.py --config configs/roberta_full.toml --protocol cv --overwrite
-python scripts/run_roberta_experiments.py --config configs/roberta_full.toml --protocol pooled_cv --overwrite
+python scripts/run_p3_experiments.py --config configs/roberta_full.toml --protocol cv
+python scripts/run_p3_experiments.py --config configs/roberta_full.toml --protocol pooled_cv
 
 # LoRA (final config version)
-python scripts/run_roberta_experiments.py --config configs/roberta_lora.toml --protocol cv --overwrite
-python scripts/run_roberta_experiments.py --config configs/roberta_lora.toml --protocol pooled_cv --overwrite
+python scripts/run_p3_experiments.py --config configs/roberta_lora.toml --protocol cv
+python scripts/run_p3_experiments.py --config configs/roberta_lora.toml --protocol pooled_cv
 ```
 
 ## Artifacts
