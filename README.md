@@ -73,6 +73,15 @@ Read [docs/architecture.md](docs/architecture.md) before adding a model and
 experiment. Model owners should start with
 [docs/model_owner_guide.md](docs/model_owner_guide.md).
 
+## Project progress
+
+As of **18 September 2026**, P2 lightweight models, P3 RoBERTa/LoRA and P4
+SetFit have been merged. P3 and P4 CV artifacts have been audited and integrated
+locally. Final result aggregation, remaining official evaluations, the combined
+report and demo are still pending. See [project status and next steps](docs/project_status.md)
+and the updated [project plan](docs/NLBSE_Topic_Comparison_and_Project_Plan.docx).
+Generated artifacts are not included in a fresh clone.
+
 ## P1 baseline status
 
 The first end-to-end training-only 5-fold run completed successfully across all
