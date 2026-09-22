@@ -98,7 +98,12 @@ def find_artifact_paths(root: str | Path) -> list[Path]:
 
     paths: list[Path] = []
     for path in root.rglob("*.json"):
+        relative_parts = path.relative_to(root).parts
         if path.name.startswith("summary-seed-"):
+            continue
+        # Analysis commands write comparison/ensemble JSON files below this
+        # directory. They are derived outputs, not run artifacts themselves.
+        if "analysis" in relative_parts[:-1]:
             continue
         paths.append(path)
     return sorted(paths)

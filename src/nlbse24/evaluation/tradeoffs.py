@@ -1,0 +1,47 @@
+"""Cost/performance trade-off analysis."""
+
+from collections.abc import Sequence
+
+import pandas as pd
+
+
+def pareto_frontier(
+    frame: pd.DataFrame,
+    *,
+    score_column: str = "macro_f1",
+    cost_columns: Sequence[str] = ("mean_fit_seconds", "mean_inference_seconds"),
+) -> pd.DataFrame:
+    """Return rows not dominated on score (higher) and costs (lower).
+
+    A row is dominated when another row is at least as good on every selected
+    dimension and strictly better on at least one dimension.
+    """
+
+    columns = [score_column, *cost_columns]
+    missing = [column for column in columns if column not in frame.columns]
+    if missing:
+        raise ValueError(f"missing Pareto columns: {missing}")
+    if frame.empty:
+        return frame.copy()
+
+    values = frame[columns].astype(float).to_numpy()
+    keep = []
+    for index, candidate in enumerate(values):
+        dominated = False
+        for other_index, other in enumerate(values):
+            if index == other_index:
+                continue
+            no_worse_score = other[0] >= candidate[0]
+            no_worse_costs = all(
+                other[position] <= candidate[position]
+                for position in range(1, len(columns))
+            )
+            strictly_better = other[0] > candidate[0] or any(
+                other[position] < candidate[position] for position in range(1, len(columns))
+            )
+            if no_worse_score and no_worse_costs and strictly_better:
+                dominated = True
+                break
+        if not dominated:
+            keep.append(index)
+    return frame.iloc[keep].reset_index(drop=True)
