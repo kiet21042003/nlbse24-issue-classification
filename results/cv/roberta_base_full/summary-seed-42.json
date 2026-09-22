@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "roberta_base_full",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7351326830274199,
+    "facebook/react": 0.8076015934552521,
+    "microsoft/vscode": 0.7407412051490689,
+    "opencv/opencv": 0.7632381002438022,
+    "tensorflow/tensorflow": 0.8797129437612327
+  },
+  "cross_repository_macro_f1": 0.7852853051273552,
+  "evaluations": 25,
+  "artifacts": [
+    "results\\cv\\roberta_base_full\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\roberta_base_full\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\cv\\roberta_base_full\\microsoft__vscode\\42\\fold-1.json",
+    "results\\cv\\roberta_base_full\\opencv__opencv\\42\\fold-1.json",
+    "results\\cv\\roberta_base_full\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\cv\\roberta_base_full\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\roberta_base_full\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\cv\\roberta_base_full\\microsoft__vscode\\42\\fold-2.json",
+    "results\\cv\\roberta_base_full\\opencv__opencv\\42\\fold-2.json",
+    "results\\cv\\roberta_base_full\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\cv\\roberta_base_full\\opencv__opencv\\42\\fold-3.json",
+    "results\\cv\\roberta_base_full\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\roberta_base_full\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\cv\\roberta_base_full\\microsoft__vscode\\42\\fold-3.json",
+    "results\\cv\\roberta_base_full\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\cv\\roberta_base_full\\microsoft__vscode\\42\\fold-4.json",
+    "results\\cv\\roberta_base_full\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\roberta_base_full\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\cv\\roberta_base_full\\opencv__opencv\\42\\fold-4.json",
+    "results\\cv\\roberta_base_full\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\cv\\roberta_base_full\\facebook__react\\42\\fold-5.json",
+    "results\\cv\\roberta_base_full\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\cv\\roberta_base_full\\microsoft__vscode\\42\\fold-5.json",
+    "results\\cv\\roberta_base_full\\opencv__opencv\\42\\fold-5.json",
+    "results\\cv\\roberta_base_full\\tensorflow__tensorflow\\42\\fold-5.json"
+  ],
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "split_strategy": "stratified_text_group_folds_per_repository"
+}

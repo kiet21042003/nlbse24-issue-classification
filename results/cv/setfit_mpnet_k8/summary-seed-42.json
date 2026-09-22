@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "setfit_mpnet_k8",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.5994186577334809,
+    "facebook/react": 0.7164352926062085,
+    "microsoft/vscode": 0.7638600852779418,
+    "opencv/opencv": 0.5673145133420222,
+    "tensorflow/tensorflow": 0.74571683094183
+  },
+  "cross_repository_macro_f1": 0.6785490759802967,
+  "evaluations": 25,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results/cv/setfit_mpnet_k8/bitcoin__bitcoin/42/fold-1.json",
+    "results/cv/setfit_mpnet_k8/facebook__react/42/fold-1.json",
+    "results/cv/setfit_mpnet_k8/microsoft__vscode/42/fold-1.json",
+    "results/cv/setfit_mpnet_k8/opencv__opencv/42/fold-1.json",
+    "results/cv/setfit_mpnet_k8/tensorflow__tensorflow/42/fold-1.json",
+    "results/cv/setfit_mpnet_k8/bitcoin__bitcoin/42/fold-2.json",
+    "results/cv/setfit_mpnet_k8/facebook__react/42/fold-2.json",
+    "results/cv/setfit_mpnet_k8/microsoft__vscode/42/fold-2.json",
+    "results/cv/setfit_mpnet_k8/opencv__opencv/42/fold-2.json",
+    "results/cv/setfit_mpnet_k8/tensorflow__tensorflow/42/fold-2.json",
+    "results/cv/setfit_mpnet_k8/bitcoin__bitcoin/42/fold-3.json",
+    "results/cv/setfit_mpnet_k8/facebook__react/42/fold-3.json",
+    "results/cv/setfit_mpnet_k8/microsoft__vscode/42/fold-3.json",
+    "results/cv/setfit_mpnet_k8/opencv__opencv/42/fold-3.json",
+    "results/cv/setfit_mpnet_k8/tensorflow__tensorflow/42/fold-3.json",
+    "results/cv/setfit_mpnet_k8/bitcoin__bitcoin/42/fold-4.json",
+    "results/cv/setfit_mpnet_k8/facebook__react/42/fold-4.json",
+    "results/cv/setfit_mpnet_k8/microsoft__vscode/42/fold-4.json",
+    "results/cv/setfit_mpnet_k8/opencv__opencv/42/fold-4.json",
+    "results/cv/setfit_mpnet_k8/tensorflow__tensorflow/42/fold-4.json",
+    "results/cv/setfit_mpnet_k8/bitcoin__bitcoin/42/fold-5.json",
+    "results/cv/setfit_mpnet_k8/facebook__react/42/fold-5.json",
+    "results/cv/setfit_mpnet_k8/microsoft__vscode/42/fold-5.json",
+    "results/cv/setfit_mpnet_k8/opencv__opencv/42/fold-5.json",
+    "results/cv/setfit_mpnet_k8/tensorflow__tensorflow/42/fold-5.json"
+  ]
+}

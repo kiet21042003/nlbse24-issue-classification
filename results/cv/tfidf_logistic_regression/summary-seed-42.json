@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "tfidf_logistic_regression",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.6892428891818373,
+    "facebook/react": 0.8179302946117885,
+    "microsoft/vscode": 0.7361719454832272,
+    "opencv/opencv": 0.765006480857154,
+    "tensorflow/tensorflow": 0.8097563277246719
+  },
+  "cross_repository_macro_f1": 0.7636215875717357,
+  "evaluations": 25,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\cv\\tfidf_logistic_regression\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\cv\\tfidf_logistic_regression\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\tfidf_logistic_regression\\microsoft__vscode\\42\\fold-1.json",
+    "results\\cv\\tfidf_logistic_regression\\opencv__opencv\\42\\fold-1.json",
+    "results\\cv\\tfidf_logistic_regression\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\cv\\tfidf_logistic_regression\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\cv\\tfidf_logistic_regression\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\tfidf_logistic_regression\\microsoft__vscode\\42\\fold-2.json",
+    "results\\cv\\tfidf_logistic_regression\\opencv__opencv\\42\\fold-2.json",
+    "results\\cv\\tfidf_logistic_regression\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\cv\\tfidf_logistic_regression\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\cv\\tfidf_logistic_regression\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\tfidf_logistic_regression\\microsoft__vscode\\42\\fold-3.json",
+    "results\\cv\\tfidf_logistic_regression\\opencv__opencv\\42\\fold-3.json",
+    "results\\cv\\tfidf_logistic_regression\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\cv\\tfidf_logistic_regression\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\cv\\tfidf_logistic_regression\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\tfidf_logistic_regression\\microsoft__vscode\\42\\fold-4.json",
+    "results\\cv\\tfidf_logistic_regression\\opencv__opencv\\42\\fold-4.json",
+    "results\\cv\\tfidf_logistic_regression\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\cv\\tfidf_logistic_regression\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\cv\\tfidf_logistic_regression\\facebook__react\\42\\fold-5.json",
+    "results\\cv\\tfidf_logistic_regression\\microsoft__vscode\\42\\fold-5.json",
+    "results\\cv\\tfidf_logistic_regression\\opencv__opencv\\42\\fold-5.json",
+    "results\\cv\\tfidf_logistic_regression\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}

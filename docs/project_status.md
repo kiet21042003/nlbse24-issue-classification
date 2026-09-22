@@ -1,6 +1,7 @@
-# Project status — 18 September 2026
+# Project status — 22 September 2026
 
-This is a progress snapshot, not a new experimental protocol. The original
+Model-integration status was verified on 18 September; artifact publication was
+updated on 22 September. This is a progress snapshot, not a new experimental protocol. The original
 21-day timeline remains a planning baseline, not a record of actual completion dates.
 
 ## Integrated work
@@ -25,12 +26,15 @@ also succeeded.
 - P3: `results/cv/roberta_base_{full,adapter}/` and
   `results/pooled_cv/roberta_base_{full,adapter}/`; 25 evaluations per configuration/protocol.
 - P4: seven model/configuration directories under `results/cv/`, 25 evaluations each.
-- The local shared result reader accepts **330 artifacts**: P1 55, P3 100 and P4 175.
+- The shared result reader accepts **330 artifacts**: P1 55, P3 100 and P4 175.
   P2 is not yet included in this consolidated local artifact set.
-- Results and source ZIPs are ignored by Git. A fresh clone does not contain them;
-  owners must share the archives separately. Preserve original archives for audit.
+- As of 22 September, the reviewed **330 run artifacts and 14 JSON summaries**
+  are versioned, together with `results/p3_import_manifest.txt`. A fresh clone
+  contains these results. Source ZIPs and model weights remain local; preserve
+  original archives for audit. P2 still needs to supply its artifacts.
 - Import P3 with `python scripts/import_p3_results.py results/p3_results.zip --output-dir results`
-  into an output tree without existing P3 runs. The importer normalizes names and
+  only when rebuilding into an output tree without existing P3 runs (a fresh
+  clone already contains them). The importer normalizes names and
   paths, preserves predictions/metrics and writes an import manifest.
 
 P3 metrics were recalculated from predictions, scores checked against predicted

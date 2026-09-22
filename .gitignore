@@ -40,8 +40,13 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
-results/*
+results/**
+!results/**/
 !results/.gitkeep
+!results/cv/**/*.json
+!results/loo/**/*.json
+!results/pooled_cv/**/*.json
+!results/p3_import_manifest.txt
 models/*
 !models/.gitkeep
 coverage.xml

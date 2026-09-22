@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "roberta_base_adapter",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7344839990626182,
+    "facebook/react": 0.831572366691631,
+    "microsoft/vscode": 0.7561911523548546,
+    "opencv/opencv": 0.7533185437260429,
+    "tensorflow/tensorflow": 0.8246717091065652
+  },
+  "cross_repository_macro_f1": 0.7800475541883424,
+  "evaluations": 25,
+  "artifacts": [
+    "results\\cv\\roberta_base_adapter\\microsoft__vscode\\42\\fold-1.json",
+    "results\\cv\\roberta_base_adapter\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\roberta_base_adapter\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\cv\\roberta_base_adapter\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\cv\\roberta_base_adapter\\opencv__opencv\\42\\fold-1.json",
+    "results\\cv\\roberta_base_adapter\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\roberta_base_adapter\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\cv\\roberta_base_adapter\\microsoft__vscode\\42\\fold-2.json",
+    "results\\cv\\roberta_base_adapter\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\cv\\roberta_base_adapter\\opencv__opencv\\42\\fold-2.json",
+    "results\\cv\\roberta_base_adapter\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\roberta_base_adapter\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\cv\\roberta_base_adapter\\microsoft__vscode\\42\\fold-3.json",
+    "results\\cv\\roberta_base_adapter\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\cv\\roberta_base_adapter\\opencv__opencv\\42\\fold-3.json",
+    "results\\cv\\roberta_base_adapter\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\roberta_base_adapter\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\cv\\roberta_base_adapter\\microsoft__vscode\\42\\fold-4.json",
+    "results\\cv\\roberta_base_adapter\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\cv\\roberta_base_adapter\\opencv__opencv\\42\\fold-4.json",
+    "results\\cv\\roberta_base_adapter\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\cv\\roberta_base_adapter\\facebook__react\\42\\fold-5.json",
+    "results\\cv\\roberta_base_adapter\\tensorflow__tensorflow\\42\\fold-5.json",
+    "results\\cv\\roberta_base_adapter\\microsoft__vscode\\42\\fold-5.json",
+    "results\\cv\\roberta_base_adapter\\opencv__opencv\\42\\fold-5.json"
+  ],
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "split_strategy": "stratified_text_group_folds_per_repository"
+}

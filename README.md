@@ -43,8 +43,10 @@ nlbse24 run-baseline --protocol cv
 Linux/macOS users activate the environment with `source .venv/bin/activate`.
 
 Downloaded data is written to `data/raw/` and verified against pinned SHA-256
-checksums. Generated runs are written below `results/`; neither directory's
-contents are committed.
+checksums. Downloaded data stays local. Reviewed JSON runs and summaries under
+`results/cv/`, `results/loo/` and `results/pooled_cv/` are versioned;
+source ZIPs and model weights stay local. Write exploratory runs outside these
+published directories (for example, under `tmp/`) and do not overwrite published runs.
 
 Other supported protocols:
 
@@ -63,7 +65,7 @@ configs/                 Versioned experiment configuration
 data/                    Local raw/processed data (ignored)
 docs/                    Architecture and experiment protocol
 models/                  Serialized models (ignored)
-results/                 Machine-readable run artifacts (ignored)
+results/                 Reviewed JSON run artifacts and summaries
 src/nlbse24/             Shared Python package
 tests/                   Unit and integration tests
 ```
@@ -80,7 +82,9 @@ SetFit have been merged. P3 and P4 CV artifacts have been audited and integrated
 locally. Final result aggregation, remaining official evaluations, the combined
 report and demo are still pending. See [project status and next steps](docs/project_status.md)
 and the updated [project plan](docs/NLBSE_Topic_Comparison_and_Project_Plan.docx).
-Generated artifacts are not included in a fresh clone.
+Since **22 September 2026**, a fresh clone includes the reviewed P1, P3 and P4
+JSON artifacts and the P3 import manifest. P2 artifacts are still needed for
+the consolidated evaluation; original ZIPs are not committed.
 
 ## P1 baseline status
 
