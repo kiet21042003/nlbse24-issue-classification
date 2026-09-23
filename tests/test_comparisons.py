@@ -38,6 +38,19 @@ def test_paired_bootstrap_is_deterministic_and_aligned() -> None:
     assert differences.iloc[0]["ci_high"] == 0.0
 
 
+def test_point_difference_uses_observed_point_estimates() -> None:
+    first = _artifact("a")
+    second = _artifact("b")
+    second["predictions"]["y_pred"] = ["bug"] * 6
+
+    grouped = group_comparable_artifacts([first, second], protocol="cv", models=["a", "b"])
+    summary, differences = paired_bootstrap(grouped, n_resamples=500, seed=7)
+
+    assert summary.loc[0, "point_estimate"] == 1.0
+    assert summary.loc[1, "point_estimate"] == pytest.approx(1.0 / 6.0)
+    assert differences.iloc[0]["point_difference"] == pytest.approx(5.0 / 6.0)
+
+
 def test_paired_bootstrap_rejects_mismatched_truth_rows() -> None:
     first = _artifact("a")
     second = _artifact("b")

@@ -3,6 +3,7 @@
 import hashlib
 import importlib.metadata
 import json
+import os
 import platform
 import re
 import sys
@@ -40,9 +41,28 @@ def environment_metadata() -> dict[str, object]:
     packages = {}
     for package in ("joblib", "numpy", "pandas", "psutil", "scikit-learn"):
         packages[package] = importlib.metadata.version(package)
+    hardware_group = os.environ.get("NLBSE_HARDWARE_GROUP")
+    if not hardware_group:
+        accelerator = "cpu"
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                accelerator = f"cuda:{torch.cuda.get_device_name(0)}"
+        except ImportError:
+            pass
+        hardware_group = "|".join(
+            (
+                platform.platform(),
+                platform.machine() or "unknown-machine",
+                platform.processor() or "unknown-processor",
+                accelerator,
+            )
+        )
     return {
         "python": sys.version.split()[0],
         "platform": platform.platform(),
+        "hardware_group": hardware_group,
         "packages": packages,
     }
 

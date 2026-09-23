@@ -61,7 +61,7 @@ def validate_artifact(artifact: dict[str, Any]) -> None:
             f"unsupported result schema version: {artifact['schema_version']!r}"
         )
 
-    if artifact["protocol"] not in {"cv", "loo", "official"}:
+    if artifact["protocol"] not in {"cv", "loo", "official", "pooled_cv"}:
         raise ValueError(f"unsupported protocol: {artifact['protocol']!r}")
 
     model = artifact["model"]
@@ -87,6 +87,19 @@ def load_artifact(path: str | Path, *, validate: bool = True) -> dict[str, Any]:
     if validate:
         validate_artifact(artifact)
     return artifact
+
+
+def artifact_hardware_group(artifact: dict[str, Any]) -> str:
+    """Return an explicit hardware identity, or ``unknown`` when absent."""
+
+    environment = artifact.get("environment", {})
+    for key in ("hardware_group", "hardware_id", "hardware"):
+        value = environment.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+        if isinstance(value, dict) and value:
+            return json.dumps(value, sort_keys=True, separators=(",", ":"))
+    return "unknown"
 
 
 def find_artifact_paths(root: str | Path) -> list[Path]:
@@ -131,6 +144,7 @@ def artifact_to_row(artifact: dict[str, Any]) -> dict[str, Any]:
         "repository": artifact["repository"],
         "seed": artifact["seed"],
         "model": artifact["model"]["name"],
+        "hardware_group": artifact_hardware_group(artifact),
         "train_size": artifact["data"]["train_size"],
         "test_size": artifact["data"]["test_size"],
         "train_fingerprint": artifact["data"]["train_fingerprint"],

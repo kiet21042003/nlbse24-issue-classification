@@ -180,6 +180,9 @@ def paired_bootstrap(
             }
         )
     summary = pd.DataFrame(summary_rows)
+    point_estimates = {
+        model: float(np.mean(point_by_model[model])) for model in models
+    }
     reference = models[0]
     difference_rows = []
     for model in models[1:]:
@@ -188,7 +191,10 @@ def paired_bootstrap(
             {
                 "reference_model": reference,
                 "comparison_model": model,
-                "point_difference": float(difference.mean()),
+                # The point estimate is the observed difference. The bootstrap
+                # distribution is used only for uncertainty, not as a second
+                # point-estimate definition.
+                "point_difference": point_estimates[reference] - point_estimates[model],
                 "ci_low": float(np.quantile(difference, alpha / 2.0)),
                 "ci_high": float(np.quantile(difference, 1.0 - alpha / 2.0)),
                 "probability_reference_better": float(np.mean(difference > 0)),

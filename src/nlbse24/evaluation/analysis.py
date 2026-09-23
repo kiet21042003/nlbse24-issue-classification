@@ -12,7 +12,11 @@ from typing import Any
 
 import pandas as pd
 
-from nlbse24.evaluation.results import load_artifacts, results_dataframe
+from nlbse24.evaluation.results import (
+    artifact_hardware_group,
+    load_artifacts,
+    results_dataframe,
+)
 
 _METRIC_COLUMNS = (
     "accuracy",
@@ -36,7 +40,10 @@ def repository_summary(frame: pd.DataFrame) -> pd.DataFrame:
 
     if frame.empty:
         return pd.DataFrame()
-    group_keys = ["protocol", "model", "repository"]
+    frame = frame.copy()
+    if "hardware_group" not in frame.columns:
+        frame["hardware_group"] = "unknown"
+    group_keys = ["protocol", "hardware_group", "model", "repository"]
     aggregations: dict[str, tuple[str, str]] = {
         column: (column, "mean") for column in _available(_METRIC_COLUMNS, frame)
     }
@@ -63,7 +70,7 @@ def model_summary(frame: pd.DataFrame) -> pd.DataFrame:
     repositories = repository_summary(frame)
     if repositories.empty:
         return repositories
-    group_keys = ["protocol", "model"]
+    group_keys = ["protocol", "hardware_group", "model"]
     aggregations: dict[str, Any] = {
         column: (column, "mean")
         for column in _available(
@@ -88,6 +95,7 @@ def resource_summary(artifacts: list[dict[str, Any]]) -> pd.DataFrame:
             {
                 "protocol": artifact["protocol"],
                 "model": artifact["model"]["name"],
+                "hardware_group": artifact_hardware_group(artifact),
                 "repository": artifact["repository"],
                 "seed": artifact["seed"],
                 "fold": artifact["fold"],
@@ -107,9 +115,16 @@ def resource_summary(artifacts: list[dict[str, Any]]) -> pd.DataFrame:
     # A pooled fit is reused by several repository artifacts.  The fingerprint
     # identifies the training partition, while protocol/model/seed/fold keeps
     # independent runs separate.
-    fit_keys = ["protocol", "model", "seed", "fold", "train_fingerprint"]
+    fit_keys = [
+        "protocol",
+        "hardware_group",
+        "model",
+        "seed",
+        "fold",
+        "train_fingerprint",
+    ]
     unique_fits = frame.drop_duplicates(fit_keys)
-    grouped = frame.groupby(["protocol", "model"], as_index=False)
+    grouped = frame.groupby(["protocol", "hardware_group", "model"], as_index=False)
     result = grouped.agg(
         artifact_count=("repository", "size"),
         repository_count=("repository", "nunique"),
@@ -123,15 +138,23 @@ def resource_summary(artifacts: list[dict[str, Any]]) -> pd.DataFrame:
         mean_inference_rss_delta_mb=("inference_rss_delta_mb", "mean"),
     )
     unique_seconds = (
-        unique_fits.groupby(["protocol", "model"], as_index=False)["fit_elapsed_seconds"]
+        unique_fits.groupby(
+            ["protocol", "hardware_group", "model"], as_index=False
+        )["fit_elapsed_seconds"]
         .sum()
         .rename(columns={"fit_elapsed_seconds": "fit_seconds_unique"})
     )
-    result = result.merge(unique_seconds, on=["protocol", "model"], how="left")
+    result = result.merge(
+        unique_seconds,
+        on=["protocol", "hardware_group", "model"],
+        how="left",
+    )
     result["pooled_fit_reuse_factor"] = (
         result["fit_seconds_per_artifact"] / result["fit_seconds_unique"]
     ).where(result["fit_seconds_unique"] != 0)
-    return result.sort_values(["protocol", "model"]).reset_index(drop=True)
+    return result.sort_values(["protocol", "hardware_group", "model"]).reset_index(
+        drop=True
+    )
 
 
 def analyze_results(root: str | Path, *, validate: bool = True) -> dict[str, pd.DataFrame]:
