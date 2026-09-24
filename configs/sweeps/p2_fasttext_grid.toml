@@ -1,0 +1,52 @@
+# P2 tuning sweep: supervised fastText.
+# Training-only 5-fold CV, seed 42. 12 points.
+# Requires the optional backend: pip install -r requirements-fasttext.txt
+#
+# Axes chosen for the data size this protocol actually trains on (240 documents per
+# repository fold): the subword hash and the learning rate dominate, so they are swept
+# while dim and epoch stay at library defaults. A probe run with subwords on and the
+# default learning rate scored 0.497 on facebook/react, well below the word-level
+# baselines, which is what motivated putting the subword switch on an axis.
+model_family = "fasttext"
+run_prefix = "p2_ft"
+
+[base.experiment]
+seed = 42
+n_splits = 5
+text_fields = ["title", "body"]
+
+[base.model]
+dim = 100
+lr = 0.5
+epoch = 25
+word_ngrams = 2
+min_count = 1
+minn = 3
+maxn = 6
+bucket = 200000
+loss = "softmax"
+
+# fastText hashes character n-grams of length minn..maxn; setting both to zero turns
+# subword features off entirely.
+[presets.off]
+"model.minn" = 0
+"model.maxn" = 0
+
+[presets.sub36]
+"model.minn" = 3
+"model.maxn" = 6
+
+[[axes]]
+tag = "sub"
+key = "preset"
+values = ["off", "sub36"]
+
+[[axes]]
+tag = "lr"
+key = "model.lr"
+values = [0.1, 0.5, 1.0]
+
+[[axes]]
+tag = "wng"
+key = "model.word_ngrams"
+values = [1, 2]

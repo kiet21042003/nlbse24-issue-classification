@@ -1,0 +1,18 @@
+# Contrastive-sampling ablation: few-shot k=32 per class,
+# everything else identical to the official baseline reproduction.
+[experiment]
+seed = 42
+n_splits = 5
+text_fields = ["title", "body"]
+
+[model]
+backbone = "sentence-transformers/all-mpnet-base-v2"
+max_seq_length = 128
+device = "cuda"
+
+[sampling]
+num_iterations = 20
+num_epochs = 1
+batch_size = 16
+head_batch_size = 2
+max_examples_per_class = 32

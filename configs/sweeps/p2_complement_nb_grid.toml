@@ -1,0 +1,61 @@
+# P2 tuning sweep: TF-IDF feature union + ComplementNB.
+# Training-only 5-fold CV, seed 42. 3 feature sets x 3 smoothing values = 9 points.
+model_family = "sparse"
+run_prefix = "p2_cnb"
+
+[base.experiment]
+seed = 42
+n_splits = 5
+text_fields = ["title", "body"]
+
+[base.features.word]
+enabled = true
+analyzer = "word"
+ngram_range = [1, 2]
+min_df = 2
+max_df = 1.0
+max_features = 50000
+sublinear_tf = true
+strip_accents = "unicode"
+lowercase = true
+
+[base.features.char]
+enabled = true
+analyzer = "char_wb"
+ngram_range = [2, 5]
+min_df = 3
+max_df = 1.0
+max_features = 100000
+sublinear_tf = true
+strip_accents = "unicode"
+lowercase = true
+
+[base.classifier]
+kind = "complement_nb"
+
+[base.classifier.complement_nb]
+alpha = 0.3
+norm = false
+
+# A preset flips the feature-union branches on or off; this is the feature ablation axis.
+[presets.word]
+"features.word.enabled" = true
+"features.char.enabled" = false
+
+[presets.char]
+"features.word.enabled" = false
+"features.char.enabled" = true
+
+[presets.word_char]
+"features.word.enabled" = true
+"features.char.enabled" = true
+
+[[axes]]
+tag = "feat"
+key = "preset"
+values = ["word", "char", "word_char"]
+
+[[axes]]
+tag = "a"
+key = "classifier.complement_nb.alpha"
+values = [0.1, 0.3, 1.0]

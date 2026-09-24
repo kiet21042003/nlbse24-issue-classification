@@ -107,12 +107,9 @@ def test_protocol_schema_and_ingestion_agree(tmp_path: Path, protocol: str) -> N
         (Path(__file__).resolve().parents[1] / "schemas/result.schema.json").read_text()
     )
     assert protocol in schema["properties"]["protocol"]["enum"]
-    (tmp_path / "fold-1.json").write_text(
-        json.dumps(_artifact(protocol=protocol)), encoding="utf-8"
-    )
-
+    artifact = _artifact(protocol=protocol)
+    (tmp_path / "fold-1.json").write_text(json.dumps(artifact), encoding="utf-8")
     frame = results_dataframe(tmp_path)
-
     assert frame["protocol"].tolist() == [protocol]
     assert frame["macro_f1"].tolist() == [1.0]
 
