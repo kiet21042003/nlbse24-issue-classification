@@ -89,6 +89,19 @@ def load_artifact(path: str | Path, *, validate: bool = True) -> dict[str, Any]:
     return artifact
 
 
+def artifact_hardware_group(artifact: dict[str, Any]) -> str:
+    """Return an explicit hardware identity, or ``unknown`` when absent."""
+
+    environment = artifact.get("environment", {})
+    for key in ("hardware_group", "hardware_id", "hardware"):
+        value = environment.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+        if isinstance(value, dict) and value:
+            return json.dumps(value, sort_keys=True, separators=(",", ":"))
+    return "unknown"
+
+
 def find_artifact_paths(root: str | Path) -> list[Path]:
     """Find run artifacts while excluding summary JSON files."""
 
@@ -98,7 +111,12 @@ def find_artifact_paths(root: str | Path) -> list[Path]:
 
     paths: list[Path] = []
     for path in root.rglob("*.json"):
+        relative_parts = path.relative_to(root).parts
         if path.name.startswith("summary-seed-"):
+            continue
+        # Analysis commands write comparison/ensemble JSON files below this
+        # directory. They are derived outputs, not run artifacts themselves.
+        if "analysis" in relative_parts[:-1]:
             continue
         paths.append(path)
     return sorted(paths)
@@ -126,6 +144,7 @@ def artifact_to_row(artifact: dict[str, Any]) -> dict[str, Any]:
         "repository": artifact["repository"],
         "seed": artifact["seed"],
         "model": artifact["model"]["name"],
+        "hardware_group": artifact_hardware_group(artifact),
         "train_size": artifact["data"]["train_size"],
         "test_size": artifact["data"]["test_size"],
         "train_fingerprint": artifact["data"]["train_fingerprint"],
