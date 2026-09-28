@@ -1,7 +1,10 @@
-# Project status — 22 September 2026
+# Project status — 28 September 2026
 
 Model-integration status was verified on 18 September; artifact publication was
-updated on 22 September. This is a progress snapshot, not a new experimental protocol. The original
+updated on 22 September. P1 title-only LOO was added on 28 September (five runs,
+macro-F1 0.5075; title + body LOO 0.5876). See
+[P1 findings](../reports/p1_initial_findings.md) for verification and reproduction.
+This is a progress snapshot, not a new experimental protocol. The original
 21-day timeline remains a planning baseline, not a record of actual completion dates.
 
 ## Integrated work
@@ -26,9 +29,9 @@ also succeeded.
 - P3: `results/cv/roberta_base_{full,adapter}/` and
   `results/pooled_cv/roberta_base_{full,adapter}/`; 25 evaluations per configuration/protocol.
 - P4: seven model/configuration directories under `results/cv/`, 25 evaluations each.
-- The shared result reader accepts **330 artifacts**: P1 55, P3 100 and P4 175.
+- The shared result reader accepts **335 artifacts**: P1 60, P3 100 and P4 175.
   P2 is not yet included in this consolidated local artifact set.
-- As of 22 September, the reviewed **330 run artifacts and 14 JSON summaries**
+- As of 28 September, the reviewed **335 run artifacts and 15 JSON summaries**
   are versioned, together with `results/p3_import_manifest.txt`. A fresh clone
   contains these results. Source ZIPs and model weights remain local; preserve
   original archives for audit. P2 still needs to supply its artifacts.
