@@ -4,6 +4,9 @@ Model-integration status was verified on 18 September; artifact publication was
 updated on 22 September. P1 title-only LOO was added on 28 September (five runs,
 macro-F1 0.5075; title + body LOO 0.5876). See
 [P1 findings](../reports/p1_initial_findings.md) for verification and reproduction.
+The paired 10,000-resample bootstrap gives a title + body advantage of 0.0801
+(95% CI [0.0484, 0.1120]); class-level F1 and confusion counts are also available.
+This analysis is conditional on fixed predictions, not training or new-repository uncertainty.
 This is a progress snapshot, not a new experimental protocol. The original
 21-day timeline remains a planning baseline, not a record of actual completion dates.
 
