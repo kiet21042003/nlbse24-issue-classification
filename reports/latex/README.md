@@ -16,7 +16,7 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
 Published PDF: `../../Seminar_2_Report.pdf`. Build intermediates are ignored.
-The existing cover date is retained as supplied, not asserted as the revision date.
+The cover date is September 25, 2026, as requested; it is not the revision date.
 
 From the repository root, reproduce P1 analysis:
 
