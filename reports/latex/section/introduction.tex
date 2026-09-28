@@ -1,0 +1,20 @@
+Software issue trackers contain a large amount of operational knowledge about software systems. Users and developers create issues to report incorrect behavior, request new functionality, or ask for help. Before maintainers can respond effectively, these reports often need to be categorized and routed to an appropriate workflow. For large open-source projects, manually reading and labeling every incoming issue is time-consuming and can also lead to inconsistent categorization.
+
+Automatic issue classification is therefore a natural Natural Language Processing (NLP) task. Unlike conventional short-text classification, GitHub issues may contain ordinary prose together with source code, stack traces, file paths, URLs, version numbers, command output, and repository-specific terminology. These elements can provide useful signals, but they also make the input heterogeneous and more difficult to model.
+
+A further challenge is the difference between software repositories. Each project has its own terminology, issue templates, coding conventions, and community practices. A classifier may perform well when training and validation issues come from the same repository while transferring less effectively to a repository that was not observed during training.
+
+This project studies the NLBSE'24 GitHub Issue Classification task \cite{nlbse2024issue}. Given the title and body of an issue, the objective is to predict one of three labels: \textit{bug}, \textit{feature}, or \textit{question}. We evaluate classical sparse models, lightweight text classifiers, pretrained Transformer models, parameter-efficient fine-tuning, and Sentence Transformer approaches within a shared experimental pipeline.
+
+\section{Project Objectives}
+The project has three practical objectives:
+\begin{itemize}[leftmargin=1.5em]
+    \item compare several text-classification approaches, from TF-IDF-based baselines to pretrained dense encoders;
+    \item evaluate how model behavior changes across repository-specific, pooled, cross-repository, and official test settings; and
+    \item consider predictive performance together with computational cost and implementation complexity.
+\end{itemize}
+
+The primary evaluation metric is Macro-F1. Because the dataset contains five repositories, performance is preserved at repository level before being summarized. Results from repository-specific cross-validation, pooled cross-validation, leave-one-repository-out evaluation, and the official test split are reported separately because these protocols answer different practical questions and use different training conditions.
+
+\section{Report Organization}
+Chapter 2 summarizes the model families used in the project. Chapter 3 describes the dataset, preprocessing choices, and evaluation protocols. Chapter 4 presents the common implementation pipeline and model-specific configurations. Chapter 5 reports the experimental results and discusses the main observations and limitations. Chapter 6 concludes the report and identifies possible improvements for future work.

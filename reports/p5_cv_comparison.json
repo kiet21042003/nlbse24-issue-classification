@@ -1,0 +1,36 @@
+{
+  "protocol": "cv",
+  "summary": [
+    {
+      "model": "tfidf_logistic_regression",
+      "point_estimate": 0.7636215875717357,
+      "ci_low": 0.7375369995901175,
+      "ci_high": 0.7805180013464617,
+      "confidence_level": 0.95,
+      "n_resamples": 10000,
+      "seed": 42
+    },
+    {
+      "model": "setfit_mpnet",
+      "point_estimate": 0.7953318570054431,
+      "ci_low": 0.7704547650612211,
+      "ci_high": 0.8113811142690057,
+      "confidence_level": 0.95,
+      "n_resamples": 10000,
+      "seed": 42
+    }
+  ],
+  "differences": [
+    {
+      "reference_model": "tfidf_logistic_regression",
+      "comparison_model": "setfit_mpnet",
+      "point_difference": -0.03171026943370736,
+      "ci_low": -0.05566595965234211,
+      "ci_high": -0.00849018094603659,
+      "probability_reference_better": 0.0041,
+      "confidence_level": 0.95,
+      "n_resamples": 10000,
+      "seed": 42
+    }
+  ]
+}

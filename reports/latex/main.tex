@@ -1,0 +1,126 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[utf8]{vietnam}
+\usepackage[english]{babel}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{sectsty}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+\usepackage[left=2.5cm,right=2.2cm,top=2.4cm,bottom=2.4cm]{geometry}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    pdftitle={NLBSE'24 GitHub Issue Classification},
+    pdfauthor={Seminar 2 Project Group}
+}
+
+\captionsetup{font=small,labelfont=bf}
+\captionsetup[subfigure]{labelformat=empty}
+\chapternumberfont{\LARGE}
+\chaptertitlefont{\LARGE}
+\sectionfont{\large}
+\setstretch{1.12}
+\setlength{\parindent}{0.6cm}
+\setlength{\parskip}{0.15em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textit{Seminar 2}}
+\rhead{\textit{NLBSE'24 GitHub Issue Classification}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{15pt}
+
+\definecolor{codegray}{gray}{0.93}
+\newcommand{\code}[1]{\colorbox{codegray}{\texttt{#1}}}
+\renewcommand{\bibname}{References}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+    {\Large Hanoi University of Science and Technology\\[0.2cm]}
+    {\Large School of Information and Communication Technology}
+
+    \vspace{1.5cm}
+    \includegraphics[width=0.22\textwidth]{image/bachkhoa.png}
+
+    \vspace{1.0cm}
+    {\Large \textbf{SEMINAR 2 PROJECT REPORT}}\\[0.6cm]
+    {\Huge \textbf{NLBSE'24 GitHub Issue Classification}}
+
+    \vspace{1.4cm}
+    \begin{tabular}{ll}
+        \textbf{Student} & \textbf{Student ID} \\
+        Pham Tuan Kiet & 20252751M \\
+        Nguyen Trung Hieu & 20261059M \\
+        Le Ngoc Anh & 20252275M \\
+        Nguyen Hoang Nam & 20261081M \\
+        Bui Tien Dung & 20261204M \\
+    \end{tabular}
+
+    \vfill
+    {\Large October 10, 2026}
+\end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+
+\chapter*{Acknowledgement}
+\addcontentsline{toc}{chapter}{Acknowledgement}
+We would like to express our sincere appreciation to Prof. Nguyen Thanh Phuong for giving us the opportunity to work on this project. We are grateful for the helpful advice, feedback, and guidance provided throughout the project.
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+GitHub issue triage is an important software-maintenance task in which incoming reports must be categorized before they can be prioritized, routed, and resolved. This project studies the NLBSE'24 issue classification task, where each issue is classified as a bug, feature request, or question. The dataset contains 1,500 training issues and 1,500 official test issues collected from five repositories: bitcoin/bitcoin, facebook/react, microsoft/vscode, opencv/opencv, and tensorflow/tensorflow. We compare several families of text-classification methods, including TF-IDF with Logistic Regression, LinearSVC, Complement Naive Bayes, hashed SGD, supervised fastText, RoBERTa full fine-tuning, RoBERTa with LoRA, and SetFit with MPNet and MiniLM. Experiments use repository-specific cross-validation, pooled cross-validation, leave-one-repository-out evaluation, and official test evaluation. Under repository-specific cross-validation, the TF-IDF + Logistic Regression baseline obtains a mean repository-level Macro-F1 of 0.7636. SetFit MPNet reaches 0.7953, and a five-iteration SetFit configuration reaches 0.7976. RoBERTa LoRA obtains 0.7994 under pooled cross-validation, while the baseline drops to 0.5876 under leave-one-repository-out evaluation. In addition to predictive performance, the report considers computational cost and the effect of the evaluation protocol on result interpretation. Overall, pretrained dense representations achieve strong classification performance, while sparse methods remain practical alternatives when simplicity and computational efficiency are important.
+
+\clearpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+\input{section/introduction}
+
+\chapter{Background and Model Families}
+\input{section/methodology}
+
+\chapter{Dataset and Evaluation Setup}
+\input{section/dataset}
+
+\chapter{Implementation Details}
+\input{section/implementation}
+
+\chapter{Experimental Results}
+\input{section/result}
+
+\chapter{Conclusion}
+\input{section/conclusion}
+
+\clearpage
+\renewcommand{\bibname}{References}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

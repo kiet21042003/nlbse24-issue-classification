@@ -1,0 +1,224 @@
+This chapter presents the experimental results obtained from the different model families and evaluation protocols. The analysis focuses primarily on Macro-F1, while computational cost and repository-level differences are considered where the available measurements support such comparisons. Results from repository-specific Cross-Validation, Pooled Cross-Validation, Leave-One-Repository-Out evaluation, and Official Test Evaluation are kept separate because each protocol represents a different training and evaluation condition.
+
+\section{Evaluation Metrics}
+The primary evaluation metric is Macro-F1. For each target class $c$, Precision and Recall are defined as
+\begin{equation}
+    \text{Precision}_c = \frac{TP_c}{TP_c + FP_c},
+\end{equation}
+and
+\begin{equation}
+    \text{Recall}_c = \frac{TP_c}{TP_c + FN_c},
+\end{equation}
+where $TP_c$, $FP_c$, and $FN_c$ denote true positives, false positives, and false negatives for class $c$.
+
+The class-level F1-score is the harmonic mean of Precision and Recall:
+\begin{equation}
+    F1_c = 2 \times \frac{\text{Precision}_c \times \text{Recall}_c}
+    {\text{Precision}_c + \text{Recall}_c}.
+\end{equation}
+
+For the three target classes, the overall Macro-F1 is
+\begin{equation}
+    \text{Macro-F1} =
+    \frac{F1_{\text{bug}} + F1_{\text{feature}} + F1_{\text{question}}}{3}.
+\end{equation}
+
+Macro-F1 gives equal weight to the three classes. This is useful even though the dataset is balanced because it prevents strong performance on one category from hiding weak performance on another. Unless stated otherwise, the scores reported below refer to Macro-F1.
+
+\section{Baseline Results}
+For reported CV scores, let $F_{r,k}$ be the three-class macro-F1 of repository $r$ and fold $k$. The ranking score is $\frac{1}{5}\sum_{r=1}^{5}\frac{1}{K}\sum_{k=1}^{K}F_{r,k}$, with $K=5$ for CV and pooled CV, and $K=1$ for LOO or official evaluation. It is not the F1 of predictions pooled across all repositories. Absent-class denominators use zero-division handling consistent with the shared evaluator.
+
+The TF-IDF + Logistic Regression classifier provides the main reference point for the remaining experiments. When both title and body are used, the model obtains a repository-specific CV Macro-F1 of 0.7636. The title-only configuration obtains 0.5953, an absolute decrease of 0.1683. This result shows that the issue body provides substantial information beyond the short title.
+
+\begin{table}[H]
+\centering
+\caption{Performance of the TF-IDF + Logistic Regression baseline.}
+\label{tab:baseline-results}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Input} & \textbf{CV Macro-F1} & \textbf{LOO Macro-F1} \\
+\midrule
+Title + Body & 0.7636 & 0.5876 \\
+Title Only & 0.5953 & 0.5075 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:baseline-results} also shows a large reduction when the evaluation setting changes from repository-specific CV to LOO. Under CV, training data contains examples from the same repository as the validation data. Under LOO, the target repository is completely absent from training. The difference should not be interpreted as a purely causal estimate of domain shift because the amount and composition of training data also change. Nevertheless, it indicates that transfer to an unseen repository is considerably more difficult for this baseline.
+
+\subsection*{Updated P1 uncertainty and error analysis}
+The title-only LOO run uses the frozen configuration and identical held-out repositories. Its score is 0.5075, versus 0.5876 for title plus body. A paired bootstrap with 10,000 resamples (seed 42) samples issue rows with replacement within each repository, shares draws across models, and averages repository macro-F1 equally. The observed title-plus-body advantage is $+0.0801$, with percentile 95\% CI $[0.0484,0.1120]$. Individual intervals are $[0.5621,0.6108]$ for title plus body and $[0.4814,0.5312]$ for title only.
+
+These intervals condition on fixed trained models and five observed repositories. They exclude training variability and new-repository uncertainty. Issue rows are assumed exchangeable; duplicates or dependent issues may make intervals optimistic.
+
+\begin{table}[H]
+\centering
+\caption{LOO class F1 averaged equally over repositories.}
+\begin{tabular}{lrrr}
+\toprule
+Class & Title + body & Title only & Difference \\
+\midrule
+bug & 0.5463 & 0.4402 & +0.1061 \\
+feature & 0.6693 & 0.5996 & +0.0697 \\
+question & 0.5471 & 0.4826 & +0.0645 \\
+\bottomrule
+\end{tabular}
+\end{table}
+The largest descriptive gain is on bugs. Across 1,500 held-out predictions, true bugs predicted as questions decrease from 207 to 182, and true features predicted as bugs decrease from 74 to 29. Pooled counts are for error inspection, not computing repository-balanced F1. Full matrices and per-repository metrics are in \texttt{reports/p1\_loo\_analysis.json}.
+
+\section{Lightweight Model Results}
+The P2 scores below are transcribed from the versioned P2 findings. Their complete raw-artifact handoff is still pending, so this report revision does not claim an independent recomputation of all P2 results.
+Several lightweight classifiers are evaluated as alternatives to Logistic Regression. Among the LinearSVC configurations, the word-only model obtains a CV Macro-F1 of 0.7541, while the word-and-character configuration obtains 0.7533. The difference under repository-specific CV is small, but the word-and-character variant obtains higher scores under LOO and Official Test Evaluation.
+
+\begin{table}[H]
+\centering
+\caption{Performance of lightweight text-classification models.}
+\label{tab:lightweight-results}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{CV} & \textbf{LOO} & \textbf{Official} \\
+\midrule
+Word LinearSVC & 0.7541 & 0.5898 & 0.7498 \\
+Word + Character LinearSVC & 0.7533 & 0.6003 & 0.7591 \\
+Hashed SGD & 0.7030 & 0.6152 & 0.7322 \\
+Supervised fastText & 0.7089 & 0.5384 & 0.6896 \\
+Complement Naive Bayes & 0.7054 & 0.4904 & 0.7108 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As shown in Table~\ref{tab:lightweight-results}, Hashed SGD obtains a CV Macro-F1 of 0.7030 but reaches 0.6152 under LOO, the highest LOO value among the lightweight configurations listed here. The relative ordering of lightweight models therefore changes across evaluation settings, reinforcing the need to keep protocol labels attached to every score.
+
+Character features also introduce additional computational cost. The reported word-and-character LinearSVC configuration requires approximately 8.5 times the fitting time and 11.5 times the inference time of the word-only configuration. The small predictive difference should therefore be interpreted together with this additional cost.
+
+\section{RoBERTa Results}
+Full RoBERTa fine-tuning and LoRA produce similar aggregate performance under repository-specific CV, but their behavior differs across individual repositories. Full fine-tuning obtains a mean repository-level Macro-F1 of 0.7853, compared with 0.7800 for LoRA.
+
+\begin{table}[H]
+\centering
+\caption{Repository-level Macro-F1 of RoBERTa full fine-tuning and LoRA under repository-specific CV.}
+\label{tab:roberta-repo-results}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Repository} & \textbf{Full} & \textbf{LoRA} & \textbf{Difference} \\
+\midrule
+bitcoin/bitcoin & 0.7351 & 0.7345 & -0.0006 \\
+facebook/react & 0.8076 & 0.8316 & +0.0240 \\
+microsoft/vscode & 0.7407 & 0.7562 & +0.0155 \\
+opencv/opencv & 0.7632 & 0.7533 & -0.0099 \\
+tensorflow/tensorflow & 0.8797 & 0.8247 & -0.0550 \\
+\midrule
+Cross-Repository Mean & 0.7853 & 0.7800 & -0.0052 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:roberta-repo-results} shows that the aggregate mean hides meaningful repository-level variation. LoRA produces higher scores on React and VS Code, whereas full fine-tuning is higher on Bitcoin, OpenCV, and especially TensorFlow. The effect of the adaptation strategy is therefore not consistent across repositories.
+
+Under Pooled Cross-Validation, full fine-tuning obtains a Macro-F1 of 0.7924 and LoRA obtains 0.7994. This relationship differs from repository-specific CV, where full fine-tuning has the slightly higher aggregate value. Because pooled and repository-specific CV use different training compositions, the two settings are reported separately rather than combined into a single ranking.
+
+\section{SetFit Results}
+SetFit achieves strong repository-specific CV performance across several configurations. The full-data MPNet configuration with 20 contrastive iterations obtains a Macro-F1 of 0.7953, while the corresponding MiniLM configuration reaches 0.7881. MiniLM requires substantially less fitting time in the reported environment: 55.1 seconds compared with 145.4 seconds for MPNet.
+
+\begin{table}[H]
+\centering
+\caption{Performance and resource measurements of SetFit configurations.}
+\label{tab:setfit-results}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Configuration} & \textbf{Macro-F1} & \textbf{Fit Time (s)} & \textbf{Inference (s)} & \textbf{Memory proxy (MiB)} \\
+\midrule
+MPNet, Full Data, 20 Iterations & 0.7953 & 145.4 & 0.23 & 2594 \\
+MiniLM, Full Data, 20 Iterations & 0.7881 & 55.1 & 0.07 & 2655 \\
+MPNet, $k=8$ & 0.6785 & 22.9 & 0.19 & 2199 \\
+MPNet, $k=16$ & 0.7375 & 35.0 & 0.20 & 2318 \\
+MPNet, $k=32$ & 0.7833 & 60.9 & 0.20 & 2476 \\
+MPNet, 5 Iterations & 0.7976 & 44.2 & 0.23 & 2521 \\
+MPNet, 80 Iterations & 0.7970 & 533.6 & 0.21 & 2505 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+The sampling experiments in Table~\ref{tab:setfit-results} show a clear improvement as the number of labeled training examples increases. MPNet obtains 0.6785 with $k=8$, 0.7375 with $k=16$, and 0.7833 with $k=32$. The result indicates that classification quality remains sensitive to labeled-data availability even when pretrained sentence representations are used.
+
+The contrastive-iteration experiment shows a different pattern. Five iterations obtain a Macro-F1 of 0.7976 with a fitting time of 44.2 seconds, whereas 80 iterations obtain 0.7970 while requiring 533.6 seconds. In this experiment, the much longer run does not provide a corresponding performance improvement, demonstrating diminishing returns from additional contrastive-training iterations.
+
+In the SetFit table, times are means over 25 repository/fold evaluations, not the total experiment time. The memory column preserves the original report's proxy: the mean of $\max(\texttt{python\_peak\_mb},\texttt{rss\_after\_mb})$ during fit. For MPNet this is 2594.15 MiB. RSS is sampled after fit rather than continuously, while the Python peak measures traced Python allocations only. This proxy is \emph{not peak process RAM or GPU VRAM}. SetFit runs used the reported RTX PRO 6000 Blackwell environment; no controlled cross-family resource ranking is claimed.
+
+\section{Overall Model Comparison}
+Table~\ref{tab:cv-main-comparison} compares the principal models under the same repository-specific CV protocol. Within this setting, pretrained dense models obtain higher observed Macro-F1 values than the TF-IDF + Logistic Regression baseline, although the differences among the strongest dense configurations are relatively small.
+
+\begin{table}[H]
+\centering
+\caption{Main model comparison under repository-specific cross-validation.}
+\label{tab:cv-main-comparison}
+\begin{tabular}{lc}
+\toprule
+\textbf{Model} & \textbf{Macro-F1} \\
+\midrule
+TF-IDF + Logistic Regression & 0.7636 \\
+RoBERTa Full Fine-Tuning & 0.7853 \\
+RoBERTa LoRA & 0.7800 \\
+SetFit MPNet & 0.7953 \\
+SetFit MPNet, 5 Iterations & 0.7976 \\
+SetFit MiniLM & 0.7881 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Pooled CV is shown separately in Table~\ref{tab:pooled-roberta-comparison}. This avoids visually mixing scores from different training conditions.
+
+\begin{table}[H]
+\centering
+\caption{RoBERTa comparison under pooled cross-validation.}
+\label{tab:pooled-roberta-comparison}
+\begin{tabular}{lc}
+\toprule
+\textbf{Model} & \textbf{Macro-F1} \\
+\midrule
+RoBERTa Full Fine-Tuning & 0.7924 \\
+RoBERTa LoRA & 0.7994 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The pooled LoRA value of 0.7994 should not be interpreted as a direct improvement over the repository-specific CV values in Table~\ref{tab:cv-main-comparison}. Pooled training exposes the model to examples from all repositories simultaneously and therefore represents a different experimental condition.
+
+\section{Ensemble and Resource Considerations}
+We executed P5's comparison and ensemble utilities from revision \texttt{09fe724} on the versioned CV artifacts (seed 42), aligning 25 repository/fold evaluations by protocol, seed, fold, test fingerprint and ordered labels. No models were retrained. An illustrative equal-weight hard vote combines Logistic Regression and SetFit MPNet; ties use the implementation's fixed class order (bug, feature, question). No ensemble weights were tuned.
+
+\begin{table}[H]
+\centering
+\caption{Post-hoc CV integration check, not an official-test result.}
+\begin{tabular}{lr}
+\toprule
+Model & Repository-balanced macro-F1 \\
+\midrule
+Logistic Regression & 0.7636 \\
+SetFit MPNet & 0.7953 \\
+Equal-weight hard vote (LR + MPNet) & 0.7885 \\
+\bottomrule
+\end{tabular}
+\end{table}
+The ensemble improves on LR by 0.0249 but trails MPNet by 0.0068; this combination does not outperform its strongest component. Because two-model votes frequently tie, the fixed tie rule matters. This descriptive check must not be treated as an independently validated ensemble-selection procedure.
+
+A paired bootstrap comparison of LR and MPNet uses 10,000 resamples with RNG seed 42. Rows are resampled within each aligned fold, sharing indices across models, then scores are averaged within repositories and equally across repositories. MPNet minus LR is $+0.0317$, with percentile 95\% CI $[0.0085,0.0557]$. Individual CIs are $[0.7375,0.7805]$ for LR and $[0.7705,0.8114]$ for MPNet. These intervals condition on fixed predictions and do not account for overlapping training folds, training randomness, configuration-selection optimism, or new-repository uncertainty. They are not a posterior probability that one model is universally better.
+
+JSON outputs are supplied as \path{reports/p5_cv_comparison.json} and \path{reports/p5_cv_ensemble.json}, with exact reproduction commands in \path{reports/latex/README.md}. Soft voting remains available only for compatible probability outputs; LinearSVC margins must not be averaged as probabilities.
+
+No global Pareto frontier is presented: legacy artifacts lack a verified common hardware identity. P5's safe default excludes unknown-hardware groups and separates protocols. Hardware must be verified or measurements recollected before presenting a controlled cross-family frontier.
+
+Resource measurements are also interpreted within their experimental context. Training time, inference time, and memory usage can be strongly affected by the underlying CPU or GPU and by the number of fitting operations required by the protocol. Consequently, the reported resource values are useful for within-environment observations, such as the SetFit iteration comparison, but they should not be treated as a controlled benchmark across all model families.
+
+\section{Discussion}
+\subsection{Main Observations}
+The experiments show a clear difference between classification within repositories already represented during training and transfer to an unseen repository. The Logistic Regression baseline decreases from 0.7636 under repository-specific CV to 0.5876 under LOO, and several lightweight classifiers show similar protocol-dependent changes. Repository-specific vocabulary, issue templates, and writing conventions therefore appear to be important factors in model behavior.
+
+Pretrained dense representations provide strong results under repository-specific CV. RoBERTa and SetFit configurations improve on the sparse Logistic Regression baseline in the reported experiments, but the gains are moderate relative to the additional implementation and computational complexity. The SetFit iteration experiments further show that more training does not automatically lead to better predictive performance.
+
+A practical conclusion from these results is that model choice should depend on the deployment setting. Sparse models remain attractive when simplicity, fast training, and low computational requirements are priorities. Dense pretrained models provide higher observed CV performance in this project, while parameter-efficient and sentence-embedding approaches offer alternatives to conventional full fine-tuning.
+
+\subsection{Limitations}
+Several limitations should be considered when interpreting the results. First, not every model family was evaluated with the same number of random seeds, so very small score differences should not be overinterpreted. Second, configuration selection using cross-validation can make the reported CV values optimistic when the same folds are also used for model selection. Third, computational measurements were collected under different hardware environments for some model families, which prevents a fully controlled comparison of training and inference cost. Finally, CV, pooled CV, LOO, and official test evaluation address different questions and should remain separated when conclusions are drawn from their scores.

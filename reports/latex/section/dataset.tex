@@ -1,0 +1,133 @@
+\section{Dataset Overview}
+The project uses the official NLBSE'24 issue-report classification dataset \cite{nlbse2024issue}. The dataset contains two official splits, each with 1,500 issues. Five repositories are represented: bitcoin/bitcoin, facebook/react, microsoft/vscode, opencv/opencv, and tensorflow/tensorflow. For each repository, the dataset contains 100 bug issues, 100 feature issues, and 100 question issues in each official split.
+
+\begin{table}[H]
+\centering
+\caption{Summary of the NLBSE'24 issue-classification dataset.}
+\label{tab:dataset-summary}
+\begin{tabularx}{\textwidth}{>{\bfseries}l X}
+\toprule
+Property & Value \\
+\midrule
+Training split & 1,500 issues \\
+Official test split & 1,500 issues \\
+Repositories & bitcoin/bitcoin; facebook/react; microsoft/vscode; opencv/opencv; tensorflow/tensorflow \\
+Labels & bug; feature; question \\
+Class balance & 100 examples per label and repository in each split \\
+Input fields & title and body \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The balanced construction in Table~\ref{tab:dataset-summary} is useful for evaluation because each target class has the same number of examples within each repository. Consequently, class-frequency imbalance is not the main source of performance differences in this dataset.
+
+\section{Dataset Characteristics and Challenges}
+Although the label distribution is balanced, the textual content is heterogeneous. Issue bodies may contain long technical descriptions, code fragments, stack traces, URLs, paths, and project-specific vocabulary. In addition, the same linguistic form can express different intents: a question may contain terms associated with a software defect, while a feature request may itself be phrased as a question.
+
+The project therefore considers the following dataset-related challenges:
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Repository-specific language:} templates, terminology, and writing conventions differ across repositories, which can make transfer to an unseen repository more difficult.
+    \item \textbf{Duplicate leakage:} identical normalized issue text should not be placed in both training and validation partitions of the same cross-validation experiment.
+    \item \textbf{Technical content:} code fragments, paths, identifiers, and version strings may be informative and should not automatically be removed as noise.
+    \item \textbf{Intent overlap:} the \textit{question} label can overlap linguistically with both bug reports and feature requests.
+    \item \textbf{Train--test overlap checks:} exact or near-exact overlap between official splits should be inspected when interpreting final test performance.
+\end{itemize}
+
+\section{Exploratory Data Analysis}
+The first EDA step is to verify the dataset structure and label distribution. Because every repository contains the same number of examples for the three labels, the class distribution is uniform by construction. Repository-level inspection remains important because issue length, issue templates, writing style, and technical vocabulary can vary substantially between projects.
+
+In this report, EDA is used mainly to validate the split structure and identify properties that influence preprocessing and evaluation. Model-performance differences between repositories are discussed later in Chapter 5 rather than being treated as part of the dataset analysis.
+
+The dataset audit found three shared normalized title-and-body keys across official train/test, including one with conflicting labels. Train has one exact duplicate beyond unique texts; group-aware CV keeps identical full texts together. Two test bodies are missing and converted to empty strings. Training text has median 150 words, 95th percentile 536.1 words, and maximum 21,595 words. These findings motivate duplicate-aware folds and explicit truncation limits. Official scores retain the original split for comparability; no de-overlapped sensitivity score is claimed. Overlap can favor memorization, while contradictory labels can penalize consistent classifiers.
+
+\section{Preprocessing Pipeline}
+The shared text representation combines the issue title and body after whitespace normalization. Missing fields are normalized at the data-service boundary. Technical content is retained because source-code fragments, paths, stack traces, and version identifiers can contain predictive information.
+
+For sparse models, vectorizers are fitted only on the training portion of each fold and then applied to the corresponding validation partition. For pretrained encoders, the text is processed using the tokenizer associated with the selected model and truncated according to that model's configuration. Sampling and any representation-learning step are also performed inside the training partition to avoid using validation information during preprocessing.
+
+\section{Evaluation Protocols}
+Four evaluation protocols are used because each one represents a different practical setting. Their results are reported separately and are not treated as interchangeable.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={
+        draw,
+        rounded corners=3pt,
+        align=center,
+        text width=3.0cm,
+        minimum width=3.3cm,
+        minimum height=1.8cm,
+        fill=gray!8,
+        inner sep=5pt,
+        font=\small
+    },
+    mainbox/.style={
+        draw,
+        rounded corners=3pt,
+        align=center,
+        text width=6.0cm,
+        minimum height=1.15cm,
+        fill=gray!15,
+        inner sep=5pt,
+        font=\small\bfseries
+    },
+    arrow/.style={
+        -{Latex[length=2mm]},
+        thick
+    }
+]
+
+% Top box
+\node[mainbox] (data) at (0,3.0)
+{NLBSE'24 Data and Experiment Setup};
+
+% Four equal bottom boxes
+\node[box] (cv) at (-5.4,0)
+{\textbf{Repository-specific CV}\\[2mm]
+5 folds per repository};
+
+\node[box] (pooled) at (-1.8,0)
+{\textbf{Pooled CV}\\[2mm]
+Training on all repositories};
+
+\node[box] (loo) at (1.8,0)
+{\textbf{Leave-One-Repository-Out}\\[2mm]
+Train on four, test on one};
+
+\node[box] (official) at (5.4,0)
+{\textbf{Official Test Evaluation}\\[2mm]
+Train split $\rightarrow$ test split};
+
+% Horizontal branching line
+\coordinate (branch) at (0,1.75);
+
+\draw[thick]
+    (data.south) -- (branch);
+
+\draw[thick]
+    (-5.4,1.75) -- (5.4,1.75);
+
+% Four arrows
+\draw[arrow] (-5.4,1.75) -- (cv.north);
+\draw[arrow] (-1.8,1.75) -- (pooled.north);
+\draw[arrow] (1.8,1.75) -- (loo.north);
+\draw[arrow] (5.4,1.75) -- (official.north);
+
+\end{tikzpicture}
+
+\caption{Overview of the evaluation protocols used in the project.}
+\label{fig:evaluation-protocols}
+\end{figure}
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Repository-specific Cross-Validation (CV):} for each repository, the training data is divided into five stratified folds while preserving the three-class distribution. Four folds are used for training and one for validation. Identical normalized title-and-body duplicates are grouped into the same fold to reduce leakage. This protocol measures performance when the target repository is already represented during training.
+
+    \item \textbf{Pooled Cross-Validation:} training partitions from all five repositories are combined for each fold. The model is exposed to a broader set of repository vocabularies and writing styles, while evaluation results are still preserved at repository level before aggregation.
+
+    \item \textbf{Leave-One-Repository-Out (LOO):} all data comes from the official training split. Each run trains on 1,200 issues from four repositories and evaluates on the remaining repository's 300 training issues. Five runs cover all held-out repositories. Official test data is not used.
+
+    \item \textbf{Official Test Evaluation:} after configuration selection, five independent classifiers are trained, one per repository. Each uses that repository's 300 official training issues and evaluates on its 300 official test issues. This is not a pooled model trained on all 1,500 issues. Test labels must not guide further selection. Here official scores are available for P2; P1, P3 and P4 results remain training-only.
+\end{itemize}
+
+Figure~\ref{fig:evaluation-protocols} summarizes the distinction between these protocols. In particular, repository-specific CV and pooled CV should not be directly ranked against LOO or the official test setting because both the training composition and the evaluation objective differ.
