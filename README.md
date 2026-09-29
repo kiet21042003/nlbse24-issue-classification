@@ -77,14 +77,17 @@ experiment. Model owners should start with
 
 ## Project progress
 
-As of **18 September 2026**, P2 lightweight models, P3 RoBERTa/LoRA and P4
-SetFit have been merged. P3 and P4 CV artifacts have been audited and integrated
-locally. Final result aggregation, remaining official evaluations, the combined
-report and demo are still pending. See [project status and next steps](docs/project_status.md)
+As of **28 September 2026**, P2 lightweight models, P3 RoBERTa/LoRA, P4
+SetFit and P5 evaluation/integration have been merged. A corrected combined
+report and initial P5 paired comparison/ensemble analysis are available;
+remaining official evaluations and final submission verification are pending.
+See [project status and next steps](docs/project_status.md)
 and the updated [project plan](docs/NLBSE_Topic_Comparison_and_Project_Plan.docx).
-Since **22 September 2026**, a fresh clone includes the reviewed P1, P3 and P4
-JSON artifacts and the P3 import manifest. P2 artifacts are still needed for
-the consolidated evaluation; original ZIPs are not committed.
+A fresh clone includes **485 run artifacts** from P1–P4 and the P3 import
+manifest. P2 contributes 150 newly reproduced CV/LOO runs, not recovered
+original logs; see [P2 reproduction handoff](reports/p2_reproduction_handoff.md).
+Original P2 official-test/tuning artifacts remain outstanding. Source result
+ZIPs are not committed; resource measurements do not support a global Pareto comparison.
 
 ## P1 baseline status
 

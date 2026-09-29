@@ -24,16 +24,18 @@ From the repository root, reproduce P1 analysis:
 python scripts/p1_loo_analysis.py --resamples 10000
 ```
 
-P5 analysis uses its reviewed source without requiring a merge into main:
+P5 analysis was first executed from reviewed revision `09fe724`, now merged
+into main in `1a8bbae`. Reproduce with the integrated scripts:
 
 ```powershell
-git worktree add --detach tmp/p5-report-tools 09fe724
-python tmp/p5-report-tools/scripts/compare_models.py --results-dir results --protocol cv --model tfidf_logistic_regression --model setfit_mpnet --resamples 10000 --output reports/p5_cv_comparison.json
-python tmp/p5-report-tools/scripts/run_ensemble.py --results-dir results --protocol cv --model tfidf_logistic_regression --model setfit_mpnet --output reports/p5_cv_ensemble.json
+python scripts/compare_models.py --results-dir results --protocol cv --model tfidf_logistic_regression --model setfit_mpnet --resamples 10000 --output reports/p5_cv_comparison.json
+python scripts/run_ensemble.py --results-dir results --protocol cv --model tfidf_logistic_regression --model setfit_mpnet --output reports/p5_cv_ensemble.json
 ```
 
-Use a new temporary worktree path if the suggested one already exists. These
-commands use fixed predictions, not GPU training or official test data. P2 table
-values are sourced from `reports/p2_lightweight_models.md`; its full raw artifact
-handoff is still outstanding. Do not represent those values as independently
-recomputed here.
+These commands use fixed predictions, not GPU training or official test data.
+P2 CV/LOO values for all five frozen configurations were independently reproduced
+on 28 September (150 new run artifacts); see `reports/p2_reproduction_handoff.md`.
+They match the published table at its displayed precision. Original P2 official-test,
+sweep and extra-seed artifacts remain outstanding: those claims are sourced from
+P2 findings, not independently recomputed here. New reproduction timings are not
+a controlled hardware benchmark.

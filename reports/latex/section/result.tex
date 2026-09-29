@@ -67,7 +67,7 @@ question & 0.5471 & 0.4826 & +0.0645 \\
 The largest descriptive gain is on bugs. Across 1,500 held-out predictions, true bugs predicted as questions decrease from 207 to 182, and true features predicted as bugs decrease from 74 to 29. Pooled counts are for error inspection, not computing repository-balanced F1. Full matrices and per-repository metrics are in \texttt{reports/p1\_loo\_analysis.json}.
 
 \section{Lightweight Model Results}
-The P2 scores below are transcribed from the versioned P2 findings. Their complete raw-artifact handoff is still pending, so this report revision does not claim an independent recomputation of all P2 results.
+P2 CV/LOO scores for all five frozen configurations were independently reproduced on 28 September: 150 new run artifacts match the table at its displayed precision. Metrics, split fingerprints and configurations were verified. Official-test values remain transcribed from P2 findings; original official and tuning artifacts are still pending. Reproduction timings were collected under concurrent load and are not a controlled cost benchmark.
 Several lightweight classifiers are evaluated as alternatives to Logistic Regression. Among the LinearSVC configurations, the word-only model obtains a CV Macro-F1 of 0.7541, while the word-and-character configuration obtains 0.7533. The difference under repository-specific CV is small, but the word-and-character variant obtains higher scores under LOO and Official Test Evaluation.
 
 \begin{table}[H]
