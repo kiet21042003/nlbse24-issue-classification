@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "p2_char_only",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.6977220878749677,
+    "facebook/react": 0.7796635792627761,
+    "microsoft/vscode": 0.7530321937343463,
+    "opencv/opencv": 0.7444658985453684,
+    "tensorflow/tensorflow": 0.7476250950541948
+  },
+  "cross_repository_macro_f1": 0.7445017708943307,
+  "evaluations": 25,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\cv\\p2_char_only\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\cv\\p2_char_only\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\p2_char_only\\microsoft__vscode\\42\\fold-1.json",
+    "results\\cv\\p2_char_only\\opencv__opencv\\42\\fold-1.json",
+    "results\\cv\\p2_char_only\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\cv\\p2_char_only\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\cv\\p2_char_only\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\p2_char_only\\microsoft__vscode\\42\\fold-2.json",
+    "results\\cv\\p2_char_only\\opencv__opencv\\42\\fold-2.json",
+    "results\\cv\\p2_char_only\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\cv\\p2_char_only\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\cv\\p2_char_only\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\p2_char_only\\microsoft__vscode\\42\\fold-3.json",
+    "results\\cv\\p2_char_only\\opencv__opencv\\42\\fold-3.json",
+    "results\\cv\\p2_char_only\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\cv\\p2_char_only\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\cv\\p2_char_only\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\p2_char_only\\microsoft__vscode\\42\\fold-4.json",
+    "results\\cv\\p2_char_only\\opencv__opencv\\42\\fold-4.json",
+    "results\\cv\\p2_char_only\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\cv\\p2_char_only\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\cv\\p2_char_only\\facebook__react\\42\\fold-5.json",
+    "results\\cv\\p2_char_only\\microsoft__vscode\\42\\fold-5.json",
+    "results\\cv\\p2_char_only\\opencv__opencv\\42\\fold-5.json",
+    "results\\cv\\p2_char_only\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}

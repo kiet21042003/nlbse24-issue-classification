@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "run_id": "46fa8c38-98fb-4bce-8948-d9faaeea1883",
-  "created_at_utc": "2026-09-28T16:42:27.165782+00:00",
+  "run_id": "3ea0c4d6-8b41-4d9e-9c35-067a50f072b5",
+  "created_at_utc": "2026-08-30T22:28:48.779145+00:00",
   "protocol": "cv",
   "fold": "fold-4",
   "repository": "bitcoin/bitcoin",
@@ -136,17 +136,17 @@
   },
   "resources": {
     "fit": {
-      "elapsed_seconds": 8.941140500013717,
-      "rss_before_mb": 189.25,
-      "rss_after_mb": 209.01171875,
-      "rss_delta_mb": 19.76171875,
+      "elapsed_seconds": 5.009748899989063,
+      "rss_before_mb": 178.03515625,
+      "rss_after_mb": 200.72265625,
+      "rss_delta_mb": 22.6875,
       "python_peak_mb": 53.51862335205078
     },
     "inference": {
-      "elapsed_seconds": 2.1394925999920815,
-      "rss_before_mb": 209.01171875,
-      "rss_after_mb": 222.546875,
-      "rss_delta_mb": 13.53515625,
+      "elapsed_seconds": 1.085620600002585,
+      "rss_before_mb": 200.72265625,
+      "rss_after_mb": 213.3984375,
+      "rss_delta_mb": 12.67578125,
       "python_peak_mb": 5.749455451965332
     }
   },
@@ -586,9 +586,8 @@
     ]
   },
   "environment": {
-    "python": "3.11.9",
-    "platform": "Windows-10-10.0.26200-SP0",
-    "hardware_group": "p2-local-cpu-reproduction-20260928",
+    "python": "3.11.16",
+    "platform": "Windows-10-10.0.22631-SP0",
     "packages": {
       "joblib": "1.5.2",
       "numpy": "1.26.4",

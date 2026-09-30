@@ -83,11 +83,14 @@ report and initial P5 paired comparison/ensemble analysis are available;
 remaining official evaluations and final submission verification are pending.
 See [project status and next steps](docs/project_status.md)
 and the updated [project plan](docs/NLBSE_Topic_Comparison_and_Project_Plan.docx).
-A fresh clone includes **485 run artifacts** from P1–P4 and the P3 import
-manifest. P2 contributes 150 newly reproduced CV/LOO runs, not recovered
-original logs; see [P2 reproduction handoff](reports/p2_reproduction_handoff.md).
-Original P2 official-test/tuning artifacts remain outstanding. Source result
-ZIPs are not committed; resource measurements do not support a global Pareto comparison.
+As of **30 September 2026**, a fresh clone includes **1,690 run artifacts**
+from P1–P4, including **1,355 original P2 runs** (CV, LOO, official, tuning,
+ablations and extra seeds). Original P2 artifacts supersede the matching 150
+reproductions, preserved in Git history. See [P2 handoff audit](reports/p2_reproduction_handoff.md).
+Use `python scripts/aggregate_results.py --seed 42` to avoid mixing seeds;
+select frozen models explicitly and exclude the React-only `p2_ft_probe` from
+five-repository comparisons. Source result ZIPs are not committed. Unverified
+hardware identity still prevents a controlled global Pareto comparison.
 
 ## P1 baseline status
 

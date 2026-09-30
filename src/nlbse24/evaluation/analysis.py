@@ -157,11 +157,17 @@ def resource_summary(artifacts: list[dict[str, Any]]) -> pd.DataFrame:
     )
 
 
-def analyze_results(root: str | Path, *, validate: bool = True) -> dict[str, pd.DataFrame]:
+def analyze_results(
+    root: str | Path, *, validate: bool = True, seed: int | None = None
+) -> dict[str, pd.DataFrame]:
     """Load artifacts and return evaluation, repository, model and resource tables."""
 
     artifacts = load_artifacts(root, validate=validate)
     frame = results_dataframe(root, validate=validate)
+    if seed is not None:
+        artifacts = [artifact for artifact in artifacts if artifact["seed"] == seed]
+        if not frame.empty:
+            frame = frame.loc[frame["seed"] == seed].copy()
     return {
         "evaluations": frame,
         "repositories": repository_summary(frame),
@@ -171,11 +177,11 @@ def analyze_results(root: str | Path, *, validate: bool = True) -> dict[str, pd.
 
 
 def write_analysis_tables(
-    root: str | Path, output_dir: str | Path, *, validate: bool = True
+    root: str | Path, output_dir: str | Path, *, validate: bool = True, seed: int | None = None
 ) -> dict[str, Path]:
     """Write CSV tables and return their paths."""
 
-    tables = analyze_results(root, validate=validate)
+    tables = analyze_results(root, validate=validate, seed=seed)
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
     paths: dict[str, Path] = {}

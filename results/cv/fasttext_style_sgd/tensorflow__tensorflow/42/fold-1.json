@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "run_id": "589e11a2-d5b9-4c90-b932-3043dccecfe2",
-  "created_at_utc": "2026-09-28T16:48:32.919818+00:00",
+  "run_id": "d19106ff-6df8-40cd-85e8-462882dd3a9e",
+  "created_at_utc": "2026-08-30T22:31:23.788665+00:00",
   "protocol": "cv",
   "fold": "fold-1",
   "repository": "tensorflow/tensorflow",
@@ -102,17 +102,17 @@
   },
   "resources": {
     "fit": {
-      "elapsed_seconds": 6.933271199988667,
-      "rss_before_mb": 156.23046875,
-      "rss_after_mb": 209.46875,
-      "rss_delta_mb": 53.23828125,
-      "python_peak_mb": 55.066781997680664
+      "elapsed_seconds": 7.700942499999655,
+      "rss_before_mb": 146.06640625,
+      "rss_after_mb": 198.21484375,
+      "rss_delta_mb": 52.1484375,
+      "python_peak_mb": 55.0669584274292
     },
     "inference": {
-      "elapsed_seconds": 1.4890787999611348,
-      "rss_before_mb": 209.46875,
-      "rss_after_mb": 205.390625,
-      "rss_delta_mb": -4.078125,
+      "elapsed_seconds": 1.5914608000020962,
+      "rss_before_mb": 198.21484375,
+      "rss_after_mb": 195.01953125,
+      "rss_delta_mb": -3.1953125,
       "python_peak_mb": 49.76845836639404
     }
   },
@@ -545,9 +545,8 @@
     ]
   },
   "environment": {
-    "python": "3.11.9",
-    "platform": "Windows-10-10.0.26200-SP0",
-    "hardware_group": "p2-local-cpu-reproduction-20260928",
+    "python": "3.11.16",
+    "platform": "Windows-10-10.0.22631-SP0",
     "packages": {
       "joblib": "1.5.2",
       "numpy": "1.26.4",

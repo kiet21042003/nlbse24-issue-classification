@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "run_id": "c21ea53f-6f3c-45ac-baee-c0cd70ec928e",
-  "created_at_utc": "2026-09-28T16:50:24.215763+00:00",
+  "run_id": "47b8cb39-e33e-4617-8c83-14807927286b",
+  "created_at_utc": "2026-08-30T22:33:29.528232+00:00",
   "protocol": "cv",
   "fold": "fold-5",
   "repository": "facebook/react",
@@ -102,18 +102,18 @@
   },
   "resources": {
     "fit": {
-      "elapsed_seconds": 2.907674699963536,
-      "rss_before_mb": 168.54296875,
-      "rss_after_mb": 217.80078125,
-      "rss_delta_mb": 49.2578125,
-      "python_peak_mb": 52.885483741760254
+      "elapsed_seconds": 2.4926413999928627,
+      "rss_before_mb": 148.6171875,
+      "rss_after_mb": 201.65234375,
+      "rss_delta_mb": 53.03515625,
+      "python_peak_mb": 52.88551425933838
     },
     "inference": {
-      "elapsed_seconds": 0.661064800049644,
-      "rss_before_mb": 217.80078125,
-      "rss_after_mb": 219.4921875,
-      "rss_delta_mb": 1.69140625,
-      "python_peak_mb": 49.15702724456787
+      "elapsed_seconds": 0.5152177999989362,
+      "rss_before_mb": 201.65234375,
+      "rss_after_mb": 204.08984375,
+      "rss_delta_mb": 2.4375,
+      "python_peak_mb": 49.15713024139404
     }
   },
   "predictions": {
@@ -545,9 +545,8 @@
     ]
   },
   "environment": {
-    "python": "3.11.9",
-    "platform": "Windows-10-10.0.26200-SP0",
-    "hardware_group": "p2-local-cpu-reproduction-20260928",
+    "python": "3.11.16",
+    "platform": "Windows-10-10.0.22631-SP0",
     "packages": {
       "joblib": "1.5.2",
       "numpy": "1.26.4",

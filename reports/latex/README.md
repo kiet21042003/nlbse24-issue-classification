@@ -35,7 +35,11 @@ python scripts/run_ensemble.py --results-dir results --protocol cv --model tfidf
 These commands use fixed predictions, not GPU training or official test data.
 P2 CV/LOO values for all five frozen configurations were independently reproduced
 on 28 September (150 new run artifacts); see `reports/p2_reproduction_handoff.md`.
-They match the published table at its displayed precision. Original P2 official-test,
-sweep and extra-seed artifacts remain outstanding: those claims are sourced from
-P2 findings, not independently recomputed here. New reproduction timings are not
-a controlled hardware benchmark.
+They match the published table at its displayed precision. On 30 September,
+1,355 original P2 artifacts were received and audited, including official-test,
+sweep, ablation and extra-seed runs. Original runs replace the overlapping
+reproductions at canonical paths; the latter remain in `bfb1c4a`. Official scores
+were independently recomputed. One stale fastText sweep summary was regenerated;
+the React-only probe is not a five-repository result. Use `--seed 42` for common
+aggregation, and select frozen model names explicitly. Hardware identity remains
+unknown, so a global controlled Pareto claim is still unsupported.

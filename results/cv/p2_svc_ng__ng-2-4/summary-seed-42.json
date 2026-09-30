@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "p2_svc_ng__ng-2-4",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7005820769020621,
+    "facebook/react": 0.7868838043540255,
+    "microsoft/vscode": 0.7418895120086273,
+    "opencv/opencv": 0.7487388839733047,
+    "tensorflow/tensorflow": 0.774264766511168
+  },
+  "cross_repository_macro_f1": 0.7504718087498375,
+  "evaluations": 25,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\cv\\p2_svc_ng__ng-2-4\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\microsoft__vscode\\42\\fold-1.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\opencv__opencv\\42\\fold-1.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\microsoft__vscode\\42\\fold-2.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\opencv__opencv\\42\\fold-2.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\microsoft__vscode\\42\\fold-3.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\opencv__opencv\\42\\fold-3.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\microsoft__vscode\\42\\fold-4.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\opencv__opencv\\42\\fold-4.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\facebook__react\\42\\fold-5.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\microsoft__vscode\\42\\fold-5.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\opencv__opencv\\42\\fold-5.json",
+    "results\\cv\\p2_svc_ng__ng-2-4\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}

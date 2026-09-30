@@ -1,5 +1,39 @@
 # P2 artifact reproduction handoff
 
+## Original handoff received: 30 September 2026
+
+Hiếu supplied 1,355 original run artifacts in `bc2765a` and `d7d35e2`:
+1,305 CV, 25 LOO and 25 official-test runs, including sweeps, ablations and
+extra seeds. All raw metrics were recomputed from predictions, split fingerprints
+and ordered labels checked against the source dataset, and frozen parameters
+checked against TOML. All 150 overlapping CV/LOO predictions, scores and metrics
+exactly match the reproduction below. Original runs now occupy the canonical
+paths; reproductions remain recoverable at `bfb1c4a`, not counted twice.
+
+Official macro-F1: word SVC 0.749765; word+char SVC 0.759113;
+ComplementNB 0.710837; hashed SGD 0.732245; fastText 0.689620.
+These independently recomputed values match the report. This audit checks saved
+evidence; it cannot by itself prove historical absence of test-informed tuning.
+
+Integration notes:
+
+- One stale fastText sweep summary (all 12 points) was rebuilt from current
+  run predictions. The unchanged source summary remains in `d7d35e2`.
+- 48 fastText tuning rows differ from NumPy's first-index argmax only because
+  of exact maximum-score ties. Their predicted class is a tied maximum;
+  predictions and metrics were preserved, not relabeled.
+- `p2_ft_probe` contains only five React folds. It is a pilot, not a five-repo
+  result, and must be excluded from cross-repository rankings.
+- All original P2 artifacts lack explicit hardware identity. The global Pareto
+  limitation remains; do not infer common hardware from equal package versions.
+- The merged reader accepts 1,690 runs (P1 60, P2 1,355, P3 100, P4 175).
+  Aggregate with `python scripts/aggregate_results.py --seed 42`; the selected
+  seed contains 1,540 runs. Compare frozen models explicitly, not tuning candidates
+  or the pilot. Extra seeds are a separate robustness analysis.
+
+The sections below preserve the history of the 28 September reproduction;
+the previously missing original handoff has now been received and audited.
+
 The original P2 branch contains model code and findings but only `.gitkeep`
 under `results/`. This handoff regenerates the five frozen configurations on
 training-only CV and LOO, using seed 42, without tuning or official evaluation.

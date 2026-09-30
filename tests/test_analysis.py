@@ -84,6 +84,19 @@ def test_analysis_writes_equal_repository_summaries(tmp_path: Path) -> None:
     assert tables["models"].iloc[0]["macro_f1"] == 1.0
 
 
+def test_analysis_seed_filter_keeps_metrics_and_resources_aligned(tmp_path: Path) -> None:
+    for seed, score in ((42, 1.0), (1, 0.2)):
+        artifact = _artifact(fit_seconds=float(seed))
+        artifact["seed"] = seed
+        artifact["metrics"]["macro_average"]["f1-score"] = score
+        (tmp_path / f"run-{seed}.json").write_text(json.dumps(artifact), encoding="utf-8")
+    tables = analyze_results(tmp_path, seed=42)
+    assert tables["evaluations"]["seed"].tolist() == [42]
+    assert tables["models"].iloc[0]["macro_f1"] == 1.0
+    assert tables["resources"].iloc[0]["fit_seconds_unique"] == 42.0
+    assert analyze_results(tmp_path, seed=7)["evaluations"].empty
+
+
 def test_resource_summary_counts_a_pooled_fit_once() -> None:
     first = _artifact(
         protocol="pooled_cv",

@@ -46,6 +46,8 @@ results/**
 !results/cv/**/*.json
 !results/loo/**/*.json
 !results/pooled_cv/**/*.json
+!results/official/**/*.json
+!results/sweeps/**/*.json
 !results/p3_import_manifest.txt
 models/*
 !models/.gitkeep

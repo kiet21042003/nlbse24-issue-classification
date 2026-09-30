@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "run_id": "0de4348a-3f2c-47d4-9dce-74f49fcd33da",
-  "created_at_utc": "2026-09-28T16:42:03.742509+00:00",
+  "run_id": "deb2e80a-297c-4356-89a9-49e349ecb91d",
+  "created_at_utc": "2026-08-30T22:28:26.653093+00:00",
   "protocol": "cv",
   "fold": "fold-3",
   "repository": "opencv/opencv",
@@ -136,17 +136,17 @@
   },
   "resources": {
     "fit": {
-      "elapsed_seconds": 11.459563600015827,
-      "rss_before_mb": 204.1171875,
-      "rss_after_mb": 198.48828125,
-      "rss_delta_mb": -5.62890625,
+      "elapsed_seconds": 6.6849159999983385,
+      "rss_before_mb": 174.4296875,
+      "rss_after_mb": 186.58203125,
+      "rss_delta_mb": 12.15234375,
       "python_peak_mb": 50.66192626953125
     },
     "inference": {
-      "elapsed_seconds": 2.8767975999508053,
-      "rss_before_mb": 198.48828125,
-      "rss_after_mb": 214.0078125,
-      "rss_delta_mb": 15.51953125,
+      "elapsed_seconds": 1.6088354000094114,
+      "rss_before_mb": 186.58203125,
+      "rss_after_mb": 203.5546875,
+      "rss_delta_mb": 16.97265625,
       "python_peak_mb": 7.761786460876465
     }
   },
@@ -579,9 +579,8 @@
     ]
   },
   "environment": {
-    "python": "3.11.9",
-    "platform": "Windows-10-10.0.26200-SP0",
-    "hardware_group": "p2-local-cpu-reproduction-20260928",
+    "python": "3.11.16",
+    "platform": "Windows-10-10.0.22631-SP0",
     "packages": {
       "joblib": "1.5.2",
       "numpy": "1.26.4",

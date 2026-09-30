@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "p2_cnb__feat-char__a-1.0",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.5983798122561785,
+    "facebook/react": 0.7182129403819918,
+    "microsoft/vscode": 0.6782415383502981,
+    "opencv/opencv": 0.6692166473987156,
+    "tensorflow/tensorflow": 0.7096547175231087
+  },
+  "cross_repository_macro_f1": 0.6747411311820585,
+  "evaluations": 25,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\microsoft__vscode\\42\\fold-1.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\opencv__opencv\\42\\fold-1.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\microsoft__vscode\\42\\fold-2.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\opencv__opencv\\42\\fold-2.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\microsoft__vscode\\42\\fold-3.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\opencv__opencv\\42\\fold-3.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\microsoft__vscode\\42\\fold-4.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\opencv__opencv\\42\\fold-4.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\facebook__react\\42\\fold-5.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\microsoft__vscode\\42\\fold-5.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\opencv__opencv\\42\\fold-5.json",
+    "results\\cv\\p2_cnb__feat-char__a-1.0\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}

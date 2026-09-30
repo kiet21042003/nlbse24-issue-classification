@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "p2_ft_probe",
+  "seed": 42,
+  "repository_macro_f1": {
+    "facebook/react": 0.49717384722360836
+  },
+  "cross_repository_macro_f1": 0.49717384722360836,
+  "evaluations": 5,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\cv\\p2_ft_probe\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\p2_ft_probe\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\p2_ft_probe\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\p2_ft_probe\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\p2_ft_probe\\facebook__react\\42\\fold-5.json"
+  ]
+}

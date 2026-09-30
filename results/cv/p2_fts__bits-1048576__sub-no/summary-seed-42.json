@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "p2_fts__bits-1048576__sub-no",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.6032798783086869,
+    "facebook/react": 0.7674976073868336,
+    "microsoft/vscode": 0.72178499050175,
+    "opencv/opencv": 0.6580693212337146,
+    "tensorflow/tensorflow": 0.7343115515797367
+  },
+  "cross_repository_macro_f1": 0.6969886698021444,
+  "evaluations": 25,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\facebook__react\\42\\fold-1.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\microsoft__vscode\\42\\fold-1.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\opencv__opencv\\42\\fold-1.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\facebook__react\\42\\fold-2.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\microsoft__vscode\\42\\fold-2.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\opencv__opencv\\42\\fold-2.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\facebook__react\\42\\fold-3.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\microsoft__vscode\\42\\fold-3.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\opencv__opencv\\42\\fold-3.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\facebook__react\\42\\fold-4.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\microsoft__vscode\\42\\fold-4.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\opencv__opencv\\42\\fold-4.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\facebook__react\\42\\fold-5.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\microsoft__vscode\\42\\fold-5.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\opencv__opencv\\42\\fold-5.json",
+    "results\\cv\\p2_fts__bits-1048576__sub-no\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}

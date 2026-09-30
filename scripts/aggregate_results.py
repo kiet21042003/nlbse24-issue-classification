@@ -70,6 +70,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--results-dir", type=Path, default=Path("results"))
     parser.add_argument("--output-dir", type=Path, default=Path("results/analysis"))
     parser.add_argument("--skip-validation", action="store_true")
+    parser.add_argument("--seed", type=int, default=42, help="aggregate one seed (default: 42)")
     parser.add_argument(
         "--include-unknown-hardware",
         action="store_true",
@@ -81,9 +82,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    tables = analyze_results(args.results_dir, validate=not args.skip_validation)
+    tables = analyze_results(args.results_dir, validate=not args.skip_validation, seed=args.seed)
     paths = write_analysis_tables(
-        args.results_dir, args.output_dir, validate=not args.skip_validation
+        args.results_dir, args.output_dir, validate=not args.skip_validation, seed=args.seed
     )
     pareto_paths, skipped_groups = _write_pareto_tables(
         tables["models"],
@@ -96,6 +97,7 @@ def main(argv: list[str] | None = None) -> int:
         "results_dir": str(args.results_dir),
         "output_dir": str(args.output_dir),
         "artifact_count": len(tables["evaluations"]),
+        "seed": args.seed,
         "tables": {name: str(path) for name, path in paths.items()},
         "skipped_unknown_hardware_groups": skipped_groups,
     }

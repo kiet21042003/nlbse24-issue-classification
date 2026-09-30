@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "run_id": "26d0e7ac-ff3c-4ea7-b0f1-110731a9982e",
-  "created_at_utc": "2026-09-28T16:41:49.063195+00:00",
+  "run_id": "fe1d6c03-7590-4ab7-822e-3096ac03e668",
+  "created_at_utc": "2026-08-30T22:28:18.119303+00:00",
   "protocol": "cv",
   "fold": "fold-3",
   "repository": "microsoft/vscode",
@@ -136,17 +136,17 @@
   },
   "resources": {
     "fit": {
-      "elapsed_seconds": 5.4922879000077955,
-      "rss_before_mb": 184.109375,
-      "rss_after_mb": 194.19140625,
-      "rss_delta_mb": 10.08203125,
+      "elapsed_seconds": 3.3703914000070654,
+      "rss_before_mb": 184.578125,
+      "rss_after_mb": 179.90234375,
+      "rss_delta_mb": -4.67578125,
       "python_peak_mb": 39.0106782913208
     },
     "inference": {
-      "elapsed_seconds": 2.172930600005202,
-      "rss_before_mb": 194.19140625,
-      "rss_after_mb": 206.0390625,
-      "rss_delta_mb": 11.84765625,
+      "elapsed_seconds": 1.2088245999912033,
+      "rss_before_mb": 179.90234375,
+      "rss_after_mb": 195.23828125,
+      "rss_delta_mb": 15.3359375,
       "python_peak_mb": 6.329657554626465
     }
   },
@@ -579,9 +579,8 @@
     ]
   },
   "environment": {
-    "python": "3.11.9",
-    "platform": "Windows-10-10.0.26200-SP0",
-    "hardware_group": "p2-local-cpu-reproduction-20260928",
+    "python": "3.11.16",
+    "platform": "Windows-10-10.0.22631-SP0",
     "packages": {
       "joblib": "1.5.2",
       "numpy": "1.26.4",
