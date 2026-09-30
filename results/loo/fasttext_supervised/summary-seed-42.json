@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "loo",
+  "model": "fasttext_supervised",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.5837312827061045,
+    "facebook/react": 0.6148952513847935,
+    "microsoft/vscode": 0.43166196967798304,
+    "opencv/opencv": 0.5141761922883052,
+    "tensorflow/tensorflow": 0.5477449367099699
+  },
+  "cross_repository_macro_f1": 0.5384419265534313,
+  "evaluations": 5,
+  "split_strategy": "leave_one_repository_out",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\loo\\fasttext_supervised\\bitcoin__bitcoin\\42\\bitcoin__bitcoin.json",
+    "results\\loo\\fasttext_supervised\\facebook__react\\42\\facebook__react.json",
+    "results\\loo\\fasttext_supervised\\microsoft__vscode\\42\\microsoft__vscode.json",
+    "results\\loo\\fasttext_supervised\\opencv__opencv\\42\\opencv__opencv.json",
+    "results\\loo\\fasttext_supervised\\tensorflow__tensorflow\\42\\tensorflow__tensorflow.json"
+  ]
+}

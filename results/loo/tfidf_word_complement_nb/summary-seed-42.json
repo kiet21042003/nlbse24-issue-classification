@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "loo",
+  "model": "tfidf_word_complement_nb",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.5274350751430549,
+    "facebook/react": 0.34453675252582733,
+    "microsoft/vscode": 0.47102372019863775,
+    "opencv/opencv": 0.5017828580061605,
+    "tensorflow/tensorflow": 0.6070505932493214
+  },
+  "cross_repository_macro_f1": 0.4903657998246004,
+  "evaluations": 5,
+  "split_strategy": "leave_one_repository_out",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\loo\\tfidf_word_complement_nb\\bitcoin__bitcoin\\42\\bitcoin__bitcoin.json",
+    "results\\loo\\tfidf_word_complement_nb\\facebook__react\\42\\facebook__react.json",
+    "results\\loo\\tfidf_word_complement_nb\\microsoft__vscode\\42\\microsoft__vscode.json",
+    "results\\loo\\tfidf_word_complement_nb\\opencv__opencv\\42\\opencv__opencv.json",
+    "results\\loo\\tfidf_word_complement_nb\\tensorflow__tensorflow\\42\\tensorflow__tensorflow.json"
+  ]
+}
