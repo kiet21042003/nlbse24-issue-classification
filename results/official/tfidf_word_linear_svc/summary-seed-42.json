@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "official",
+  "model": "tfidf_word_linear_svc",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7094072000075418,
+    "facebook/react": 0.7878377058604986,
+    "microsoft/vscode": 0.7238035117779456,
+    "opencv/opencv": 0.7508828263548888,
+    "tensorflow/tensorflow": 0.7768941720970727
+  },
+  "cross_repository_macro_f1": 0.7497650832195895,
+  "evaluations": 5,
+  "split_strategy": "official_train_test_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\official\\tfidf_word_linear_svc\\bitcoin__bitcoin\\42\\final.json",
+    "results\\official\\tfidf_word_linear_svc\\facebook__react\\42\\final.json",
+    "results\\official\\tfidf_word_linear_svc\\microsoft__vscode\\42\\final.json",
+    "results\\official\\tfidf_word_linear_svc\\opencv__opencv\\42\\final.json",
+    "results\\official\\tfidf_word_linear_svc\\tensorflow__tensorflow\\42\\final.json"
+  ]
+}

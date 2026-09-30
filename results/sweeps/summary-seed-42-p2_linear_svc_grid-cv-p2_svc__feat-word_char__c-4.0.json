@@ -1,0 +1,20 @@
+{
+  "grid": "configs\\sweeps\\p2_linear_svc_grid.toml",
+  "protocol": "cv",
+  "model_family": "sparse",
+  "points": [
+    {
+      "run_name": "p2_svc__feat-word_char__c-4.0",
+      "cross_repository_macro_f1": 0.7480344567913008,
+      "repository_macro_f1": {
+        "bitcoin/bitcoin": 0.6957944539915425,
+        "facebook/react": 0.7864549061292053,
+        "microsoft/vscode": 0.7315959777281689,
+        "opencv/opencv": 0.7451425874634275,
+        "tensorflow/tensorflow": 0.7811843586441595
+      },
+      "evaluations": 25
+    }
+  ],
+  "seed": 42
+}

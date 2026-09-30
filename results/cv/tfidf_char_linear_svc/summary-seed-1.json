@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "cv",
+  "model": "tfidf_char_linear_svc",
+  "seed": 1,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7180916927441068,
+    "facebook/react": 0.786348871846388,
+    "microsoft/vscode": 0.7341626944113734,
+    "opencv/opencv": 0.7461026393375558,
+    "tensorflow/tensorflow": 0.7621478527644664
+  },
+  "cross_repository_macro_f1": 0.749370750220778,
+  "evaluations": 25,
+  "split_strategy": "stratified_text_group_folds_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\cv\\tfidf_char_linear_svc\\bitcoin__bitcoin\\1\\fold-1.json",
+    "results\\cv\\tfidf_char_linear_svc\\facebook__react\\1\\fold-1.json",
+    "results\\cv\\tfidf_char_linear_svc\\microsoft__vscode\\1\\fold-1.json",
+    "results\\cv\\tfidf_char_linear_svc\\opencv__opencv\\1\\fold-1.json",
+    "results\\cv\\tfidf_char_linear_svc\\tensorflow__tensorflow\\1\\fold-1.json",
+    "results\\cv\\tfidf_char_linear_svc\\bitcoin__bitcoin\\1\\fold-2.json",
+    "results\\cv\\tfidf_char_linear_svc\\facebook__react\\1\\fold-2.json",
+    "results\\cv\\tfidf_char_linear_svc\\microsoft__vscode\\1\\fold-2.json",
+    "results\\cv\\tfidf_char_linear_svc\\opencv__opencv\\1\\fold-2.json",
+    "results\\cv\\tfidf_char_linear_svc\\tensorflow__tensorflow\\1\\fold-2.json",
+    "results\\cv\\tfidf_char_linear_svc\\bitcoin__bitcoin\\1\\fold-3.json",
+    "results\\cv\\tfidf_char_linear_svc\\facebook__react\\1\\fold-3.json",
+    "results\\cv\\tfidf_char_linear_svc\\microsoft__vscode\\1\\fold-3.json",
+    "results\\cv\\tfidf_char_linear_svc\\opencv__opencv\\1\\fold-3.json",
+    "results\\cv\\tfidf_char_linear_svc\\tensorflow__tensorflow\\1\\fold-3.json",
+    "results\\cv\\tfidf_char_linear_svc\\bitcoin__bitcoin\\1\\fold-4.json",
+    "results\\cv\\tfidf_char_linear_svc\\facebook__react\\1\\fold-4.json",
+    "results\\cv\\tfidf_char_linear_svc\\microsoft__vscode\\1\\fold-4.json",
+    "results\\cv\\tfidf_char_linear_svc\\opencv__opencv\\1\\fold-4.json",
+    "results\\cv\\tfidf_char_linear_svc\\tensorflow__tensorflow\\1\\fold-4.json",
+    "results\\cv\\tfidf_char_linear_svc\\bitcoin__bitcoin\\1\\fold-5.json",
+    "results\\cv\\tfidf_char_linear_svc\\facebook__react\\1\\fold-5.json",
+    "results\\cv\\tfidf_char_linear_svc\\microsoft__vscode\\1\\fold-5.json",
+    "results\\cv\\tfidf_char_linear_svc\\opencv__opencv\\1\\fold-5.json",
+    "results\\cv\\tfidf_char_linear_svc\\tensorflow__tensorflow\\1\\fold-5.json"
+  ]
+}
