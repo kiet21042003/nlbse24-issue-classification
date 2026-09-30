@@ -48,6 +48,11 @@ silently changing the headline comparison. No models or official tests were reru
   robustness seeds (1,540 runs at seed 42); select frozen models for headline tables.
 - Original P2 handoff is no longer outstanding. Explicit hardware identity is
   missing, so controlled global Pareto conclusions remain unsupported.
+  Delivered scope is descriptive cost analysis; a controlled frontier is deferred,
+  not silently marked complete. To enable it, verify CPU/GPU/RAM, software stack,
+  thread limits, inference batch size, warm-up and concurrent load, or recollect
+  measurements under one controlled protocol. Missing identity does not prove
+  that all models used different hardware.
 - Import P3 with `python scripts/import_p3_results.py results/p3_results.zip --output-dir results`
   only when rebuilding into an output tree without existing P3 runs (a fresh
   clone already contains them). The importer normalizes names and
