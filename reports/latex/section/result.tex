@@ -186,6 +186,27 @@ RoBERTa LoRA & 0.7994 \\
 
 The pooled LoRA value of 0.7994 should not be interpreted as a direct improvement over the repository-specific CV values in Table~\ref{tab:cv-main-comparison}. Pooled training exposes the model to examples from all repositories simultaneously and therefore represents a different experimental condition.
 
+\subsection*{Protocol coverage}
+Not every model family was evaluated under every protocol. Table~\ref{tab:protocol-coverage} lists what was actually run; the main cross-family comparison above is therefore restricted to repository-specific CV, the only protocol shared by all families. Missing cells mean \emph{not run}, not a score of zero, and no value is estimated or imputed for them.
+
+\begin{table}[H]
+\centering
+\caption{Protocols run for each model family (seed 42).}
+\label{tab:protocol-coverage}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model family} & \textbf{CV} & \textbf{Pooled CV} & \textbf{LOO} & \textbf{Official} \\
+\midrule
+TF-IDF + Logistic Regression & Yes & -- & Yes & -- \\
+Lightweight models (P2) & Yes & -- & Yes & Yes \\
+RoBERTa full / LoRA & Yes & Yes & -- & -- \\
+SetFit MPNet / MiniLM & Yes & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Consequently, official-test scores are available only for the P2 lightweight models, and LOO scores only for Logistic Regression and the P2 models. Dense models (RoBERTa, SetFit) have not been compared with the sparse models on unseen repositories or on the official test split, so the CV advantage of dense models reported here should not be read as evidence that it persists under LOO or official evaluation.
+
 \section{Ensemble and Resource Considerations}
 We executed P5's comparison and ensemble utilities from revision \texttt{09fe724} on the versioned CV artifacts (seed 42), aligning 25 repository/fold evaluations by protocol, seed, fold, test fingerprint and ordered labels. No models were retrained. An illustrative equal-weight hard vote combines Logistic Regression and SetFit MPNet; ties use the implementation's fixed class order (bug, feature, question). No ensemble weights were tuned.
 
@@ -221,4 +242,4 @@ Pretrained dense representations provide strong results under repository-specifi
 A practical conclusion from these results is that model choice should depend on the deployment setting. Sparse models remain attractive when simplicity, fast training, and low computational requirements are priorities. Dense pretrained models provide higher observed CV performance in this project, while parameter-efficient and sentence-embedding approaches offer alternatives to conventional full fine-tuning.
 
 \subsection{Limitations}
-Several limitations should be considered when interpreting the results. First, not every model family was evaluated with the same number of random seeds, so very small score differences should not be overinterpreted. Second, configuration selection using cross-validation can make the reported CV values optimistic when the same folds are also used for model selection. Third, hardware identity and measurement conditions are not sufficiently documented to establish comparability across model families; this is missing provenance, not proof that every model used different hardware. Finally, CV, pooled CV, LOO, and official test evaluation address different questions and should remain separated when conclusions are drawn from their scores.
+Several limitations should be considered when interpreting the results. First, not every model family was evaluated with the same number of random seeds, so very small score differences should not be overinterpreted. Second, configuration selection using cross-validation can make the reported CV values optimistic when the same folds are also used for model selection. Third, hardware identity and measurement conditions are not sufficiently documented to establish comparability across model families; this is missing provenance, not proof that every model used different hardware. Fourth, protocol coverage is uneven (Table~\ref{tab:protocol-coverage}): official-test scores exist only for the P2 lightweight models, LOO scores only for Logistic Regression and the P2 models, and the dense models are compared with the baseline under repository-specific CV alone. Finally, CV, pooled CV, LOO, and official test evaluation address different questions and should remain separated when conclusions are drawn from their scores.
