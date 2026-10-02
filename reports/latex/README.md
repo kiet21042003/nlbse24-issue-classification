@@ -18,6 +18,12 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 Published PDF: `../../presentation/Seminar_2_Report.pdf`. Build intermediates are ignored.
 The cover date is September 25, 2026, as requested; it is not the revision date.
 
+The protocol matrix in the Results chapter is generated from the artifacts:
+
+```powershell
+python scripts/protocol_coverage.py --latex reports/latex/section/protocol_matrix.tex
+```
+
 From the repository root, reproduce P1 analysis:
 
 ```powershell
