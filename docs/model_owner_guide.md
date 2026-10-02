@@ -47,7 +47,7 @@ summary = run_classifier_experiment(
     repository=CsvIssueRepository("data/raw"),
     model_factory=lambda: MyClassifier(...),
     model_name="my_model",
-    protocol="cv",
+    protocol="cv",  # or "pooled_cv", "loo", "official" (official needs allow_official_test=True)
     seed=42,
     n_splits=5,
     text_fields=("title", "body"),

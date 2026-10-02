@@ -44,13 +44,16 @@ Linux/macOS users activate the environment with `source .venv/bin/activate`.
 
 Downloaded data is written to `data/raw/` and verified against pinned SHA-256
 checksums. Downloaded data stays local. Reviewed JSON runs and summaries under
-`results/cv/`, `results/loo/` and `results/pooled_cv/` are versioned;
-source ZIPs and model weights stay local. Write exploratory runs outside these
+`results/cv/`, `results/pooled_cv/`, `results/loo/` and `results/official/` are versioned;
+source ZIPs, model weights and training checkpoints stay local. Write exploratory runs outside these
 published directories (for example, under `tmp/`) and do not overwrite published runs.
 
-Other supported protocols:
+Other supported protocols (the same four work for every model through the shared runner):
 
 ```powershell
+# One model trained on all repositories per fold, evaluated per repository
+nlbse24 run-baseline --protocol pooled_cv
+
 # Domain-transfer experiment on training data only
 nlbse24 run-baseline --protocol loo
 
@@ -58,14 +61,31 @@ nlbse24 run-baseline --protocol loo
 nlbse24 run-baseline --protocol official --confirm-official-test
 ```
 
+Other models have their own launchers (`scripts/run_p2_experiments.py`,
+`scripts/run_p3_experiments.py`, `scripts/run_setfit.py`), all taking
+`--config`, `--protocol` and `--run-name`. RoBERTa and SetFit additionally need
+`pip install -r requirements-roberta.txt` and `pip install setfit==1.1.1`
+(fastText: `requirements-fasttext.txt`) and a CUDA GPU in practice.
+
+To see which model/protocol cells have no result yet, and to run only those:
+
+```powershell
+python scripts/protocol_coverage.py                 # table of what exists
+python scripts/run_missing_evaluations.py --dry-run # list missing cells
+python scripts/run_missing_evaluations.py --models setfit_mpnet --protocols pooled_cv
+```
+
 ## Repository layout
 
 ```text
 configs/                 Versioned experiment configuration
 data/                    Local raw/processed data (ignored)
-docs/                    Architecture and experiment protocol
+docs/                    Architecture, experiment protocol and project status
 models/                  Serialized models (ignored)
+presentation/            Final report (PDF) and slides
+reports/                 Findings, protocol coverage and the LaTeX report source
 results/                 Reviewed JSON run artifacts and summaries
+scripts/                 Experiment launchers, aggregation and coverage tools
 src/nlbse24/             Shared Python package
 tests/                   Unit and integration tests
 ```
@@ -77,33 +97,54 @@ experiment. Model owners should start with
 
 ## Project progress
 
-As of **28 September 2026**, P2 lightweight models, P3 RoBERTa/LoRA, P4
-SetFit and P5 evaluation/integration have been merged. A corrected combined
-report and initial P5 paired comparison/ensemble analysis are available;
-remaining official evaluations and final submission verification are pending.
-See [project status and next steps](docs/project_status.md)
-and the updated [project plan](docs/NLBSE_Topic_Comparison_and_Project_Plan.docx).
-As of **30 September 2026**, a fresh clone includes **1,690 run artifacts**
-from P1–P4, including **1,355 original P2 runs** (CV, LOO, official, tuning,
-ablations and extra seeds). Original P2 artifacts supersede the matching 150
-reproductions, preserved in Git history. See [P2 handoff audit](reports/p2_reproduction_handoff.md).
-As of **2 October 2026**, the protocol matrix is complete except one cell: every frozen
-model has repository-specific CV, pooled CV, LOO and official results, apart from
-SetFit MPNet pooled CV (see [protocol coverage](reports/protocol_coverage.md)). Regenerate the
-table with `python scripts/protocol_coverage.py` and list open cells with
-`python scripts/run_missing_evaluations.py --dry-run`.
-The final report and slides are in [presentation/](presentation/).
-Use `python scripts/aggregate_results.py --seed 42` to avoid mixing seeds;
-select frozen models explicitly and exclude the React-only `p2_ft_probe` from
-five-repository comparisons. Source result ZIPs are not committed. Unverified
-hardware identity still prevents a controlled global Pareto comparison.
+As of **2 October 2026** every module is merged and the experiment matrix is complete
+except one cell. Macro-F1 per frozen model and protocol (seed 42, repository-balanced; a
+snapshot of [reports/protocol_coverage.md](reports/protocol_coverage.md), regenerate with
+`python scripts/protocol_coverage.py`):
 
-## P1 baseline status
+| Model | Repo-specific CV | Pooled CV | LOO | Official |
+|---|---:|---:|---:|---:|
+| TF-IDF + Logistic Regression | 0.7636 | 0.7601 | 0.5876 | 0.7495 |
+| Word LinearSVC | 0.7541 | 0.7570 | 0.5898 | 0.7498 |
+| Word + Char LinearSVC | 0.7533 | 0.7658 | 0.6003 | 0.7591 |
+| Hashed SGD | 0.7030 | 0.7460 | 0.6152 | 0.7322 |
+| Supervised fastText | 0.7089 | 0.7126 | 0.5384 | 0.6896 |
+| Complement NB | 0.7054 | 0.6757 | 0.4904 | 0.7108 |
+| RoBERTa full fine-tuning | 0.7853 | 0.7924 | 0.6867 | 0.8033 |
+| RoBERTa LoRA | 0.7800 | 0.7994 | 0.6896 | 0.7937 |
+| SetFit MPNet | 0.7953 | not run | 0.6854 | 0.8033 |
+| SetFit MiniLM | 0.7881 | 0.7795 | 0.6684 | 0.7972 |
 
-The first end-to-end training-only 5-fold run completed successfully across all
-five repositories (25 evaluations). Its cross-repository macro-F1 is **0.7636**.
-This is a pipeline smoke test and preliminary baseline, not the official test
-score. Initial ablation and domain-transfer findings are summarized in
+Scores are comparable within a column only. The dense models lead under every protocol
+(about +0.03 under CV, +0.04 on the official test, +0.07 under LOO over the best sparse
+model); `not run` means no artifacts exist, not a score of zero. SetFit MPNet pooled CV
+is the only open cell: a SetFit fit is slow on a small GPU, so it is best run on a larger
+one (`python scripts/run_missing_evaluations.py --models setfit_mpnet --protocols pooled_cv`).
+
+- The cells added on 2 October (Logistic Regression official and pooled CV, pooled CV of
+  the P2 models, RoBERTa official and LOO, SetFit official, LOO and MiniLM pooled CV) were run
+  with the frozen configurations on one laptop (RTX 3050 6 GB); their artifacts carry the
+  hardware group `kiet-laptop-rtx3050-6gb`. They passed schema validation, metric
+  recomputation and split-fingerprint checks. Timings from different machines are not
+  comparable, and hardware identity is unrecorded for earlier artifacts, so a controlled
+  global Pareto comparison is still not possible.
+- A fresh clone contains about 1,900 run artifacts, including the **1,355 original P2 runs**
+  (CV, LOO, official, tuning, ablations and extra seeds). Original P2 artifacts supersede the
+  matching 150 reproductions, preserved in Git history; see the
+  [P2 handoff audit](reports/p2_reproduction_handoff.md).
+- Use `python scripts/aggregate_results.py --seed 42` to avoid mixing seeds, select frozen
+  models explicitly and exclude the React-only `p2_ft_probe` from five-repository
+  comparisons. Source result ZIPs are not committed.
+- The final report and slides are in [presentation/](presentation/). More detail, ownership
+  and next steps: [project status](docs/project_status.md) and the
+  [project plan](docs/NLBSE_Topic_Comparison_and_Project_Plan.docx).
+
+## P1 baseline
+
+The TF-IDF + Logistic Regression baseline scores **0.7636** under training-only 5-fold CV,
+0.7601 under pooled CV, **0.5876** under leave-one-repository-out and **0.7495** on the
+official test (run once, after the configuration was frozen). Ablation and domain-transfer
+findings, including the title-only comparison and bootstrap intervals, are in
 [reports/p1_initial_findings.md](reports/p1_initial_findings.md).
 
 ## Official data source
