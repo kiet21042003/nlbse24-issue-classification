@@ -12,5 +12,5 @@ Repository-balanced macro-F1 per protocol, computed from the versioned run artif
 | Complement NB | P2 | 0.7054 | 0.6757 | 0.4904 | 0.7108 |
 | RoBERTa full fine-tuning | P3 | 0.7853 | 0.7924 | 0.6867 | 0.8033 |
 | RoBERTa LoRA | P3 | 0.7800 | 0.7994 | 0.6896 | 0.7937 |
-| SetFit MPNet | P4 | 0.7953 | not run | not run | 0.8033 |
+| SetFit MPNet | P4 | 0.7953 | not run | 0.6854 | 0.8033 |
 | SetFit MiniLM | P4 | 0.7881 | not run | not run | not run |

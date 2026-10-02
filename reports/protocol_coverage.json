@@ -248,10 +248,10 @@
       "macro_f1": null
     },
     "loo": {
-      "evaluations": 0,
+      "evaluations": 5,
       "expected": 5,
-      "complete": false,
-      "macro_f1": null
+      "complete": true,
+      "macro_f1": 0.6854
     },
     "official": {
       "evaluations": 5,
