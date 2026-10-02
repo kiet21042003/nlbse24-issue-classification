@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "loo",
+  "model": "roberta_base_full",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.6929375010048546,
+    "facebook/react": 0.7827985022974503,
+    "microsoft/vscode": 0.6138289751030861,
+    "opencv/opencv": 0.6424203879118257,
+    "tensorflow/tensorflow": 0.7015859664834151
+  },
+  "cross_repository_macro_f1": 0.6867142665601265,
+  "evaluations": 5,
+  "split_strategy": "leave_one_repository_out",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\loo\\roberta_base_full\\bitcoin__bitcoin\\42\\bitcoin__bitcoin.json",
+    "results\\loo\\roberta_base_full\\facebook__react\\42\\facebook__react.json",
+    "results\\loo\\roberta_base_full\\microsoft__vscode\\42\\microsoft__vscode.json",
+    "results\\loo\\roberta_base_full\\opencv__opencv\\42\\opencv__opencv.json",
+    "results\\loo\\roberta_base_full\\tensorflow__tensorflow\\42\\tensorflow__tensorflow.json"
+  ]
+}

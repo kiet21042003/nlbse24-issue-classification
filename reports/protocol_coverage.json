@@ -1,0 +1,292 @@
+[
+  {
+    "model": "tfidf_logistic_regression",
+    "name": "TF-IDF + Logistic Regression",
+    "owner": "P1",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7636
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7601
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.5876
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.7495
+    }
+  },
+  {
+    "model": "tfidf_word_linear_svc",
+    "name": "Word LinearSVC",
+    "owner": "P2",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7541
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.757
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.5898
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.7498
+    }
+  },
+  {
+    "model": "tfidf_char_linear_svc",
+    "name": "Word + Char LinearSVC",
+    "owner": "P2",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7533
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7658
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.6003
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.7591
+    }
+  },
+  {
+    "model": "fasttext_style_sgd",
+    "name": "Hashed SGD",
+    "owner": "P2",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.703
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.746
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.6152
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.7322
+    }
+  },
+  {
+    "model": "fasttext_supervised",
+    "name": "Supervised fastText",
+    "owner": "P2",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7089
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7126
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.5384
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.6896
+    }
+  },
+  {
+    "model": "tfidf_word_complement_nb",
+    "name": "Complement NB",
+    "owner": "P2",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7054
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.6757
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.4904
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.7108
+    }
+  },
+  {
+    "model": "roberta_base_full",
+    "name": "RoBERTa full fine-tuning",
+    "owner": "P3",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7853
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7924
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.6867
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.8033
+    }
+  },
+  {
+    "model": "roberta_base_adapter",
+    "name": "RoBERTa LoRA",
+    "owner": "P3",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.78
+    },
+    "pooled_cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7994
+    },
+    "loo": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.6896
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.7937
+    }
+  },
+  {
+    "model": "setfit_mpnet",
+    "name": "SetFit MPNet",
+    "owner": "P4",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7953
+    },
+    "pooled_cv": {
+      "evaluations": 0,
+      "expected": 25,
+      "complete": false,
+      "macro_f1": null
+    },
+    "loo": {
+      "evaluations": 0,
+      "expected": 5,
+      "complete": false,
+      "macro_f1": null
+    },
+    "official": {
+      "evaluations": 5,
+      "expected": 5,
+      "complete": true,
+      "macro_f1": 0.8033
+    }
+  },
+  {
+    "model": "setfit_minilm",
+    "name": "SetFit MiniLM",
+    "owner": "P4",
+    "cv": {
+      "evaluations": 25,
+      "expected": 25,
+      "complete": true,
+      "macro_f1": 0.7881
+    },
+    "pooled_cv": {
+      "evaluations": 0,
+      "expected": 25,
+      "complete": false,
+      "macro_f1": null
+    },
+    "loo": {
+      "evaluations": 0,
+      "expected": 5,
+      "complete": false,
+      "macro_f1": null
+    },
+    "official": {
+      "evaluations": 0,
+      "expected": 5,
+      "complete": false,
+      "macro_f1": null
+    }
+  }
+]

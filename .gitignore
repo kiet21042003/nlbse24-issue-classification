@@ -65,3 +65,6 @@ AGENTS.md
 .claude/
 .codex/
 .github/copilot-instructions.md
+
+# Training checkpoints written by the HF/SetFit trainers
+checkpoints/

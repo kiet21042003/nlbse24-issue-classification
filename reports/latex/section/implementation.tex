@@ -201,7 +201,7 @@ Owner & Member & Contribution \\
 \midrule
 P1 & Pham Tuan Kiet & Leadership; data/persistence, splits, contracts, Logistic Regression and text ablations. \\
 P2 & Nguyen Trung Hieu & Sparse models, fastText, tuning and feature ablations. \\
-P3 & Le Ngoc Anh & RoBERTa full/LoRA, per-repository and pooled experiments. \\
+P3 & Le Ngoc Anh & RoBERTa full/LoRA, per-repository and pooled CV. \\
 P4 & Nguyen Hoang Nam & SetFit MPNet/MiniLM, few-shot and iteration ablations. \\
 P5 & Bui Tien Dung & Aggregation, paired comparisons, ensemble/resource utilities, demo and report integration. \\
 \bottomrule
@@ -271,4 +271,4 @@ Training time, inference time, and memory consumption are recorded when availabl
 \section{Experiment Execution}
 Each experiment follows the same general sequence. The required split is created according to the selected evaluation protocol. Model-specific preprocessing is then fitted using only the training partition. The classifier is trained, predictions are generated for the validation or test partition, and the outputs are passed to the shared evaluation component. Metrics, predictions, resource measurements, and configuration information are stored together.
 
-Repeating this process across repositories, folds, model configurations, and protocols produces the collection of artifacts used in the final analysis. The standardized procedure reduces the risk that observed differences arise from inconsistent data handling and makes the experimental workflow easier to verify and reproduce.
+All four protocols (repository-specific CV, pooled CV, LOO and official evaluation) run through the same runner for every model, and 	exttt{scripts/run\_missing\_evaluations.py} runs only the protocol cells that have no result yet, with an explicit guard for the official test. Repeating this process across repositories, folds, model configurations, and protocols produces the collection of artifacts used in the final analysis. The standardized procedure reduces the risk that observed differences arise from inconsistent data handling and makes the experimental workflow easier to verify and reproduce.

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "official",
+  "model": "setfit_mpnet",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7223861769322232,
+    "facebook/react": 0.852440291225775,
+    "microsoft/vscode": 0.788928025631261,
+    "opencv/opencv": 0.7908470413017475,
+    "tensorflow/tensorflow": 0.861886361208907
+  },
+  "cross_repository_macro_f1": 0.8032975792599828,
+  "evaluations": 5,
+  "split_strategy": "official_train_test_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\official\\setfit_mpnet\\bitcoin__bitcoin\\42\\final.json",
+    "results\\official\\setfit_mpnet\\facebook__react\\42\\final.json",
+    "results\\official\\setfit_mpnet\\microsoft__vscode\\42\\final.json",
+    "results\\official\\setfit_mpnet\\opencv__opencv\\42\\final.json",
+    "results\\official\\setfit_mpnet\\tensorflow__tensorflow\\42\\final.json"
+  ]
+}

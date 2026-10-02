@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "official",
+  "model": "roberta_base_adapter",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7006003752345217,
+    "facebook/react": 0.8363559398043717,
+    "microsoft/vscode": 0.7961359437868444,
+    "opencv/opencv": 0.7886941824070918,
+    "tensorflow/tensorflow": 0.8468876887688769
+  },
+  "cross_repository_macro_f1": 0.7937348260003413,
+  "evaluations": 5,
+  "split_strategy": "official_train_test_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\official\\roberta_base_adapter\\bitcoin__bitcoin\\42\\final.json",
+    "results\\official\\roberta_base_adapter\\facebook__react\\42\\final.json",
+    "results\\official\\roberta_base_adapter\\microsoft__vscode\\42\\final.json",
+    "results\\official\\roberta_base_adapter\\opencv__opencv\\42\\final.json",
+    "results\\official\\roberta_base_adapter\\tensorflow__tensorflow\\42\\final.json"
+  ]
+}

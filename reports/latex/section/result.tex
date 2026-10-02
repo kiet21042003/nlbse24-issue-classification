@@ -186,26 +186,25 @@ RoBERTa LoRA & 0.7994 \\
 
 The pooled LoRA value of 0.7994 should not be interpreted as a direct improvement over the repository-specific CV values in Table~\ref{tab:cv-main-comparison}. Pooled training exposes the model to examples from all repositories simultaneously and therefore represents a different experimental condition.
 
-\subsection*{Protocol coverage}
-Not every model family was evaluated under every protocol. Table~\ref{tab:protocol-coverage} lists what was actually run; the main cross-family comparison above is therefore restricted to repository-specific CV, the only protocol shared by all families. Missing cells mean \emph{not run}, not a score of zero, and no value is estimated or imputed for them.
+\subsection*{Results across all four protocols}
+Table~\ref{tab:protocol-matrix} reports every frozen configuration under each protocol it was run under. It is generated from the versioned run artifacts (seed 42, \texttt{scripts/protocol\_coverage.py}), so it cannot drift from the data. Each cell is the repository-balanced Macro-F1 defined above. A cell marked ``--'' means the configuration was \emph{not run} under that protocol; it is not a score of zero, and no value is estimated or imputed. Scores should be compared within a column only, because each protocol trains and evaluates differently.
 
 \begin{table}[H]
 \centering
-\caption{Protocols run for each model family (seed 42).}
-\label{tab:protocol-coverage}
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Model family} & \textbf{CV} & \textbf{Pooled CV} & \textbf{LOO} & \textbf{Official} \\
-\midrule
-TF-IDF + Logistic Regression & Yes & -- & Yes & -- \\
-Lightweight models (P2) & Yes & -- & Yes & Yes \\
-RoBERTa full / LoRA & Yes & Yes & -- & -- \\
-SetFit MPNet / MiniLM & Yes & -- & -- & -- \\
-\bottomrule
-\end{tabular}
+\caption{Macro-F1 of the frozen configurations under the four protocols (seed 42). Bold marks the best score in each column.}
+\label{tab:protocol-matrix}
+\input{section/protocol_matrix}
 \end{table}
 
-Consequently, official-test scores are available only for the P2 lightweight models, and LOO scores only for Logistic Regression and the P2 models. Dense models (RoBERTa, SetFit) have not been compared with the sparse models on unseen repositories or on the official test split, so the CV advantage of dense models reported here should not be read as evidence that it persists under LOO or official evaluation.
+\paragraph{Provenance.} The CV artifacts of every model, the pooled-CV artifacts of RoBERTa and the original P2 artifacts (including their official and LOO runs) were produced by their owners. The remaining cells were run on 2 October on a single laptop (NVIDIA RTX 3050 with 6~GB of memory), recorded in the artifacts as hardware group \texttt{kiet-laptop-rtx3050-6gb}: Logistic Regression official and pooled CV, pooled CV of the P2 models, RoBERTa official and LOO, and SetFit MPNet official. The configurations are the frozen ones used for CV, with no change; the official test split was used once per configuration and never for configuration choices. All new artifacts passed schema validation, their metrics were recomputed from the stored predictions, and their train/test fingerprints match the existing splits. GPU training is not bit-for-bit reproducible, so small differences from a re-run are expected, and timings measured on different machines are not comparable.
+
+\paragraph{Official test.} Under the official split, RoBERTa full fine-tuning and SetFit MPNet both reach 0.8033 (RoBERTa LoRA 0.7937), against 0.7591 for the best sparse model (word-and-character LinearSVC) and 0.7495 for Logistic Regression. The dense advantage is therefore about 0.04 to 0.05 on the official split, larger than under repository-specific CV (0.0317 for MPNet over Logistic Regression). The two best dense scores differ only in the sixth decimal place, so no ordering between them is claimed. The official split trains on all 300 training issues of a repository, 25\% more than a CV fold, which partly explains why the dense models score higher there than under CV.
+
+\paragraph{Leave-one-repository-out.} Transfer to an unseen repository is much harder for every model, but the dense models lose far less: RoBERTa LoRA reaches 0.6896 and full fine-tuning 0.6867, against 0.6152 for the best sparse model (hashed SGD) and 0.5876 for Logistic Regression. Relative to repository-specific CV, the LOO scores fall by about 0.09 to 0.10 for RoBERTa and by 0.09 to 0.22 for the sparse models (0.176 for Logistic Regression). Training data amount and composition also change under LOO, so this is not a pure domain-shift estimate.
+
+\paragraph{Pooled cross-validation.} Training on all repositories together has no consistent effect relative to repository-specific CV: Macro-F1 changes from $-0.030$ (Complement Naive Bayes) to $+0.043$ (hashed SGD) for the sparse models, and by $+0.007$ and $+0.019$ for RoBERTa full fine-tuning and LoRA. Differences of this size, from a single seed, should not be over-interpreted.
+
+\paragraph{Remaining gaps.} SetFit was run under repository-specific CV and, for MPNet, the official test only; MiniLM official, and both SetFit models under pooled CV and LOO, were not run. The SetFit row therefore supports no statement about transfer to unseen repositories. All results use seed 42, so the intervals reported elsewhere do not cover training variability.
 
 \section{Ensemble and Resource Considerations}
 We executed P5's comparison and ensemble utilities from revision \texttt{09fe724} on the versioned CV artifacts (seed 42), aligning 25 repository/fold evaluations by protocol, seed, fold, test fingerprint and ordered labels. No models were retrained. An illustrative equal-weight hard vote combines Logistic Regression and SetFit MPNet; ties use the implementation's fixed class order (bug, feature, question). No ensemble weights were tuned.
@@ -237,9 +236,9 @@ Resource measurements are also interpreted within their experimental context. Tr
 \subsection{Main Observations}
 The experiments show a clear difference between classification within repositories already represented during training and transfer to an unseen repository. The Logistic Regression baseline decreases from 0.7636 under repository-specific CV to 0.5876 under LOO, and several lightweight classifiers show similar protocol-dependent changes. Repository-specific vocabulary, issue templates, and writing conventions therefore appear to be important factors in model behavior.
 
-Pretrained dense representations provide strong results under repository-specific CV. RoBERTa and SetFit configurations improve on the sparse Logistic Regression baseline in the reported experiments, but the gains are moderate relative to the additional implementation and computational complexity. The SetFit iteration experiments further show that more training does not automatically lead to better predictive performance.
+Pretrained dense representations provide strong results under repository-specific CV. RoBERTa and SetFit configurations improve on the sparse Logistic Regression baseline in the reported experiments, but under CV the gains are moderate relative to the additional implementation and computational complexity. The additional protocols change this picture: under LOO the dense models score about 0.69 against 0.49 to 0.62 for the sparse models, and on the official test split the best dense models reach 0.8033 against 0.7591 for the best sparse model. Dense models therefore appear more robust to a change of repository and benefit more from the full official training set. The SetFit iteration experiments further show that more training does not automatically lead to better predictive performance.
 
-A practical conclusion from these results is that model choice should depend on the deployment setting. Sparse models remain attractive when simplicity, fast training, and low computational requirements are priorities. Dense pretrained models provide higher observed CV performance in this project, while parameter-efficient and sentence-embedding approaches offer alternatives to conventional full fine-tuning.
+A practical conclusion from these results is that model choice should depend on the deployment setting. Sparse models remain attractive when simplicity, fast training, and low computational requirements are priorities and the target repository is represented in the training data. When transfer to a new repository matters, or when the highest accuracy is required, the dense pretrained models provide a clear advantage in this project, and parameter-efficient and sentence-embedding approaches offer alternatives to conventional full fine-tuning.
 
 \subsection{Limitations}
-Several limitations should be considered when interpreting the results. First, not every model family was evaluated with the same number of random seeds, so very small score differences should not be overinterpreted. Second, configuration selection using cross-validation can make the reported CV values optimistic when the same folds are also used for model selection. Third, hardware identity and measurement conditions are not sufficiently documented to establish comparability across model families; this is missing provenance, not proof that every model used different hardware. Fourth, protocol coverage is uneven (Table~\ref{tab:protocol-coverage}): official-test scores exist only for the P2 lightweight models, LOO scores only for Logistic Regression and the P2 models, and the dense models are compared with the baseline under repository-specific CV alone. Finally, CV, pooled CV, LOO, and official test evaluation address different questions and should remain separated when conclusions are drawn from their scores.
+Several limitations should be considered when interpreting the results. First, not every model family was evaluated with the same number of random seeds, so very small score differences should not be overinterpreted. Second, configuration selection using cross-validation can make the reported CV values optimistic when the same folds are also used for model selection. Third, hardware identity and measurement conditions are not sufficiently documented to establish comparability across model families; this is missing provenance, not proof that every model used different hardware. Fourth, protocol coverage is still incomplete (Table~\ref{tab:protocol-matrix}): SetFit MPNet and MiniLM were not run under pooled CV or LOO, and SetFit MiniLM was not run on the official test, so no transfer claim is made for SetFit. Finally, CV, pooled CV, LOO, and official test evaluation address different questions and should remain separated when conclusions are drawn from their scores.

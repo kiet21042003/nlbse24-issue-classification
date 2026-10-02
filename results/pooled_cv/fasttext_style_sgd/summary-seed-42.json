@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "pooled_cv",
+  "model": "fasttext_style_sgd",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.6902239561237864,
+    "facebook/react": 0.7885119229856286,
+    "microsoft/vscode": 0.7562161847014222,
+    "opencv/opencv": 0.7446718392674747,
+    "tensorflow/tensorflow": 0.7502312954230571
+  },
+  "cross_repository_macro_f1": 0.7459710397002738,
+  "evaluations": 25,
+  "split_strategy": "stratified_pooled_train_evaluated_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\pooled_cv\\fasttext_style_sgd\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\facebook__react\\42\\fold-1.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\microsoft__vscode\\42\\fold-1.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\opencv__opencv\\42\\fold-1.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\facebook__react\\42\\fold-2.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\microsoft__vscode\\42\\fold-2.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\opencv__opencv\\42\\fold-2.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\facebook__react\\42\\fold-3.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\microsoft__vscode\\42\\fold-3.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\opencv__opencv\\42\\fold-3.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\facebook__react\\42\\fold-4.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\microsoft__vscode\\42\\fold-4.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\opencv__opencv\\42\\fold-4.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\facebook__react\\42\\fold-5.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\microsoft__vscode\\42\\fold-5.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\opencv__opencv\\42\\fold-5.json",
+    "results\\pooled_cv\\fasttext_style_sgd\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "official",
+  "model": "tfidf_logistic_regression",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7128842048516342,
+    "facebook/react": 0.7917836562997853,
+    "microsoft/vscode": 0.7272952479508822,
+    "opencv/opencv": 0.7442715023524374,
+    "tensorflow/tensorflow": 0.7713696137609181
+  },
+  "cross_repository_macro_f1": 0.7495208450431314,
+  "evaluations": 5,
+  "split_strategy": "official_train_test_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\official\\tfidf_logistic_regression\\bitcoin__bitcoin\\42\\final.json",
+    "results\\official\\tfidf_logistic_regression\\facebook__react\\42\\final.json",
+    "results\\official\\tfidf_logistic_regression\\microsoft__vscode\\42\\final.json",
+    "results\\official\\tfidf_logistic_regression\\opencv__opencv\\42\\final.json",
+    "results\\official\\tfidf_logistic_regression\\tensorflow__tensorflow\\42\\final.json"
+  ]
+}

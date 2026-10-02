@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "pooled_cv",
+  "model": "tfidf_word_complement_nb",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.6167823913190602,
+    "facebook/react": 0.6639390762630552,
+    "microsoft/vscode": 0.6733626755557653,
+    "opencv/opencv": 0.6930809945863537,
+    "tensorflow/tensorflow": 0.7313033502531872
+  },
+  "cross_repository_macro_f1": 0.6756936975954844,
+  "evaluations": 25,
+  "split_strategy": "stratified_pooled_train_evaluated_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\pooled_cv\\tfidf_word_complement_nb\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\facebook__react\\42\\fold-1.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\microsoft__vscode\\42\\fold-1.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\opencv__opencv\\42\\fold-1.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\facebook__react\\42\\fold-2.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\microsoft__vscode\\42\\fold-2.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\opencv__opencv\\42\\fold-2.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\facebook__react\\42\\fold-3.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\microsoft__vscode\\42\\fold-3.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\opencv__opencv\\42\\fold-3.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\facebook__react\\42\\fold-4.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\microsoft__vscode\\42\\fold-4.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\opencv__opencv\\42\\fold-4.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\facebook__react\\42\\fold-5.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\microsoft__vscode\\42\\fold-5.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\opencv__opencv\\42\\fold-5.json",
+    "results\\pooled_cv\\tfidf_word_complement_nb\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}
