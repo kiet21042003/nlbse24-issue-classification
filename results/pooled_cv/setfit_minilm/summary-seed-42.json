@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol": "pooled_cv",
+  "model": "setfit_minilm",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.717806227102582,
+    "facebook/react": 0.8385496070348445,
+    "microsoft/vscode": 0.7570920815772074,
+    "opencv/opencv": 0.7466340531824007,
+    "tensorflow/tensorflow": 0.8374013052830648
+  },
+  "cross_repository_macro_f1": 0.7794966548360199,
+  "evaluations": 25,
+  "split_strategy": "stratified_pooled_train_evaluated_per_repository",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\pooled_cv\\setfit_minilm\\bitcoin__bitcoin\\42\\fold-1.json",
+    "results\\pooled_cv\\setfit_minilm\\facebook__react\\42\\fold-1.json",
+    "results\\pooled_cv\\setfit_minilm\\microsoft__vscode\\42\\fold-1.json",
+    "results\\pooled_cv\\setfit_minilm\\opencv__opencv\\42\\fold-1.json",
+    "results\\pooled_cv\\setfit_minilm\\tensorflow__tensorflow\\42\\fold-1.json",
+    "results\\pooled_cv\\setfit_minilm\\bitcoin__bitcoin\\42\\fold-2.json",
+    "results\\pooled_cv\\setfit_minilm\\facebook__react\\42\\fold-2.json",
+    "results\\pooled_cv\\setfit_minilm\\microsoft__vscode\\42\\fold-2.json",
+    "results\\pooled_cv\\setfit_minilm\\opencv__opencv\\42\\fold-2.json",
+    "results\\pooled_cv\\setfit_minilm\\tensorflow__tensorflow\\42\\fold-2.json",
+    "results\\pooled_cv\\setfit_minilm\\bitcoin__bitcoin\\42\\fold-3.json",
+    "results\\pooled_cv\\setfit_minilm\\facebook__react\\42\\fold-3.json",
+    "results\\pooled_cv\\setfit_minilm\\microsoft__vscode\\42\\fold-3.json",
+    "results\\pooled_cv\\setfit_minilm\\opencv__opencv\\42\\fold-3.json",
+    "results\\pooled_cv\\setfit_minilm\\tensorflow__tensorflow\\42\\fold-3.json",
+    "results\\pooled_cv\\setfit_minilm\\bitcoin__bitcoin\\42\\fold-4.json",
+    "results\\pooled_cv\\setfit_minilm\\facebook__react\\42\\fold-4.json",
+    "results\\pooled_cv\\setfit_minilm\\microsoft__vscode\\42\\fold-4.json",
+    "results\\pooled_cv\\setfit_minilm\\opencv__opencv\\42\\fold-4.json",
+    "results\\pooled_cv\\setfit_minilm\\tensorflow__tensorflow\\42\\fold-4.json",
+    "results\\pooled_cv\\setfit_minilm\\bitcoin__bitcoin\\42\\fold-5.json",
+    "results\\pooled_cv\\setfit_minilm\\facebook__react\\42\\fold-5.json",
+    "results\\pooled_cv\\setfit_minilm\\microsoft__vscode\\42\\fold-5.json",
+    "results\\pooled_cv\\setfit_minilm\\opencv__opencv\\42\\fold-5.json",
+    "results\\pooled_cv\\setfit_minilm\\tensorflow__tensorflow\\42\\fold-5.json"
+  ]
+}

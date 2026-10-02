@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "loo",
+  "model": "setfit_minilm",
+  "seed": 42,
+  "repository_macro_f1": {
+    "bitcoin/bitcoin": 0.7333175640159194,
+    "facebook/react": 0.754019163598603,
+    "microsoft/vscode": 0.6169016103960802,
+    "opencv/opencv": 0.5884156873121219,
+    "tensorflow/tensorflow": 0.649411869225302
+  },
+  "cross_repository_macro_f1": 0.6684131789096053,
+  "evaluations": 5,
+  "split_strategy": "leave_one_repository_out",
+  "text_fields": [
+    "title",
+    "body"
+  ],
+  "artifacts": [
+    "results\\loo\\setfit_minilm\\bitcoin__bitcoin\\42\\bitcoin__bitcoin.json",
+    "results\\loo\\setfit_minilm\\facebook__react\\42\\facebook__react.json",
+    "results\\loo\\setfit_minilm\\microsoft__vscode\\42\\microsoft__vscode.json",
+    "results\\loo\\setfit_minilm\\opencv__opencv\\42\\opencv__opencv.json",
+    "results\\loo\\setfit_minilm\\tensorflow__tensorflow\\42\\tensorflow__tensorflow.json"
+  ]
+}

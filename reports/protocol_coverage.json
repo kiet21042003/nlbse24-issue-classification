@@ -271,16 +271,16 @@
       "macro_f1": 0.7881
     },
     "pooled_cv": {
-      "evaluations": 0,
+      "evaluations": 25,
       "expected": 25,
-      "complete": false,
-      "macro_f1": null
+      "complete": true,
+      "macro_f1": 0.7795
     },
     "loo": {
-      "evaluations": 0,
+      "evaluations": 5,
       "expected": 5,
-      "complete": false,
-      "macro_f1": null
+      "complete": true,
+      "macro_f1": 0.6684
     },
     "official": {
       "evaluations": 5,

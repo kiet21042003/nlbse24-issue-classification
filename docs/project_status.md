@@ -22,14 +22,14 @@ have no result; the same script runs them (official cells need the explicit
 
 - Run on 2 October on one laptop (RTX 3050 6 GB, hardware group
   `kiet-laptop-rtx3050-6gb`): Logistic Regression official and pooled CV; pooled CV for
-  the P2 models; RoBERTa official and LOO; SetFit MPNet official. New artifacts were
+  the P2 models; RoBERTa official and LOO; SetFit MPNet official and LOO; SetFit MiniLM official, LOO and pooled CV. New artifacts were
   validated, metrics recomputed from predictions, and fingerprints checked against the
   existing splits. Timings from different machines are not comparable.
 - `pooled_cv` moved from a P3-only script into the shared runner, so every model can run it.
-- Still open if the table shows `not run`: SetFit pooled CV / LOO and MiniLM official. A
-  SetFit fit takes roughly 10 minutes per 300 training issues on the 3050 and ~4x that
-  for LOO or pooled training, so these cells are best run on a larger GPU:
-  `python scripts/run_missing_evaluations.py --models setfit_mpnet --protocols loo pooled_cv`.
+- Still open if the table shows `not run`: SetFit MPNet pooled CV. A SetFit MPNet fit takes
+  roughly 10 minutes per 300 training issues on the RTX 3050 and about 4x that for
+  pooled or LOO training (MPNet LOO took ~3.3 h), so this cell is best run on a larger GPU:
+  `python scripts/run_missing_evaluations.py --models setfit_mpnet --protocols pooled_cv`.
 
 ## Integrated work
 
@@ -38,7 +38,7 @@ have no result; the same script runs them (official cells need the explicit
 | P1 — Kiệt | Shared data, persistence, splits, schema and Logistic Regression; CV, title ablation and LOO findings. | Artifact handoff and end-to-end verification. LR official and pooled CV were run on 2 October. |
 | P2 — Hiếu | Original 1,355 CV/LOO/official/tuning/ablation/extra-seed runs received and audited; all frozen official scores verified. | Artifact handoff complete for supplied experiments; hardware identity still needed for controlled resource comparison. |
 | P3 — Ánh | RoBERTa full/LoRA merged; 100 verified per-repository and pooled CV artifacts imported; pooled schema and reproduction commands fixed. | Official and LOO were run on 2 October (see protocol coverage); contribute Method/Results/Discussion to the combined report. |
-| P4 — Nam | SetFit merged; 175 verified CV artifacts covering seven configurations, with findings and a runbook. | SetFit MPNet official was run on 2 October; remaining SetFit protocols are listed under protocol coverage; contribute report sections. |
+| P4 — Nam | SetFit merged; 175 verified CV artifacts covering seven configurations, with findings and a runbook. | SetFit MPNet official and LOO and all MiniLM protocols were run on 2 October; only MPNet pooled CV is open; contribute report sections. |
 | P5 — Dũng | Evaluation/integration branch merged; validated reader, aggregation, paired bootstrap, resource/ensemble tools and demo notebook. LR–MPNet CV comparison and illustrative hard vote executed. | Final selected-model comparisons, controlled resource benchmarks and final demo/submission verification. |
 
 P2, P4 and P3 were merged in `4599fa8`, `9220948` and `77bf724`, respectively.
