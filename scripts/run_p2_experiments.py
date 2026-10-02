@@ -234,7 +234,7 @@ def build_parser() -> argparse.ArgumentParser:
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--config", type=Path, help="run one committed configuration")
     source.add_argument("--grid", type=Path, help="run a sweep declared in a sweep TOML")
-    parser.add_argument("--protocol", choices=("cv", "loo", "official"), default="cv")
+    parser.add_argument("--protocol", choices=("cv", "pooled_cv", "loo", "official"), default="cv")
     parser.add_argument("--data-dir", type=Path, default=Path("data/raw"))
     parser.add_argument("--output-dir", type=Path, default=Path("results"))
     parser.add_argument("--repository", action="append", help="repeat to select repositories")

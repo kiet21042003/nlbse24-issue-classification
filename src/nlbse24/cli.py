@@ -96,7 +96,9 @@ def build_parser() -> argparse.ArgumentParser:
     audit.set_defaults(handler=_audit)
 
     baseline = subparsers.add_parser("run-baseline", help="run TF-IDF + Logistic Regression")
-    baseline.add_argument("--protocol", choices=("cv", "loo", "official"), default="cv")
+    baseline.add_argument(
+        "--protocol", choices=("cv", "pooled_cv", "loo", "official"), default="cv"
+    )
     baseline.add_argument("--data-dir", type=Path, default=Path("data/raw"))
     baseline.add_argument("--output-dir", type=Path, default=Path("results"))
     baseline.add_argument(

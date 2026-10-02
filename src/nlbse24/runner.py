@@ -28,8 +28,25 @@ def _select(records: Sequence[IssueRecord], indices: Sequence[int]) -> list[Issu
     return [records[index] for index in indices]
 
 
-def _evaluate_partition(
+def _fit_partition(
     *,
+    train_records: list[IssueRecord],
+    text_fields: tuple[str, ...],
+    model_factory: ModelFactory,
+) -> tuple[BaseIssueClassifier, Any]:
+    """Fit a fresh model on one training partition and profile the fit."""
+
+    model = model_factory()
+    train_texts = compose_texts(train_records, fields=text_fields)
+    y_train = [record.label for record in train_records]
+    _, fit_profile = profile_call(model.fit, train_texts, y_train)
+    return model, fit_profile
+
+
+def _score_partition(
+    *,
+    model: BaseIssueClassifier,
+    fit_profile: Any,
     train_records: list[IssueRecord],
     test_records: list[IssueRecord],
     protocol: str,
@@ -38,16 +55,12 @@ def _evaluate_partition(
     seed: int,
     run_name: str,
     text_fields: tuple[str, ...],
-    model_factory: ModelFactory,
     writer: ResultWriter,
 ) -> tuple[Path, dict[str, Any]]:
-    model = model_factory()
-    train_texts = compose_texts(train_records, fields=text_fields)
-    test_texts = compose_texts(test_records, fields=text_fields)
-    y_train = [record.label for record in train_records]
-    y_true = [record.label for record in test_records]
+    """Evaluate an already fitted model on one test partition and write its artifact."""
 
-    _, fit_profile = profile_call(model.fit, train_texts, y_train)
+    test_texts = compose_texts(test_records, fields=text_fields)
+    y_true = [record.label for record in test_records]
     y_pred_array, inference_profile = profile_call(model.predict, test_texts)
     y_pred = [str(label) for label in y_pred_array]
     scores = model.predict_scores(test_texts)
@@ -92,24 +105,7 @@ def run_classifier_experiment(
     result_rows: list[dict[str, Any]] = []
     paths: list[str] = []
 
-    def evaluate(
-        train_records: list[IssueRecord],
-        test_records: list[IssueRecord],
-        fold: str,
-        repository: str,
-    ) -> None:
-        path, artifact = _evaluate_partition(
-            train_records=train_records,
-            test_records=test_records,
-            protocol=protocol,
-            fold=fold,
-            repository=repository,
-            seed=seed,
-            run_name=model_name,
-            text_fields=text_fields,
-            model_factory=model_factory,
-            writer=writer,
-        )
+    def record(path: Path, artifact: dict[str, Any], fold: str, repository: str) -> None:
         paths.append(str(path))
         result_rows.append(
             {
@@ -118,6 +114,30 @@ def run_classifier_experiment(
                 "macro_f1": artifact["metrics"]["macro_average"]["f1-score"],
             }
         )
+
+    def evaluate(
+        train_records: list[IssueRecord],
+        test_records: list[IssueRecord],
+        fold: str,
+        repository: str,
+    ) -> None:
+        model, fit_profile = _fit_partition(
+            train_records=train_records, text_fields=text_fields, model_factory=model_factory
+        )
+        path, artifact = _score_partition(
+            model=model,
+            fit_profile=fit_profile,
+            train_records=train_records,
+            test_records=test_records,
+            protocol=protocol,
+            fold=fold,
+            repository=repository,
+            seed=seed,
+            run_name=model_name,
+            text_fields=text_fields,
+            writer=writer,
+        )
+        record(path, artifact, fold, repository)
 
     if protocol == "cv":
         split_strategy = "stratified_text_group_folds_per_repository"
@@ -136,6 +156,37 @@ def run_classifier_experiment(
                     split.fold,
                     repo,
                 )
+    elif protocol == "pooled_cv":
+        # One model per fold is trained on every repository's training partition and then
+        # evaluated separately on each repository's held-out partition (5 fits, 25 artifacts).
+        # The fit profile is repeated across the repository artifacts of a fold.
+        split_strategy = "stratified_pooled_train_evaluated_per_repository"
+        records = service.load(DatasetSplit.TRAIN, repositories)
+        for split in stratified_repository_folds(records, n_splits=n_splits, seed=seed):
+            train_records = _select(records, split.train_indices)
+            model, fit_profile = _fit_partition(
+                train_records=train_records, text_fields=text_fields, model_factory=model_factory
+            )
+            for repo in sorted({item.repo for item in records}):
+                test_indices = [
+                    index for index in split.test_indices if records[index].repo == repo
+                ]
+                if not test_indices:
+                    continue
+                path, artifact = _score_partition(
+                    model=model,
+                    fit_profile=fit_profile,
+                    train_records=train_records,
+                    test_records=_select(records, test_indices),
+                    protocol=protocol,
+                    fold=split.fold,
+                    repository=repo,
+                    seed=seed,
+                    run_name=model_name,
+                    text_fields=text_fields,
+                    writer=writer,
+                )
+                record(path, artifact, split.fold, repo)
     elif protocol == "loo":
         split_strategy = "leave_one_repository_out"
         records = service.load(DatasetSplit.TRAIN, repositories)

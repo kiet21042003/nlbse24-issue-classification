@@ -31,10 +31,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--config", type=Path, required=True, help="Path to a SetFit TOML config.")
     parser.add_argument(
         "--protocol",
-        choices=("cv", "loo", "official"),
+        choices=("cv", "pooled_cv", "loo", "official"),
         default="cv",
-        help="cv= tuning; loo=domain transfer; official=frozen-model test.",
-
+        help="cv=tuning; pooled_cv=pooled training; loo=domain transfer; official=frozen test.",
     )
     parser.add_argument("--data-dir", type=Path, default=Path("data/raw"))
     parser.add_argument("--output-dir", type=Path, default=Path("results"))
