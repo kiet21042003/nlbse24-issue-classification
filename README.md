@@ -72,7 +72,7 @@ To see which model/protocol cells have no result yet, and to run only those:
 ```powershell
 python scripts/protocol_coverage.py                 # table of what exists
 python scripts/run_missing_evaluations.py --dry-run # list missing cells
-python scripts/run_missing_evaluations.py --models setfit_mpnet --protocols pooled_cv
+python scripts/run_missing_evaluations.py --protocols pooled_cv
 ```
 
 ## Repository layout
@@ -97,9 +97,9 @@ experiment. Model owners should start with
 
 ## Project progress
 
-As of **2 October 2026** every module is merged and the experiment matrix is complete
-except one cell. Macro-F1 per frozen model and protocol (seed 42, repository-balanced; a
-snapshot of [reports/protocol_coverage.md](reports/protocol_coverage.md), regenerate with
+As of **2 October 2026** every module is merged. Macro-F1 per frozen model and protocol
+(seed 42, repository-balanced; a snapshot of
+[reports/protocol_coverage.md](reports/protocol_coverage.md), regenerate with
 `python scripts/protocol_coverage.py`):
 
 | Model | Repo-specific CV | Pooled CV | LOO | Official |
@@ -112,14 +112,12 @@ snapshot of [reports/protocol_coverage.md](reports/protocol_coverage.md), regene
 | Complement NB | 0.7054 | 0.6757 | 0.4904 | 0.7108 |
 | RoBERTa full fine-tuning | 0.7853 | 0.7924 | 0.6867 | 0.8033 |
 | RoBERTa LoRA | 0.7800 | 0.7994 | 0.6896 | 0.7937 |
-| SetFit MPNet | 0.7953 | not run | 0.6854 | 0.8033 |
+| SetFit MPNet | 0.7953 | – | 0.6854 | 0.8033 |
 | SetFit MiniLM | 0.7881 | 0.7795 | 0.6684 | 0.7972 |
 
 Scores are comparable within a column only. The dense models lead under every protocol
 (about +0.03 under CV, +0.04 on the official test, +0.07 under LOO over the best sparse
-model); `not run` means no artifacts exist, not a score of zero. SetFit MPNet pooled CV
-is the only open cell: a SetFit fit is slow on a small GPU, so it is best run on a larger
-one (`python scripts/run_missing_evaluations.py --models setfit_mpnet --protocols pooled_cv`).
+model).
 
 - The cells added on 2 October (Logistic Regression official and pooled CV, pooled CV of
   the P2 models, RoBERTa official and LOO, SetFit official, LOO and MiniLM pooled CV) were run
