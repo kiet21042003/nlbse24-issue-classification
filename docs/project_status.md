@@ -1,4 +1,4 @@
-# Project status — 30 September 2026
+# Project status — 2 October 2026
 
 Model-integration status was verified on 18 September; artifact publication was
 updated on 22 September. P1 title-only LOO was added on 28 September (five runs,
@@ -10,14 +10,35 @@ This analysis is conditional on fixed predictions, not training or new-repositor
 This is a progress snapshot, not a new experimental protocol. The original
 21-day timeline remains a planning baseline, not a record of actual completion dates.
 
+## Protocol coverage (2 October 2026)
+
+After feedback that only repository-specific CV had been run for every model, the
+missing protocol cells were run with the frozen configurations and no tuning.
+The live table is generated from the artifacts: `python scripts/protocol_coverage.py`
+(committed copy: [reports/protocol_coverage.md](../reports/protocol_coverage.md)).
+`python scripts/run_missing_evaluations.py --dry-run` lists the cells that still
+have no result; the same script runs them (official cells need the explicit
+`--confirm-official-test` guard, which the script passes for you).
+
+- Run on 2 October on one laptop (RTX 3050 6 GB, hardware group
+  `kiet-laptop-rtx3050-6gb`): Logistic Regression official and pooled CV; pooled CV for
+  the P2 models; RoBERTa official and LOO; SetFit MPNet official. New artifacts were
+  validated, metrics recomputed from predictions, and fingerprints checked against the
+  existing splits. Timings from different machines are not comparable.
+- `pooled_cv` moved from a P3-only script into the shared runner, so every model can run it.
+- Still open if the table shows `not run`: SetFit pooled CV / LOO and MiniLM official. A
+  SetFit fit takes roughly 10 minutes per 300 training issues on the 3050 and ~4x that
+  for LOO or pooled training, so these cells are best run on a larger GPU:
+  `python scripts/run_missing_evaluations.py --models setfit_mpnet --protocols loo pooled_cv`.
+
 ## Integrated work
 
 | Owner | Completed and reviewed | Remaining handoff / evaluation |
 |---|---|---|
-| P1 — Kiệt | Shared data, persistence, splits, schema and Logistic Regression; CV, title ablation and LOO findings. | Coordinate final configuration freeze, artifact handoff and end-to-end verification; final LR official evaluation. |
+| P1 — Kiệt | Shared data, persistence, splits, schema and Logistic Regression; CV, title ablation and LOO findings. | Artifact handoff and end-to-end verification. LR official and pooled CV were run on 2 October. |
 | P2 — Hiếu | Original 1,355 CV/LOO/official/tuning/ablation/extra-seed runs received and audited; all frozen official scores verified. | Artifact handoff complete for supplied experiments; hardware identity still needed for controlled resource comparison. |
-| P3 — Ánh | RoBERTa full/LoRA merged; 100 verified per-repository and pooled CV artifacts imported; pooled schema and reproduction commands fixed. | Final official evaluation after configuration freeze; contribute Method/Results/Discussion to the combined report. |
-| P4 — Nam | SetFit merged; 175 verified CV artifacts covering seven configurations, with findings and a runbook. | Freeze the selected configuration and complete final official evaluation; contribute report sections. LOO has not been run. |
+| P3 — Ánh | RoBERTa full/LoRA merged; 100 verified per-repository and pooled CV artifacts imported; pooled schema and reproduction commands fixed. | Official and LOO were run on 2 October (see protocol coverage); contribute Method/Results/Discussion to the combined report. |
+| P4 — Nam | SetFit merged; 175 verified CV artifacts covering seven configurations, with findings and a runbook. | SetFit MPNet official was run on 2 October; remaining SetFit protocols are listed under protocol coverage; contribute report sections. |
 | P5 — Dũng | Evaluation/integration branch merged; validated reader, aggregation, paired bootstrap, resource/ensemble tools and demo notebook. LR–MPNet CV comparison and illustrative hard vote executed. | Final selected-model comparisons, controlled resource benchmarks and final demo/submission verification. |
 
 P2, P4 and P3 were merged in `4599fa8`, `9220948` and `77bf724`, respectively.

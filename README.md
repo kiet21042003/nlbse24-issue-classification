@@ -87,6 +87,13 @@ As of **30 September 2026**, a fresh clone includes **1,690 run artifacts**
 from P1–P4, including **1,355 original P2 runs** (CV, LOO, official, tuning,
 ablations and extra seeds). Original P2 artifacts supersede the matching 150
 reproductions, preserved in Git history. See [P2 handoff audit](reports/p2_reproduction_handoff.md).
+As of **2 October 2026**, the protocol matrix is nearly complete: every model has
+repository-specific CV, and Logistic Regression, the P2 models and RoBERTa also have
+pooled CV, LOO and official results (SetFit has CV and, for MPNet, official; see
+[protocol coverage](reports/protocol_coverage.md)). Regenerate the table with
+`python scripts/protocol_coverage.py` and run missing cells with
+`python scripts/run_missing_evaluations.py --dry-run`.
+The final report and slides are in [presentation/](presentation/).
 Use `python scripts/aggregate_results.py --seed 42` to avoid mixing seeds;
 select frozen models explicitly and exclude the React-only `p2_ft_probe` from
 five-repository comparisons. Source result ZIPs are not committed. Unverified
